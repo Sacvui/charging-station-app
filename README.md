@@ -1,46 +1,100 @@
-# Ứng dụng Kết nối Trạm Sạc Pin Xe Máy
+# ⚡ ChargeFinder - Ứng dụng Tìm Trạm Sạc Xe Điện
 
-Ứng dụng web giúp kết nối người dùng với các trạm sạc pin xe máy, cho phép tìm kiếm trạm gần nhất, đánh giá và tạo trạm mới.
+Ứng dụng web toàn diện giúp kết nối cộng đồng xe điện Việt Nam, tìm kiếm trạm sạc gần nhất, kết nối với người dùng khác và chia sẻ thông tin hữu ích.
 
-## Tính năng chính
+## 🚀 Tính năng nổi bật
 
-### Người dùng (User)
-- Tìm trạm sạc gần nhất trên bản đồ
-- Xem thông tin chi tiết: đánh giá, loại sạc, bảng giá
-- Tạo trạm sạc mới với hình ảnh xác minh
-- Nhận điểm thưởng khi đóng góp thông tin
-- Đánh giá và bình luận về trạm sạc
+### 🔍 Tìm kiếm & Định vị
+- **Tìm trạm gần nhất** với GPS định vị chính xác
+- **Bản đồ tương tác** với OpenStreetMap
+- **Filter theo loại xe** (ô tô/xe máy) 
+- **Chỉ đường tức thì** với Google Maps integration
+- **Tìm kiếm theo khu vực** (tỉnh/huyện)
 
-### Chủ trạm (Station Owner)
-- Tạo và quản lý trạm sạc của mình
-- Tạo các chương trình khuyến mãi
-- Cập nhật thông tin trạm
+### 👥 Mạng xã hội EV
+- **Xem người dùng gần đây** trong bán kính 15km
+- **Chat real-time** với cộng đồng EV
+- **Chia sẻ kinh nghiệm** sạc xe
+- **Profile người dùng** với rating và thống kê
+- **Status real-time** (đang sạc, tìm trạm, online)
 
-### Quản trị viên (Admin)
-- Quản lý tất cả người dùng và trạm sạc
-- Xác minh trạm sạc mới
-- Toàn quyền quản lý hệ thống
+### 🏗️ Quản lý trạm sạc
+- **Tạo trạm mới** với form thông minh
+- **Upload hình ảnh** (tổng thể + trụ sạc) với auto-compression
+- **Chọn loại sạc + giá** từ database có sẵn
+- **Đánh giá đa tiêu chí** (dịch vụ, thoải mái, giá cả, vị trí, vệ sinh)
+- **Xác minh trạm** bởi admin
 
-## Cài đặt
+### 🎁 Hệ thống thưởng
+- **Điểm thưởng** cho mọi hoạt động
+- **Mời bạn bè** qua nhiều kênh (+50 điểm/lời mời)
+- **Leaderboard** và ranking
+- **Badges** và achievements
 
-### Backend
+### 📱 Trải nghiệm người dùng
+- **Responsive design** tối ưu mobile
+- **iOS-style UI** với animations mượt mà
+- **Dark/Light theme** tự động
+- **PWA ready** - cài đặt như app native
+- **Offline support** cho dữ liệu cơ bản
+
+## 🛠️ Cài đặt & Chạy
+
+### Yêu cầu hệ thống
+- Node.js 16+ 
+- npm hoặc yarn
+- PostgreSQL database (hoặc sử dụng Supabase)
+
+### 1. Clone repository
 ```bash
-npm install
-npm run dev
+git clone https://github.com/Sacvui/charging-station-app.git
+cd charging-station-app
 ```
 
-### Frontend
+### 2. Cài đặt dependencies
 ```bash
+# Backend
+npm install
+
+# Frontend  
 cd client
 npm install
-npm start
+cd ..
 ```
 
-## Cấu hình
+### 3. Cấu hình môi trường
+```bash
+# Tạo file .env từ template
+cp .env.example .env
 
-1. Tạo file `.env` từ `.env.example`
-2. Cấu hình MongoDB URI
-3. Thiết lập JWT secret key
+# Cấu hình các biến môi trường:
+DATABASE_URL=postgresql://username:password@host:port/database
+JWT_SECRET=your-super-secret-jwt-key
+NODE_ENV=development
+```
+
+### 4. Setup database
+```bash
+# Generate Prisma client
+npx prisma generate
+
+# Push schema to database
+npx prisma db push
+```
+
+### 5. Chạy ứng dụng
+```bash
+# Development mode
+npm run dev          # Backend (port 5000)
+npm run client       # Frontend (port 3000)
+
+# Hoặc chạy đồng thời
+npm run dev & npm run client
+```
+
+### 6. Truy cập ứng dụng
+- **Frontend:** http://localhost:3000
+- **Backend API:** http://localhost:5000
 
 ## API Endpoints
 

@@ -1,0 +1,224 @@
+{
+  "provinces": [
+    {
+      "code": "HCM",
+      "name": "TP. Hồ Chí Minh",
+      "districts": [
+        { 
+          "code": "Q1", 
+          "name": "Quận 1",
+          "wards": [
+            { "code": "TL", "name": "Phường Tân Định" },
+            { "code": "DK", "name": "Phường Đa Kao" },
+            { "code": "BN", "name": "Phường Bến Nghé" },
+            { "code": "BT", "name": "Phường Bến Thành" },
+            { "code": "NTB", "name": "Phường Nguyễn Thái Bình" },
+            { "code": "PNL", "name": "Phường Phạm Ngũ Lão" },
+            { "code": "CML", "name": "Phường Cầu Ông Lãnh" },
+            { "code": "COK", "name": "Phường Cô Giang" },
+            { "code": "NCD", "name": "Phường Nguyễn Cư Trinh" },
+            { "code": "CKV", "name": "Phường Cầu Kho" }
+          ]
+        },
+        { 
+          "code": "Q3", 
+          "name": "Quận 3",
+          "wards": [
+            { "code": "P1", "name": "Phường 1" },
+            { "code": "P2", "name": "Phường 2" },
+            { "code": "P3", "name": "Phường 3" },
+            { "code": "P4", "name": "Phường 4" },
+            { "code": "P5", "name": "Phường 5" },
+            { "code": "P6", "name": "Phường 6" },
+            { "code": "P7", "name": "Phường 7" },
+            { "code": "P8", "name": "Phường 8" },
+            { "code": "P9", "name": "Phường 9" },
+            { "code": "P10", "name": "Phường 10" },
+            { "code": "P11", "name": "Phường 11" },
+            { "code": "P12", "name": "Phường 12" },
+            { "code": "P13", "name": "Phường 13" },
+            { "code": "P14", "name": "Phường 14" }
+          ]
+        },
+        { 
+          "code": "Q7", 
+          "name": "Quận 7",
+          "wards": [
+            { "code": "TM", "name": "Phường Tân Thuận Đông" },
+            { "code": "TT", "name": "Phường Tân Thuận Tây" },
+            { "code": "TH", "name": "Phường Tân Hưng" },
+            { "code": "BT", "name": "Phường Bình Thuận" },
+            { "code": "TK", "name": "Phường Tân Kiểng" },
+            { "code": "TQ", "name": "Phường Tân Quy" },
+            { "code": "PH", "name": "Phường Phú Thuận" },
+            { "code": "NV", "name": "Phường Nguyễn Thái Học" },
+            { "code": "PM", "name": "Phường Phú Mỹ" },
+            { "code": "TPC", "name": "Phường Tân Phong" }
+          ]
+        },
+        { "code": "Q5", "name": "Quận 5" },
+        { "code": "Q10", "name": "Quận 10" },
+        { "code": "BT", "name": "Bình Thạnh" },
+        { "code": "TB", "name": "Tân Bình" },
+        { "code": "PN", "name": "Phú Nhuận" },
+        { "code": "GV", "name": "Gò Vấp" },
+        { "code": "TD", "name": "Thủ Đức" },
+        { "code": "BTan", "name": "Bình Tân" },
+        { "code": "Q2", "name": "Quận 2" },
+        { "code": "Q4", "name": "Quận 4" },
+        { "code": "Q6", "name": "Quận 6" },
+        { "code": "Q8", "name": "Quận 8" },
+        { "code": "Q9", "name": "Quận 9" },
+        { "code": "Q11", "name": "Quận 11" },
+        { "code": "Q12", "name": "Quận 12" }
+      ]
+    },
+    {
+      "code": "HN",
+      "name": "Hà Nội",
+      "districts": [
+        { 
+          "code": "BD", 
+          "name": "Ba Đình",
+          "wards": [
+            { "code": "PVT", "name": "Phường Phúc Xá" },
+            { "code": "TL", "name": "Phường Trúc Bạch" },
+            { "code": "VT", "name": "Phường Vĩnh Phúc" },
+            { "code": "CQ", "name": "Phường Cống Vị" },
+            { "code": "LT", "name": "Phường Liễu Giai" },
+            { "code": "NTD", "name": "Phường Nguyễn Trung Trực" },
+            { "code": "QT", "name": "Phường Quán Thánh" },
+            { "code": "NTB", "name": "Phường Ngọc Hà" },
+            { "code": "DK", "name": "Phường Điện Biên" },
+            { "code": "DH", "name": "Phường Đội Cấn" },
+            { "code": "NKS", "name": "Phường Ngọc Khánh" },
+            { "code": "KM", "name": "Phường Kim Mã" },
+            { "code": "GV", "name": "Phường Giảng Võ" },
+            { "code": "TT", "name": "Phường Thành Công" }
+          ]
+        },
+        { 
+          "code": "HK", 
+          "name": "Hoàn Kiếm",
+          "wards": [
+            { "code": "PH", "name": "Phường Phúc Tân" },
+            { "code": "DH", "name": "Phường Đồng Xuân" },
+            { "code": "HT", "name": "Phường Hàng Mã" },
+            { "code": "HB", "name": "Phường Hàng Buồm" },
+            { "code": "HD", "name": "Phường Hàng Đào" },
+            { "code": "HBo", "name": "Phường Hàng Bồ" },
+            { "code": "CQ", "name": "Phường Cửa Đông" },
+            { "code": "LT", "name": "Phường Lý Thái Tổ" },
+            { "code": "HG", "name": "Phường Hàng Gai" },
+            { "code": "CD", "name": "Phường Chương Dương" },
+            { "code": "HT2", "name": "Phường Hàng Trống" },
+            { "code": "CD2", "name": "Phường Cửa Nam" },
+            { "code": "HB2", "name": "Phường Hàng Bạc" },
+            { "code": "HBa", "name": "Phường Hàng Bài" },
+            { "code": "TH", "name": "Phường Tràng Tiền" },
+            { "code": "TT", "name": "Phường Trần Hưng Đạo" },
+            { "code": "PL", "name": "Phường Phan Chu Trinh" },
+            { "code": "HQ", "name": "Phường Hàng Quạt" }
+          ]
+        },
+        { "code": "TH", "name": "Tây Hồ" },
+        { "code": "LB", "name": "Long Biên" },
+        { "code": "CG", "name": "Cầu Giấy" },
+        { "code": "DD", "name": "Đống Đa" },
+        { "code": "HBT", "name": "Hai Bà Trưng" },
+        { "code": "HM", "name": "Hoàng Mai" },
+        { "code": "TX", "name": "Thanh Xuân" },
+        { "code": "NTL", "name": "Nam Từ Liêm" },
+        { "code": "BTL", "name": "Bắc Từ Liêm" },
+        { "code": "HD", "name": "Hà Đông" }
+      ]
+    },
+    {
+      "code": "LA",
+      "name": "Long An",
+      "districts": [
+        { "code": "TH", "name": "Tân Hưng" },
+        { "code": "VH", "name": "Vĩnh Hưng" },
+        { "code": "MH", "name": "Mộc Hóa" },
+        { "code": "TT", "name": "Tân Thạnh" },
+        { "code": "TC", "name": "Thạnh Hóa" },
+        { "code": "DH", "name": "Đức Hòa" },
+        { "code": "BL", "name": "Bến Lức" },
+        { "code": "THA", "name": "Thủ Thừa" },
+        { "code": "TA", "name": "Tân An" },
+        { "code": "CT", "name": "Cần Đước" },
+        { "code": "CG", "name": "Cần Giuộc" },
+        { "code": "CH", "name": "Châu Thành" }
+      ]
+    },
+    {
+      "code": "DN",
+      "name": "Đà Nẵng",
+      "districts": [
+        { "code": "HC", "name": "Hải Châu" },
+        { "code": "TK", "name": "Thanh Khê" },
+        { "code": "SH", "name": "Sơn Trà" },
+        { "code": "NK", "name": "Ngũ Hành Sơn" },
+        { "code": "LC", "name": "Liên Chiểu" },
+        { "code": "CL", "name": "Cẩm Lệ" },
+        { "code": "HV", "name": "Hòa Vang" }
+      ]
+    },
+    {
+      "code": "CT",
+      "name": "Cần Thơ",
+      "districts": [
+        { "code": "NK", "name": "Ninh Kiều" },
+        { "code": "BT", "name": "Bình Thủy" },
+        { "code": "CL", "name": "Cái Răng" },
+        { "code": "OT", "name": "Ô Môn" },
+        { "code": "TL", "name": "Thốt Nốt" },
+        { "code": "PC", "name": "Phong Điền" },
+        { "code": "CG", "name": "Cờ Đỏ" },
+        { "code": "VT", "name": "Vĩnh Thạnh" }
+      ]
+    },
+    {
+      "code": "HP",
+      "name": "Hải Phòng",
+      "districts": [
+        { "code": "HK", "name": "Hồng Bàng" },
+        { "code": "LB", "name": "Lê Chân" },
+        { "code": "NQ", "name": "Ngô Quyền" },
+        { "code": "KA", "name": "Kiến An" },
+        { "code": "HD", "name": "Hải An" },
+        { "code": "DH", "name": "Đồ Sơn" },
+        { "code": "DL", "name": "Dương Kinh" },
+        { "code": "AT", "name": "An Dương" }
+      ]
+    },
+    {
+      "code": "BD",
+      "name": "Bình Dương",
+      "districts": [
+        { "code": "TD", "name": "Thủ Dầu Một" },
+        { "code": "DU", "name": "Dĩ An" },
+        { "code": "TU", "name": "Thuận An" },
+        { "code": "BD", "name": "Bến Cát" },
+        { "code": "TT", "name": "Tân Uyên" },
+        { "code": "BT", "name": "Bàu Bàng" },
+        { "code": "DT", "name": "Dầu Tiếng" },
+        { "code": "PT", "name": "Phú Giáo" }
+      ]
+    },
+    {
+      "code": "DN2",
+      "name": "Đồng Nai",
+      "districts": [
+        { "code": "BH", "name": "Biên Hòa" },
+        { "code": "LK", "name": "Long Khánh" },
+        { "code": "NH", "name": "Nhơn Trạch" },
+        { "code": "VH", "name": "Vĩnh Cửu" },
+        { "code": "TL", "name": "Trảng Bom" },
+        { "code": "TT", "name": "Thống Nhất" },
+        { "code": "CX", "name": "Cẩm Mỹ" },
+        { "code": "LT", "name": "Long Thành" }
+      ]
+    }
+  ]
+}
