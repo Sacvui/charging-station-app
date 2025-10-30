@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
+import { saveToLocalStorage, getFromLocalStorage, generateId } from '../utils/mockData';
 
 const AuthContext = createContext();
 
@@ -12,54 +12,106 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      axios.defaults.headers.common['x-auth-token'] = token;
-      // Có thể gọi API để lấy thông tin user
+    // Lấy user từ localStorage
+    const savedUser = getFromLocalStorage('currentUser');
+    if (savedUser) {
+      setUser(savedUser);
     }
     setLoading(false);
   }, []);
 
   const login = async (email, password) => {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
     try {
-      const res = await axios.post(`${process.env.REACT_APP_API_URL || ''}/api/auth/login`, { email, password });
-      const { token, user } = res.data;
+      // Lấy danh sách users từ localStorage
+      const users = getFromLocalStorage('users', []);
+      const user = users.find(u => u.email === email && u.password === password);
       
-      localStorage.setItem('token', token);
-      axios.defaults.headers.common['x-auth-token'] = token;
+      if (!user) {
+        return { 
+          success: false, 
+          message: 'Email hoặc mật khẩu không đúng' 
+        };
+      }
+      
+      // Lưu user hiện tại
+      saveToLocalStorage('currentUser', user);
       setUser(user);
       
-      return { success: true };
+      return { success: true, redirect: '/' }; // Redirect to home to see nearby stations
     } catch (error) {
       return { 
         success: false, 
-        message: error.response?.data?.message || 'Đăng nhập thất bại' 
+        message: 'Đăng nhập thất bại' 
       };
     }
   };
 
   const register = async (name, email, password, role) => {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
     try {
-      const res = await axios.post(`${process.env.REACT_APP_API_URL || ''}/api/auth/register`, { name, email, password, role });
-      const { token, user } = res.data;
+      // Lấy danh sách users từ localStorage
+      const users = getFromLocalStorage('users', []);
       
-      localStorage.setItem('token', token);
-      axios.defaults.headers.common['x-auth-token'] = token;
-      setUser(user);
+      // Kiểm tra email đã tồn tại
+      if (users.find(u => u.email === email)) {
+        return { 
+          success: false, 
+          message: 'Email đã được sử dụng' 
+        };
+      }
       
-      return { success: true };
+      // Tạo user mới
+      const newUser = {
+        id: generateId(),
+        name,
+        email,
+        password, // Trong thực tế nên hash password
+        role: role?.toUpperCase() || 'USER',
+        points: 50, // Tặng 50 điểm khi đăng ký
+        phone: '',
+        avatar: null,
+        createdAt: new Date().toISOString()
+      };
+      
+      // Lưu vào danh sách users
+      users.push(newUser);
+      saveToLocalStorage('users', users);
+      
+      // Lưu user hiện tại
+      saveToLocalStorage('currentUser', newUser);
+      setUser(newUser);
+      
+      return { success: true, redirect: '/' }; // Redirect to home to see nearby stations
     } catch (error) {
       return { 
         success: false, 
-        message: error.response?.data?.message || 'Đăng ký thất bại' 
+        message: 'Đăng ký thất bại' 
       };
     }
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
-    delete axios.defaults.headers.common['x-auth-token'];
+    localStorage.removeItem('currentUser');
     setUser(null);
+  };
+
+  const updateUser = (updatedUser) => {
+    // Cập nhật user hiện tại
+    saveToLocalStorage('currentUser', updatedUser);
+    setUser(updatedUser);
+    
+    // Cập nhật trong danh sách users
+    const users = getFromLocalStorage('users', []);
+    const userIndex = users.findIndex(u => u.id === updatedUser.id);
+    if (userIndex !== -1) {
+      users[userIndex] = updatedUser;
+      saveToLocalStorage('users', users);
+    }
   };
 
   const value = {
@@ -67,6 +119,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
+    updateUser,
     loading
   };
 

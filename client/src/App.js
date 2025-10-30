@@ -5,6 +5,8 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import QuickRegister from './pages/QuickRegister';
+import NearbyStations from './pages/NearbyStations';
 import Map from './pages/Map';
 import StationDetail from './pages/StationDetail';
 import CreateStation from './pages/CreateStation';
@@ -22,6 +24,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/quick-register" element={<QuickRegister />} />
+            <Route path="/nearby" element={<NearbyStations />} />
             <Route path="/map" element={<Map />} />
             <Route path="/station/:id" element={<StationDetail />} />
             <Route path="/create-station" element={<CreateStation />} />

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { saveToLocalStorage, getFromLocalStorage } from '../utils/mockData';
 
 const CreateStation = () => {
   const [formData, setFormData] = useState({
     name: '',
     address: '',
+    province: '',
+    district: '',
     lat: '',
     lng: '',
     chargerTypes: [],
@@ -17,9 +19,29 @@ const CreateStation = () => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [gettingLocation, setGettingLocation] = useState(false);
 
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const navigate = useNavigate();
+
+  // Danh sách tỉnh thành Việt Nam
+  const provinces = [
+    { code: 'HCM', name: 'TP. Hồ Chí Minh', districts: ['Quận 1', 'Quận 3', 'Quận 5', 'Quận 7', 'Quận 10', 'Bình Thạnh', 'Tân Bình', 'Phú Nhuận', 'Gò Vấp', 'Thủ Đức', 'Bình Tân'] },
+    { code: 'HN', name: 'Hà Nội', districts: ['Ba Đình', 'Hoàn Kiếm', 'Tây Hồ', 'Long Biên', 'Cầu Giấy', 'Đống Đa', 'Hai Bà Trưng', 'Hoàng Mai', 'Thanh Xuân', 'Nam Từ Liêm', 'Bắc Từ Liêm'] },
+    { code: 'DN', name: 'Đà Nẵng', districts: ['Hải Châu', 'Thanh Khê', 'Sơn Trà', 'Ngũ Hành Sơn', 'Liên Chiểu', 'Cẩm Lệ'] },
+    { code: 'CT', name: 'Cần Thơ', districts: ['Ninh Kiều', 'Ô Môn', 'Bình Thuỷ', 'Cái Răng', 'Thốt Nốt'] },
+    { code: 'HP', name: 'Hải Phòng', districts: ['Hồng Bàng', 'Ngô Quyền', 'Lê Chân', 'Hải An', 'Kiến An', 'Đồ Sơn'] },
+    { code: 'BD', name: 'Bình Dương', districts: ['Thủ Dầu Một', 'Dĩ An', 'Thuận An', 'Tân Uyên', 'Bến Cát'] },
+    { code: 'DNA', name: 'Đồng Nai', districts: ['Biên Hòa', 'Long Khánh', 'Nhơn Trạch', 'Vĩnh Cửu', 'Trảng Bom'] },
+    { code: 'KH', name: 'Khánh Hòa', districts: ['Nha Trang', 'Cam Ranh', 'Ninh Hòa', 'Vạn Ninh'] },
+    { code: 'QN', name: 'Quảng Nam', districts: ['Hội An', 'Tam Kỳ', 'Điện Bàn', 'Duy Xuyên'] },
+    { code: 'VT', name: 'Vũng Tàu', districts: ['Vũng Tàu', 'Bà Rịa', 'Châu Đức', 'Xuyên Mộc'] }
+  ];
+
+  const getCurrentDistricts = () => {
+    const selectedProvince = provinces.find(p => p.code === formData.province);
+    return selectedProvince ? selectedProvince.districts : [];
+  };
 
   if (!user) {
     return <div>Vui lòng đăng nhập để tạo trạm sạc</div>;
@@ -65,100 +87,191 @@ const CreateStation = () => {
     setLoading(true);
     setError('');
 
-    const formDataToSend = new FormData();
-    formDataToSend.append('name', formData.name);
-    formDataToSend.append('address', formData.address);
-    formDataToSend.append('lat', formData.lat);
-    formDataToSend.append('lng', formData.lng);
-    formDataToSend.append('chargerTypes', JSON.stringify(formData.chargerTypes));
-    formDataToSend.append('pricing', JSON.stringify(formData.pricing));
-    formDataToSend.append('amenities', JSON.stringify(formData.amenities));
-    formDataToSend.append('operatingHours', JSON.stringify(formData.operatingHours));
-
-    for (let i = 0; i < images.length; i++) {
-      formDataToSend.append('images', images[i]);
-    }
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
 
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL || ''}/api/stations`, formDataToSend, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      // Validate required fields
+      if (!formData.name || !formData.address || !formData.lat || !formData.lng) {
+        throw new Error('Vui lòng điền đầy đủ thông tin bắt buộc');
+      }
+
+      if (formData.chargerTypes.length === 0) {
+        throw new Error('Vui lòng chọn ít nhất một loại sạc');
+      }
+
+      // Tạo station mới
+      const newStation = {
+        id: Date.now().toString(),
+        name: formData.name,
+        address: formData.address,
+        latitude: parseFloat(formData.lat),
+        longitude: parseFloat(formData.lng),
+        rating: 0,
+        totalRatings: 0,
+        chargerTypes: formData.chargerTypes,
+        pricing: formData.pricing.filter(p => p.chargerType && p.pricePerHour),
+        amenities: formData.amenities,
+        images: images.map(img => img.name), // Chỉ lưu tên file
+        isVerified: false,
+        status: 'ACTIVE',
+        operatingHours: formData.operatingHours,
+        promotions: [],
+        owner: {
+          name: user.name,
+          phone: user.phone || 'Chưa cập nhật'
+        },
+        ownerId: user.id,
+        createdAt: new Date().toISOString()
+      };
+
+      // Lưu vào localStorage
+      const stations = getFromLocalStorage('userStations', []);
+      stations.push(newStation);
+      saveToLocalStorage('userStations', stations);
+
+      // Thưởng điểm cho user
+      const updatedUser = { ...user, points: (user.points || 0) + 100 };
+      updateUser(updatedUser);
+
+      alert('🎉 Tạo trạm sạc thành công! Bạn được thưởng 100 điểm. Trạm sạc sẽ được xem xét để xác minh.');
       navigate('/profile');
     } catch (error) {
-      setError(error.response?.data?.message || 'Có lỗi xảy ra');
+      setError(error.message || 'Có lỗi xảy ra');
     }
     
     setLoading(false);
   };
 
   return (
-    <div className="form-container" style={{ maxWidth: '600px' }}>
-      <h2>Tạo trạm sạc mới</h2>
-      {error && <div style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}
+    <div style={{ padding: '1rem', minHeight: '100vh' }}>
+      {/* Back Button */}
+      <div style={{ marginBottom: '1rem' }}>
+        <button 
+          onClick={() => navigate(-1)}
+          className="back-button"
+        >
+          ← Quay lại
+        </button>
+      </div>
+      
+      <div className="form-container" style={{ maxWidth: '700px' }}>
+        <h2>⚡ Thêm trạm sạc mới</h2>
+        {error && <div className="error-message">{error}</div>}
       
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Tên trạm sạc:</label>
+          <label>⚡ Tên trạm sạc</label>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
+            placeholder="VD: Trạm sạc Vincom Quận 1"
             required
           />
         </div>
         
         <div className="form-group">
-          <label>Địa chỉ:</label>
+          <label>🏙️ Tỉnh/Thành phố</label>
+          <select
+            name="province"
+            value={formData.province}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Chọn tỉnh/thành phố</option>
+            {provinces.map(province => (
+              <option key={province.code} value={province.code}>
+                {province.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {formData.province && (
+          <div className="form-group">
+            <label>🏘️ Quận/Huyện</label>
+            <select
+              name="district"
+              value={formData.district}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Chọn quận/huyện</option>
+              {getCurrentDistricts().map(district => (
+                <option key={district} value={district}>
+                  {district}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        <div className="form-group">
+          <label>📍 Địa chỉ cụ thể</label>
           <input
             type="text"
             name="address"
             value={formData.address}
             onChange={handleChange}
+            placeholder="VD: 123 Nguyễn Huệ"
             required
           />
         </div>
         
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <div className="form-group" style={{ flex: 1 }}>
-            <label>Vĩ độ (Latitude):</label>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div className="form-group">
+            <label>🌍 Vĩ độ (Latitude)</label>
             <input
               type="number"
               step="any"
               name="lat"
               value={formData.lat}
               onChange={handleChange}
+              placeholder="VD: 10.7769"
               required
             />
           </div>
           
-          <div className="form-group" style={{ flex: 1 }}>
-            <label>Kinh độ (Longitude):</label>
+          <div className="form-group">
+            <label>🌍 Kinh độ (Longitude)</label>
             <input
               type="number"
               step="any"
               name="lng"
               value={formData.lng}
               onChange={handleChange}
+              placeholder="VD: 106.7009"
               required
             />
           </div>
         </div>
         
+        <div style={{ padding: '1rem', background: 'rgba(102, 126, 234, 0.1)', borderRadius: '12px', marginBottom: '1rem' }}>
+          <p style={{ margin: 0, fontSize: '0.9rem', color: '#6b7280' }}>
+            💡 <strong>Mẹo:</strong> Bạn có thể tìm tọa độ chính xác bằng cách search địa chỉ trên Google Maps, 
+            click chuột phải và chọn tọa độ hiển thị.
+          </p>
+        </div>
+        
         <div className="form-group">
-          <label>Loại sạc:</label>
-          {['Type A', 'Type B', 'Type C', 'Fast Charge', 'Super Fast'].map(type => (
-            <label key={type} style={{ display: 'block', fontWeight: 'normal' }}>
-              <input
-                type="checkbox"
-                name="chargerTypes"
-                value={type}
-                checked={formData.chargerTypes.includes(type)}
-                onChange={handleChange}
-              />
-              {type}
-            </label>
-          ))}
+          <label>🔌 Loại sạc có sẵn</label>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.5rem' }}>
+            {['Type A', 'Type B', 'Type C', 'Fast Charge', 'Super Fast'].map(type => (
+              <label key={type} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'normal', padding: '0.75rem', background: formData.chargerTypes.includes(type) ? 'rgba(102, 126, 234, 0.2)' : 'rgba(255, 255, 255, 0.5)', borderRadius: '12px', cursor: 'pointer', transition: 'all 0.3s ease' }}>
+                <input
+                  type="checkbox"
+                  name="chargerTypes"
+                  value={type}
+                  checked={formData.chargerTypes.includes(type)}
+                  onChange={handleChange}
+                  style={{ margin: 0 }}
+                />
+                <span>{type}</span>
+              </label>
+            ))}
+          </div>
         </div>
         
         <div className="form-group">
@@ -199,10 +312,18 @@ const CreateStation = () => {
           />
         </div>
         
-        <button type="submit" className="btn-primary" disabled={loading}>
-          {loading ? 'Đang tạo...' : 'Tạo trạm sạc'}
+        <button type="submit" className="btn-primary" disabled={loading} style={{ width: '100%', marginTop: '1rem' }}>
+          {loading ? '⏳ Đang tạo trạm sạc...' : '🚀 Tạo trạm sạc (+100 điểm)'}
         </button>
+        
+        <div style={{ textAlign: 'center', marginTop: '1.5rem', padding: '1rem', background: 'rgba(34, 197, 94, 0.1)', borderRadius: '12px', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
+          <p style={{ fontSize: '0.9rem', color: '#059669', margin: 0, fontWeight: '500' }}>
+            🎁 Tạo trạm sạc thành công sẽ được thưởng 100 điểm!<br/>
+            ✅ Sau khi được admin xác minh sẽ thưởng thêm 200 điểm nữa!
+          </p>
+        </div>
       </form>
+      </div>
     </div>
   );
 };
