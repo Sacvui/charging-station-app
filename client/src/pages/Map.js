@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Link } from 'react-router-dom';
-import { getStationsNearby } from '../utils/mockData';
+import { getStationsNearby, getNearbyUsers, initializeNearbyUsers } from '../utils/mockData';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
@@ -15,10 +15,16 @@ L.Icon.Default.mergeOptions({
 
 const Map = () => {
   const [stations, setStations] = useState([]);
+  const [nearbyUsers, setNearbyUsers] = useState([]);
   const [userLocation, setUserLocation] = useState([10.7769, 106.7009]); // Default: TP.HCM
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('stations'); // 'stations' or 'users'
+  const [showUserProfile, setShowUserProfile] = useState(null);
 
   useEffect(() => {
+    // Initialize nearby users data
+    initializeNearbyUsers();
+    
     // Lấy vị trí hiện tại của user
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -26,14 +32,17 @@ const Map = () => {
           const { latitude, longitude } = position.coords;
           setUserLocation([latitude, longitude]);
           fetchNearbyStations(latitude, longitude);
+          fetchNearbyUsers(latitude, longitude);
         },
         (error) => {
           console.error('Error getting location:', error);
           fetchNearbyStations(10.7769, 106.7009); // Fallback location: TP.HCM
+          fetchNearbyUsers(10.7769, 106.7009);
         }
       );
     } else {
       fetchNearbyStations(10.7769, 106.7009);
+      fetchNearbyUsers(10.7769, 106.7009);
     }
   }, []);
 
@@ -51,6 +60,36 @@ const Map = () => {
     }
   };
 
+  const fetchNearbyUsers = async (lat, lng) => {
+    try {
+      const users = getNearbyUsers(lat, lng, 15000); // 15km radius
+      setNearbyUsers(users);
+    } catch (error) {
+      console.error('Error fetching nearby users:', error);
+    }
+  };
+
+  const formatDistance = (distance) => {
+    if (distance < 1000) {
+      return `${Math.round(distance)}m`;
+    } else {
+      return `${(distance / 1000).toFixed(1)}km`;
+    }
+  };
+
+  const formatLastSeen = (date) => {
+    const now = new Date();
+    const diff = now - new Date(date);
+    const minutes = Math.floor(diff / 60000);
+    
+    if (minutes < 1) return 'Vừa xong';
+    if (minutes < 60) return `${minutes} phút trước`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours} giờ trước`;
+    const days = Math.floor(hours / 24);
+    return `${days} ngày trước`;
+  };
+
   const getRatingStars = (rating) => {
     return '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating));
   };
@@ -65,20 +104,38 @@ const Map = () => {
 
   return (
     <div className="map-container">
-      <h2>🗺️ Tìm trạm sạc gần bạn</h2>
+      <h2>🗺️ Khám phá khu vực</h2>
       
-      <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
-        <p style={{ color: 'white', fontSize: '1.1rem' }}>
-          Tìm thấy <strong>{stations.length}</strong> trạm sạc gần bạn
-        </p>
+      {/* Tabs */}
+      <div className="map-tabs">
+        <button 
+          className={`tab-btn ${activeTab === 'stations' ? 'active' : ''}`}
+          onClick={() => setActiveTab('stations')}
+        >
+          ⚡ Trạm sạc ({stations.length})
+        </button>
+        <button 
+          className={`tab-btn ${activeTab === 'users' ? 'active' : ''}`}
+          onClick={() => setActiveTab('users')}
+        >
+          👥 Người dùng gần ({nearbyUsers.length})
+        </button>
       </div>
 
-      <MapContainer 
-        center={userLocation} 
-        zoom={13} 
-        style={{ height: '600px', width: '100%' }}
-      >
-        <TileLayer
+      {activeTab === 'stations' ? (
+        <>
+          <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
+            <p style={{ color: 'white', fontSize: '1.1rem' }}>
+              Tìm thấy <strong>{stations.length}</strong> trạm sạc gần bạn
+            </p>
+          </div>
+
+          <MapContainer 
+            center={userLocation} 
+            zoom={13} 
+            style={{ height: '600px', width: '100%' }}
+          >
+            <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
@@ -194,6 +251,126 @@ const Map = () => {
           ))}
         </div>
       </div>
+        </>
+      ) : (
+        /* Nearby Users Section */
+        <div className="nearby-users-section">
+          <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
+            <p style={{ color: 'white', fontSize: '1.1rem' }}>
+              Tìm thấy <strong>{nearbyUsers.length}</strong> người dùng gần bạn
+            </p>
+          </div>
+
+          <div className="users-grid">
+            {nearbyUsers.map((user) => (
+              <div key={user.id} className="user-card">
+                <div className="user-header">
+                  <div className="user-avatar">
+                    <span className="avatar-icon">{user.avatar}</span>
+                    {user.isOnline && <div className="online-indicator"></div>}
+                  </div>
+                  <div className="user-info">
+                    <h3>{user.name}</h3>
+                    <p className="user-status">{user.status}</p>
+                    <p className="user-distance">📍 {formatDistance(user.distance)}</p>
+                  </div>
+                  <div className="user-vehicle">
+                    {user.vehicle}
+                  </div>
+                </div>
+
+                <div className="user-details">
+                  <div className="user-stats">
+                    <span>⭐ {user.rating}</span>
+                    <span>🚗 {user.totalTrips} chuyến</span>
+                    <span>🕒 {formatLastSeen(user.lastSeen)}</span>
+                  </div>
+                  <p className="user-bio">{user.bio}</p>
+                </div>
+
+                <div className="user-actions">
+                  <button 
+                    className="btn-secondary"
+                    onClick={() => setShowUserProfile(user)}
+                  >
+                    👤 Xem profile
+                  </button>
+                  <Link 
+                    to={`/chat/${user.id}`}
+                    className="btn-primary"
+                  >
+                    💬 Nhắn tin
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {nearbyUsers.length === 0 && (
+            <div className="no-users">
+              <div className="no-users-icon">👥</div>
+              <h3>Không có người dùng nào gần bạn</h3>
+              <p>Thử mở rộng bán kính tìm kiếm hoặc quay lại sau</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* User Profile Modal */}
+      {showUserProfile && (
+        <div className="modal-overlay" onClick={() => setShowUserProfile(null)}>
+          <div className="user-profile-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{showUserProfile.avatar} {showUserProfile.name}</h2>
+              <button 
+                className="close-btn"
+                onClick={() => setShowUserProfile(null)}
+              >
+                ✕
+              </button>
+            </div>
+            
+            <div className="modal-content">
+              <div className="profile-stats">
+                <div className="stat-item">
+                  <span className="stat-label">Đánh giá</span>
+                  <span className="stat-value">⭐ {showUserProfile.rating}</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-label">Chuyến đi</span>
+                  <span className="stat-value">🚗 {showUserProfile.totalTrips}</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-label">Tham gia</span>
+                  <span className="stat-value">📅 {new Date(showUserProfile.joinedDate).toLocaleDateString('vi-VN')}</span>
+                </div>
+              </div>
+              
+              <div className="profile-info">
+                <p><strong>Phương tiện:</strong> {showUserProfile.vehicle}</p>
+                <p><strong>Trạng thái:</strong> {showUserProfile.status}</p>
+                <p><strong>Khoảng cách:</strong> {formatDistance(showUserProfile.distance)}</p>
+                <p><strong>Hoạt động:</strong> {formatLastSeen(showUserProfile.lastSeen)}</p>
+              </div>
+              
+              <div className="profile-bio">
+                <h4>Giới thiệu</h4>
+                <p>{showUserProfile.bio}</p>
+              </div>
+              
+              <div className="modal-actions">
+                <Link 
+                  to={`/chat/${showUserProfile.id}`}
+                  className="btn-primary"
+                  onClick={() => setShowUserProfile(null)}
+                >
+                  💬 Nhắn tin
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

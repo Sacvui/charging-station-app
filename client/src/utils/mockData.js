@@ -230,3 +230,131 @@ export const getFromLocalStorage = (key, defaultValue = null) => {
 export const generateId = () => {
   return Date.now().toString() + Math.random().toString(36).substr(2, 9);
 };
+
+// Mock data cho nearby users
+const generateNearbyUsers = () => {
+  const users = [];
+  const userNames = [
+    'Minh Anh', 'Hoàng Nam', 'Thu Hà', 'Đức Thành', 'Lan Phương',
+    'Quốc Bảo', 'Hương Giang', 'Văn Tú', 'Thị Nga', 'Công Phúc',
+    'Mai Linh', 'Xuân Tùng', 'Bích Ngọc', 'Hải Đăng', 'Thanh Tâm',
+    'Việt Anh', 'Phương Thảo', 'Duy Khánh', 'Ngọc Ánh', 'Trung Hiếu'
+  ];
+
+  const avatars = [
+    '👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓', '👨‍💻', '👩‍💻', '👨‍🔧', '👩‍🔧',
+    '👨‍⚕️', '👩‍⚕️', '👨‍🍳', '👩‍🍳', '👨‍🎨', '👩‍🎨', '👨‍🚀', '👩‍🚀',
+    '👨‍🏫', '👩‍🏫', '👨‍🌾', '👩‍🌾'
+  ];
+
+  const vehicles = ['🚗', '🏍️', '🚙', '🚕'];
+  const statuses = ['Đang sạc', 'Tìm trạm', 'Online', 'Nghỉ ngơi'];
+
+  // Tạo 50 users gần TP.HCM
+  for (let i = 0; i < 50; i++) {
+    const baseLatHCM = 10.7769;
+    const baseLngHCM = 106.7009;
+    
+    // Random trong bán kính 20km
+    const randomLat = baseLatHCM + (Math.random() - 0.5) * 0.3;
+    const randomLng = baseLngHCM + (Math.random() - 0.5) * 0.3;
+
+    users.push({
+      id: `user_${i + 1}`,
+      name: userNames[i % userNames.length],
+      avatar: avatars[i % avatars.length],
+      vehicle: vehicles[Math.floor(Math.random() * vehicles.length)],
+      status: statuses[Math.floor(Math.random() * statuses.length)],
+      latitude: randomLat,
+      longitude: randomLng,
+      distance: Math.floor(Math.random() * 20000) + 500, // 0.5-20km
+      lastSeen: new Date(Date.now() - Math.random() * 3600000), // Trong 1h qua
+      isOnline: Math.random() > 0.3, // 70% online
+      rating: (Math.random() * 2 + 3).toFixed(1), // 3.0-5.0
+      totalTrips: Math.floor(Math.random() * 200) + 10,
+      joinedDate: new Date(Date.now() - Math.random() * 365 * 24 * 3600000), // Trong 1 năm qua
+      bio: [
+        'Yêu thích xe điện 🔋',
+        'Thường xuyên đi công tác',
+        'Sạc xe mỗi ngày',
+        'Newbie cần hỗ trợ',
+        'Chia sẻ kinh nghiệm sạc xe',
+        'Tìm bạn đồng hành',
+        'Chuyên gia về EV',
+        'Thích khám phá địa điểm mới'
+      ][Math.floor(Math.random() * 8)]
+    });
+  }
+
+  return users;
+};
+
+// Lưu users vào localStorage nếu chưa có
+export const initializeNearbyUsers = () => {
+  const existingUsers = getFromLocalStorage('nearbyUsers', null);
+  if (!existingUsers) {
+    const users = generateNearbyUsers();
+    saveToLocalStorage('nearbyUsers', users);
+    return users;
+  }
+  return existingUsers;
+};
+
+// Lấy users gần vị trí hiện tại
+export const getNearbyUsers = (userLat, userLng, radiusInMeters = 10000) => {
+  const users = getFromLocalStorage('nearbyUsers', []);
+  
+  return users
+    .map(user => ({
+      ...user,
+      distance: calculateDistance(userLat, userLng, user.latitude, user.longitude)
+    }))
+    .filter(user => user.distance <= radiusInMeters)
+    .sort((a, b) => a.distance - b.distance);
+};
+
+// Lấy user theo ID
+export const getUserById = (userId) => {
+  const users = getFromLocalStorage('nearbyUsers', []);
+  return users.find(user => user.id === userId);
+};
+
+// Mock chat messages
+export const getChatMessages = (userId) => {
+  const messages = getFromLocalStorage(`chat_${userId}`, []);
+  return messages;
+};
+
+export const sendChatMessage = (userId, message, fromCurrentUser = true) => {
+  const messages = getChatMessages(userId);
+  const newMessage = {
+    id: generateId(),
+    text: message,
+    fromCurrentUser,
+    timestamp: new Date(),
+    read: false
+  };
+  
+  messages.push(newMessage);
+  saveToLocalStorage(`chat_${userId}`, messages);
+  
+  // Simulate auto reply (30% chance)
+  if (fromCurrentUser && Math.random() < 0.3) {
+    setTimeout(() => {
+      const autoReplies = [
+        'Chào bạn! 👋',
+        'Cảm ơn bạn đã nhắn tin',
+        'Mình đang ở trạm sạc gần đây',
+        'Bạn có cần hỗ trợ gì không?',
+        'Trạm này sạc khá nhanh đấy',
+        'Mình sẽ chia sẻ vị trí cho bạn',
+        'Hẹn gặp lại bạn! 😊'
+      ];
+      
+      const autoReply = autoReplies[Math.floor(Math.random() * autoReplies.length)];
+      sendChatMessage(userId, autoReply, false);
+    }, 2000 + Math.random() * 3000); // 2-5s delay
+  }
+  
+  return newMessage;
+};

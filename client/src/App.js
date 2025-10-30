@@ -12,6 +12,7 @@ import StationDetail from './pages/StationDetail';
 import CreateStation from './pages/CreateStation';
 import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
+import Chat from './pages/Chat';
 import './App.css';
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
             <Route path="/create-station" element={<CreateStation />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/chat/:userId" element={<Chat />} />
           </Routes>
         </div>
       </Router>
