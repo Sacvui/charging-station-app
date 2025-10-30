@@ -72,3 +72,4 @@ npm start
 - Tạo trạm mới: +100 điểm
 - Trạm được xác minh: +200 điểm
 - Đánh giá trạm: +10 điểm"# 1st" 
+"# charging-station-app" 
