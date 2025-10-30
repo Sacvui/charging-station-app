@@ -19,6 +19,13 @@ const Home = () => {
     }
   }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Re-fetch when vehicle filter changes
+  useEffect(() => {
+    if (user && userLocation) {
+      fetchNearbyStations(userLocation.lat, userLocation.lng);
+    }
+  }, [vehicleFilter]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const getCurrentLocationAndStations = () => {
     setLoading(true);
     
@@ -48,8 +55,16 @@ const Home = () => {
   const fetchNearbyStations = async (lat, lng) => {
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    const stations = getStationsNearby(lat, lng, 50000); // 50km radius
-    console.log(`Searching from ${lat}, ${lng} - Found ${stations.length} stations`);
+    let stations = getStationsNearby(lat, lng, 50000); // 50km radius
+    
+    // Filter by vehicle type
+    if (vehicleFilter !== 'all') {
+      stations = stations.filter(station => 
+        station.supportedVehicles && station.supportedVehicles.includes(vehicleFilter)
+      );
+    }
+    
+    console.log(`Searching from ${lat}, ${lng} - Found ${stations.length} stations (filter: ${vehicleFilter})`);
     setNearbyStations(stations.slice(0, 5)); // Top 5 closest
     setLoading(false);
   };
@@ -167,15 +182,6 @@ const Home = () => {
 
       {/* Quick Actions */}
       <div className="quick-actions-home">
-        <Link to="/nearby" className="action-card">
-          <div className="action-icon">📍</div>
-          <div className="action-text">
-            <strong>Tất cả trạm gần</strong>
-            <span>Xem danh sách đầy đủ</span>
-          </div>
-          <div className="action-arrow">→</div>
-        </Link>
-        
         <Link to="/map" className="action-card">
           <div className="action-icon">🗺️</div>
           <div className="action-text">
@@ -190,7 +196,20 @@ const Home = () => {
       <div className="nearby-section">
         <div className="section-header">
           <h2>⚡ Trạm sạc gần nhất</h2>
-          <Link to="/nearby" className="see-all-btn">Tất cả</Link>
+          <Link to="/nearby" className="see-all-btn">Xem tất cả</Link>
+        </div>
+
+        {/* Quick Links to Nearby with Filter */}
+        <div className="quick-filter-links">
+          <Link to="/nearby?filter=all" className="quick-link">
+            📍 Tất cả trạm gần
+          </Link>
+          <Link to="/nearby?filter=car" className="quick-link car">
+            🚗 Trạm sạc ô tô
+          </Link>
+          <Link to="/nearby?filter=motorbike" className="quick-link motorbike">
+            🏍️ Trạm sạc xe máy
+          </Link>
         </div>
 
         {loading ? (
@@ -222,7 +241,12 @@ const Home = () => {
                     </div>
                     
                     <div className="detail-item">
-                      <span className="charger-types">{station.chargerTypes.slice(0, 2).join(', ')}</span>
+                      <span className="vehicle-support">
+                        {station.supportedVehicles?.includes('car') && '🚗'}
+                        {station.supportedVehicles?.includes('motorbike') && '🏍️'}
+                        {!station.supportedVehicles && '🚗🏍️'}
+                      </span>
+                      <span className="charger-count">{station.chargerTypes.length} loại sạc</span>
                     </div>
                   </div>
 

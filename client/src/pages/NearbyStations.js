@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getStationsNearby } from '../utils/mockData';
 
 const NearbyStations = () => {
   const { user } = useAuth();
+  const [searchParams] = useSearchParams();
   const [stations, setStations] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchRadius, setSearchRadius] = useState(10000); // 10km default
-  const [vehicleFilter, setVehicleFilter] = useState('all'); // all, car, motorbike
+  const [vehicleFilter, setVehicleFilter] = useState(searchParams.get('filter') || 'all'); // all, car, motorbike
 
   useEffect(() => {
     getCurrentLocationAndStations();

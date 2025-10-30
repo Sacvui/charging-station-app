@@ -1766,4 +1766,275 @@
   .progress-line {
     width: 30px;
   }
+}/* Home Veh
+icle Quick Select */
+.nearby-action-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.nearby-action-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.action-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.action-header .action-icon {
+  font-size: 2rem;
+  background: linear-gradient(135deg, var(--ios-blue), var(--ios-purple));
+  border-radius: 12px;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-header .action-text strong {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.action-header .action-text span {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.vehicle-quick-select {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.vehicle-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.75rem 0.5rem;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 122, 255, 0.2);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.vehicle-option:hover {
+  background: var(--ios-blue);
+  color: white;
+  border-color: var(--ios-blue);
+  transform: translateY(-1px);
+}
+
+.vehicle-option.car:hover {
+  background: #007AFF;
+}
+
+.vehicle-option.motorbike:hover {
+  background: #FF9500;
+}
+
+.vehicle-option .vehicle-icon {
+  font-size: 1rem;
+}
+
+.vehicle-option .vehicle-text {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* Enhanced Quick Actions */
+.quick-actions-home {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.action-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.action-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.action-card .action-icon {
+  font-size: 2rem;
+  background: linear-gradient(135deg, var(--ios-green), var(--ios-blue));
+  border-radius: 12px;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-card .action-text {
+  flex: 1;
+}
+
+.action-card .action-text strong {
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.action-card .action-text span {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.action-card .action-arrow {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+}
+
+/* Home Vehicle Filter Improvements */
+.home-vehicle-filter {
+  margin-bottom: 1.5rem;
+}
+
+.home-vehicle-filter .filter-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.home-vehicle-filter .filter-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.75rem 0.5rem;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 122, 255, 0.2);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.home-vehicle-filter .filter-btn:hover {
+  background: rgba(0, 122, 255, 0.1);
+  border-color: var(--ios-blue);
+  transform: translateY(-1px);
+}
+
+.home-vehicle-filter .filter-btn.active {
+  background: var(--ios-blue);
+  color: white;
+  border-color: var(--ios-blue);
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+}
+
+.home-vehicle-filter .filter-btn.car.active {
+  background: #007AFF;
+}
+
+.home-vehicle-filter .filter-btn.motorbike.active {
+  background: #FF9500;
+}
+
+/* Station Cards Improvements */
+.vehicle-support {
+  font-size: 1.1rem;
+  margin-right: 0.5rem;
+}
+
+.charger-count {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}/* Quick 
+Filter Links */
+.quick-filter-links {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.quick-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 0.6rem 0.4rem;
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--text-primary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.quick-link:hover {
+  background: var(--ios-blue);
+  color: white;
+  border-color: var(--ios-blue);
+  transform: translateY(-1px);
+}
+
+.quick-link.car:hover {
+  background: #007AFF;
+}
+
+.quick-link.motorbike:hover {
+  background: #FF9500;
+}
+
+/* Adjust section header for see-all button */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.see-all-btn {
+  font-size: 0.9rem;
+  color: var(--ios-blue);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  background: rgba(0, 122, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+.see-all-btn:hover {
+  background: var(--ios-blue);
+  color: white;
 }

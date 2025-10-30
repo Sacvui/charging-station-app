@@ -11,7 +11,13 @@ const StationDetail = () => {
   const [loading, setLoading] = useState(true);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [reviewForm, setReviewForm] = useState({
-    rating: 5,
+    ratings: {
+      service: 0,        // Dịch vụ
+      comfort: 0,        // Sự thoải mái
+      pricing: 0,        // Giá cả
+      location: 0,       // Vị trí
+      cleanliness: 0     // Vệ sinh
+    },
     comment: ''
   });
 
@@ -39,12 +45,17 @@ const StationDetail = () => {
       return;
     }
 
+    // Tính rating tổng từ các tiêu chí
+    const ratingsArray = Object.values(reviewForm.ratings);
+    const averageRating = ratingsArray.reduce((sum, rating) => sum + rating, 0) / ratingsArray.length;
+    
     // Tạo review mới
     const newReview = {
       id: generateId(),
       stationId: id,
       user: { name: user.name, avatar: user.avatar },
-      rating: parseInt(reviewForm.rating),
+      rating: Math.round(averageRating * 10) / 10, // Làm tròn 1 chữ số thập phân
+      ratings: { ...reviewForm.ratings },
       comment: reviewForm.comment,
       images: [],
       createdAt: new Date()
@@ -63,7 +74,16 @@ const StationDetail = () => {
     updateUser(updatedUser);
 
     // Reset form
-    setReviewForm({ rating: 5, comment: '' });
+    setReviewForm({ 
+      ratings: {
+        service: 0,
+        comfort: 0,
+        pricing: 0,
+        location: 0,
+        cleanliness: 0
+      },
+      comment: '' 
+    });
     setShowReviewForm(false);
 
     alert('Cảm ơn bạn đã đánh giá! Bạn được thưởng 10 điểm.');
@@ -201,34 +221,148 @@ const StationDetail = () => {
 
         {/* Review Form */}
         {showReviewForm && (
-          <form onSubmit={handleReviewSubmit} style={{ marginBottom: '2rem', padding: '1.5rem', background: 'rgba(102, 126, 234, 0.1)', borderRadius: '16px' }}>
-            <div className="form-group">
-              <label>⭐ Đánh giá</label>
-              <select
-                value={reviewForm.rating}
-                onChange={(e) => setReviewForm({...reviewForm, rating: e.target.value})}
-                required
-              >
-                <option value={5}>5 sao - Xuất sắc</option>
-                <option value={4}>4 sao - Tốt</option>
-                <option value={3}>3 sao - Bình thường</option>
-                <option value={2}>2 sao - Kém</option>
-                <option value={1}>1 sao - Rất kém</option>
-              </select>
+          <form onSubmit={handleReviewSubmit} className="review-form">
+            <h3>✍️ Đánh giá trạm sạc</h3>
+            
+            {/* Rating Criteria */}
+            <div className="rating-criteria">
+              <div className="criteria-item">
+                <label>🛎️ Dịch vụ</label>
+                <div className="star-rating">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      className={`star ${reviewForm.ratings.service >= star ? 'active' : ''}`}
+                      onClick={() => setReviewForm({
+                        ...reviewForm,
+                        ratings: { ...reviewForm.ratings, service: star }
+                      })}
+                    >
+                      ⭐
+                    </button>
+                  ))}
+                  <span className="rating-text">
+                    {reviewForm.ratings.service > 0 ? `${reviewForm.ratings.service}/5` : 'Chưa đánh giá'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="criteria-item">
+                <label>🛋️ Sự thoải mái</label>
+                <div className="star-rating">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      className={`star ${reviewForm.ratings.comfort >= star ? 'active' : ''}`}
+                      onClick={() => setReviewForm({
+                        ...reviewForm,
+                        ratings: { ...reviewForm.ratings, comfort: star }
+                      })}
+                    >
+                      ⭐
+                    </button>
+                  ))}
+                  <span className="rating-text">
+                    {reviewForm.ratings.comfort > 0 ? `${reviewForm.ratings.comfort}/5` : 'Chưa đánh giá'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="criteria-item">
+                <label>💰 Giá cả</label>
+                <div className="star-rating">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      className={`star ${reviewForm.ratings.pricing >= star ? 'active' : ''}`}
+                      onClick={() => setReviewForm({
+                        ...reviewForm,
+                        ratings: { ...reviewForm.ratings, pricing: star }
+                      })}
+                    >
+                      ⭐
+                    </button>
+                  ))}
+                  <span className="rating-text">
+                    {reviewForm.ratings.pricing > 0 ? `${reviewForm.ratings.pricing}/5` : 'Chưa đánh giá'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="criteria-item">
+                <label>📍 Vị trí</label>
+                <div className="star-rating">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      className={`star ${reviewForm.ratings.location >= star ? 'active' : ''}`}
+                      onClick={() => setReviewForm({
+                        ...reviewForm,
+                        ratings: { ...reviewForm.ratings, location: star }
+                      })}
+                    >
+                      ⭐
+                    </button>
+                  ))}
+                  <span className="rating-text">
+                    {reviewForm.ratings.location > 0 ? `${reviewForm.ratings.location}/5` : 'Chưa đánh giá'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="criteria-item">
+                <label>🧽 Vệ sinh</label>
+                <div className="star-rating">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      className={`star ${reviewForm.ratings.cleanliness >= star ? 'active' : ''}`}
+                      onClick={() => setReviewForm({
+                        ...reviewForm,
+                        ratings: { ...reviewForm.ratings, cleanliness: star }
+                      })}
+                    >
+                      ⭐
+                    </button>
+                  ))}
+                  <span className="rating-text">
+                    {reviewForm.ratings.cleanliness > 0 ? `${reviewForm.ratings.cleanliness}/5` : 'Chưa đánh giá'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Overall Rating Display */}
+            <div className="overall-rating">
+              <label>📊 Đánh giá tổng thể</label>
+              <div className="overall-score">
+                {(() => {
+                  const ratingsArray = Object.values(reviewForm.ratings);
+                  const validRatings = ratingsArray.filter(r => r > 0);
+                  if (validRatings.length === 0) return 'Chưa có đánh giá';
+                  const average = validRatings.reduce((sum, rating) => sum + rating, 0) / validRatings.length;
+                  return `${average.toFixed(1)}/5 ⭐`;
+                })()}
+              </div>
             </div>
             
             <div className="form-group">
-              <label>💭 Nhận xét</label>
+              <label>💭 Nhận xét chi tiết</label>
               <textarea
                 value={reviewForm.comment}
                 onChange={(e) => setReviewForm({...reviewForm, comment: e.target.value})}
-                placeholder="Chia sẻ trải nghiệm của bạn về trạm sạc này..."
+                placeholder="Chia sẻ trải nghiệm chi tiết của bạn về trạm sạc này..."
                 rows={4}
                 required
               />
             </div>
             
-            <div style={{ display: 'flex', gap: '1rem' }}>
+            <div className="form-actions">
               <button type="submit" className="btn-primary">
                 🚀 Gửi đánh giá (+10 điểm)
               </button>
