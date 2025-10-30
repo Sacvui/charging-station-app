@@ -356,7 +356,7 @@ const CreateStation = () => {
       // Tự động lấy vị trí khi trang load
       getCurrentLocation();
     }
-  }, [dataLoaded]);
+  }, [dataLoaded, locationDetected, getCurrentLocation]);
 
   if (!user) {
     return <div>Vui lòng đăng nhập để tạo trạm sạc</div>;

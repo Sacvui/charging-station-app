@@ -14,7 +14,7 @@ const Chat = () => {
 
   useEffect(() => {
     loadChatData();
-  }, [userId]);
+  }, [userId, loadChatData]);
 
   useEffect(() => {
     scrollToBottom();

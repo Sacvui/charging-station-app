@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 const InviteFriends = () => {
   const { user, updateUser } = useAuth();
   const [showInviteModal, setShowInviteModal] = useState(false);
-  const [inviteMethod, setInviteMethod] = useState('link');
+
   const [phoneNumber, setPhoneNumber] = useState('');
   const [message, setMessage] = useState('');
 
@@ -12,7 +12,7 @@ const InviteFriends = () => {
   const brandName = 'Sạc Vui';
   const hashtags = '#SacVui #XeDien #TramSac #EV #Vietnam #GreenEnergy #SustainableTransport #ElectricVehicle';
   
-  const inviteMessage = `🔋 ${brandName} - Ứng dụng tìm trạm sạc xe điện thông minh nhất Việt Nam!
+  // const inviteMessage = `🔋 ${brandName} - Ứng dụng tìm trạm sạc xe điện thông minh nhất Việt Nam!
 
 ✨ TÍNH NĂNG NỔI BẬT:
 🎯 Tìm trạm sạc gần nhất với GPS thông minh

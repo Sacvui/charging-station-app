@@ -9,7 +9,7 @@ const Home = () => {
   const [userLocation, setUserLocation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [locationError, setLocationError] = useState(false);
-  const [vehicleFilter, setVehicleFilter] = useState('all'); // all, car, motorbike
+  const [vehicleFilter] = useState('all'); // all, car, motorbike
 
   useEffect(() => {
     if (user) {
