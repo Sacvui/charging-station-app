@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { prisma } from '../lib/prisma.js';
 
-export default async function(req, res, next) {
+export default async function (req, res, next) {
   // Lấy token từ header
   const token = req.header('x-auth-token');
 
@@ -13,7 +13,7 @@ export default async function(req, res, next) {
   try {
     // Xác minh token
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
-    
+
     // Kiểm tra user có phải admin không
     const user = await prisma.user.findUnique({
       where: { id: decoded.user.id }
