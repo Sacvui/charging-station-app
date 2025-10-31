@@ -1041,8 +1041,7 @@ body {
     }
 }
 
-/* M
-odal Overlay */
+/* Modal Overlay */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -1271,7 +1270,8 @@ odal Overlay */
     margin: 0;
 }
 
-* Profile Page */ .profile-container {
+/* Profile Page */
+.profile-container {
     padding: 2rem 1rem;
     max-width: 800px;
     margin: 0 auto;
@@ -1392,8 +1392,7 @@ odal Overlay */
     font-weight: 700;
 }
 
-/* Ne
-arby Stations Page */
+/* Nearby Stations Page */
 .nearby-container {
     padding: 1rem;
     max-width: 1200px;
@@ -1641,8 +1640,7 @@ arby Stations Page */
     transform: translateX(4px);
 }
 
-/* Map 
-Page */
+/* Map Page */
 .map-container {
     padding: 1rem;
     max-width: 1200px;
@@ -1825,8 +1823,7 @@ Page */
     padding: 0.6rem 1rem;
 }
 
-/* Sta
-r Rating với hiệu ứng bóng trong suốt */
+/* Star Rating với hiệu ứng bóng trong suốt */
 .star-rating {
     display: inline-flex;
     align-items: center;
@@ -1941,8 +1938,7 @@ r Rating với hiệu ứng bóng trong suốt */
     animation: starGlow 2s ease-in-out infinite;
 }
 
-/*
- Navbar logout button */
+/* Navbar logout button */
 .navbar-logout-btn {
     color: rgba(255, 255, 255, 0.9) !important;
     background: rgba(255, 59, 48, 0.1) !important;
@@ -1953,8 +1949,9 @@ r Rating với hiệu ứng bóng trong suốt */
     background: rgba(255, 59, 48, 0.2) !important;
     color: #ffffff !important;
     border-color: rgba(255, 59, 48, 0.5) !important;
-}/* =====
- CHAT INTERFACE STYLES ===== */
+}
+
+/* ===== CHAT INTERFACE STYLES ===== */
 
 /* Chat Container */
 .chat-container {
@@ -2046,8 +2043,15 @@ r Rating với hiệu ứng bóng trong suốt */
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
 }
 
 .user-details {
@@ -2212,6 +2216,7 @@ r Rating với hiệu ứng bóng trong suốt */
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -2412,38 +2417,38 @@ r Rating với hiệu ứng bóng trong suốt */
     .chat-header {
         padding: 0.75rem;
     }
-    
+
     .user-avatar {
         width: 45px;
         height: 45px;
         font-size: 1.3rem;
     }
-    
+
     .user-name {
         font-size: 1rem;
     }
-    
+
     .chat-nav-menu {
         padding: 0.5rem;
     }
-    
+
     .nav-item {
         min-width: 50px;
         padding: 0.4rem 0.5rem;
     }
-    
+
     .nav-icon {
         font-size: 1rem;
     }
-    
+
     .nav-text {
         font-size: 0.65rem;
     }
-    
+
     .message {
         max-width: 90%;
     }
-    
+
     .quick-messages-grid {
         grid-template-columns: repeat(3, 1fr);
     }
@@ -2453,19 +2458,3809 @@ r Rating với hiệu ứng bóng trong suốt */
     .chat-header-left {
         gap: 0.5rem;
     }
-    
+
     .user-avatar {
         width: 40px;
         height: 40px;
         font-size: 1.2rem;
     }
-    
+
     .quick-messages-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-    
+
     .message-input-container {
         gap: 0.5rem;
     }
 }
 
+/* ===== CHARGER TYPES & PRICING STYLES ===== */
+
+/* Charger Types Grid */
+.charger-types-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+/* Charger Type Card */
+.charger-type-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+}
+
+.charger-type-card:hover {
+    border-color: rgba(102, 126, 234, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.charger-type-card.selected {
+    border-color: var(--ios-blue);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(59, 130, 246, 0.05));
+    box-shadow: 0 0 0 1px rgba(102, 126, 234, 0.3), 0 8px 25px rgba(102, 126, 234, 0.2);
+}
+
+.charger-type-card.selected::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ios-blue), var(--ios-teal));
+}
+
+/* Power Badge */
+.charger-power-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: linear-gradient(135deg, var(--ios-orange), var(--ios-red));
+    color: #ffffff;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 2;
+}
+
+/* Charger Header */
+.charger-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+    cursor: pointer;
+    position: relative;
+}
+
+.charger-checkbox {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.charger-icon {
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(59, 130, 246, 0.1));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(102, 126, 234, 0.3);
+}
+
+.charger-type-card.selected .charger-icon {
+    background: linear-gradient(135deg, var(--ios-blue), var(--ios-teal));
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.charger-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.charger-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+}
+
+.charger-desc {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+}
+
+.charger-time {
+    font-size: 0.85rem;
+    color: var(--ios-green);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* Vehicle Type Indicators */
+.vehicle-indicators {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.vehicle-indicator {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.charger-type-card.selected .vehicle-indicator {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+}
+
+.check-indicator {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: transparent;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.charger-type-card.selected .check-indicator {
+    background: var(--ios-green);
+    border-color: var(--ios-green);
+    color: #ffffff;
+    transform: scale(1.1);
+}
+
+/* Charger Price Section */
+.charger-price-section {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.price-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 1rem 0 0.5rem 0;
+}
+
+.recommended-price {
+    background: linear-gradient(135deg, var(--ios-green), #059669);
+    color: #ffffff;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.price-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.price-input-container {
+    position: relative;
+}
+
+.price-input-container::before {
+    content: 'VNĐ';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    pointer-events: none;
+}
+
+.price-input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 0.75rem 3rem 0.75rem 1rem;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.price-input:focus {
+    outline: none;
+    border-color: var(--ios-blue);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.price-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.price-range {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+}
+
+/* Price Input Number Styling */
+.price-input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.price-input[type="number"]::-webkit-outer-spin-button,
+.price-input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Charger Types Section Header */
+.charger-types-section .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.charger-types-section .field-hint {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+
+/* Charger Selection Counter */
+.charger-selection-counter {
+    background: linear-gradient(135deg, var(--ios-blue), var(--ios-teal));
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Pricing Summary */
+.pricing-summary {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.05));
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 1.5rem;
+}
+
+.pricing-summary-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ios-green);
+    margin: 0 0 0.75rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pricing-summary-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.pricing-summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.pricing-summary-charger {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.pricing-summary-price {
+    color: var(--ios-green);
+    font-weight: 600;
+}
+
+/* Revenue Estimate */
+.revenue-estimate {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 152, 0, 0.05));
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.revenue-estimate-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ios-yellow);
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.revenue-estimate-text {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .charger-types-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .charger-header {
+        padding: 1rem;
+        gap: 0.75rem;
+    }
+
+    .charger-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 2rem;
+    }
+
+    .charger-name {
+        font-size: 1.1rem;
+    }
+
+    .charger-price-section {
+        padding: 0 1rem 1rem 1rem;
+    }
+
+    .charger-power-badge {
+        position: static;
+        margin-top: 0.5rem;
+        align-self: flex-start;
+    }
+
+    .vehicle-indicators {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .charger-types-grid {
+        gap: 0.75rem;
+    }
+
+    .charger-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .charger-icon {
+        align-self: center;
+    }
+
+    .check-indicator {
+        align-self: center;
+    }
+
+    .pricing-summary {
+        margin-top: 1rem;
+    }
+}
+
+/*
+ ===== STATION DETAIL STYLES ===== */
+
+/* ===== ENHANCED STATION DETAIL STYLES ===== */
+
+/* Station Detail Container */
+.station-detail-container {
+    padding: 1rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, #000000 0%, #0f0f23 30%, #1a1a2e 70%, #16213e 100%);
+    min-height: 100vh;
+    color: #ffffff;
+    position: relative;
+}
+
+.station-detail-container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Enhanced Station Header Card */
+.station-header-card {
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.04) 50%,
+            rgba(255, 255, 255, 0.02) 100%);
+    backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 24px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.4),
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    animation: slideInUp 0.6s ease-out;
+}
+
+.station-header-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg,
+            var(--ios-blue) 0%,
+            var(--ios-teal) 25%,
+            var(--ios-green) 50%,
+            var(--ios-yellow) 75%,
+            var(--ios-orange) 100%);
+    box-shadow: 0 2px 10px rgba(0, 122, 255, 0.3);
+}
+
+.station-header-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.03), transparent);
+    transform: rotate(45deg);
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+
+    0%,
+    100% {
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    }
+
+    50% {
+        transform: translateX(100%) translateY(100%) rotate(45deg);
+    }
+}
+
+.station-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0 0 1rem 0;
+    background: linear-gradient(135deg,
+            #ffffff 0%,
+            #f0f9ff 25%,
+            #e0f2fe 50%,
+            #b3e5fc 75%,
+            #81d4fa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.station-address {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.2rem;
+    margin: 0 0 1.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.station-address-icon {
+    font-size: 1.5rem;
+    color: var(--ios-blue);
+    background: rgba(0, 122, 255, 0.2);
+    padding: 0.5rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.verified-badge {
+    background: linear-gradient(135deg, var(--ios-green), #059669);
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow:
+        0 8px 25px rgba(34, 197, 94, 0.4),
+        0 4px 12px rgba(34, 197, 94, 0.3);
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.verified-badge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: verifiedShine 2s ease-in-out infinite;
+}
+
+@keyframes verifiedShine {
+    0% {
+        left: -100%;
+    }
+
+    50%,
+    100% {
+        left: 100%;
+    }
+}
+
+.verified-icon {
+    font-size: 1.2rem;
+    animation: verifiedPulse 2s ease-in-out infinite;
+}
+
+@keyframes verifiedPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Enhanced Station Info Grid */
+.station-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.info-section {
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.04) 50%,
+            rgba(255, 255, 255, 0.02) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 2rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.info-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--ios-blue), var(--ios-teal));
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.info-section:hover {
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.12) 0%,
+            rgba(255, 255, 255, 0.08) 50%,
+            rgba(255, 255, 255, 0.04) 100%);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.4),
+        0 8px 32px rgba(0, 122, 255, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border-color: rgba(0, 122, 255, 0.3);
+}
+
+.info-section:hover::before {
+    transform: scaleX(1);
+}
+
+.info-section h3 {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+}
+
+.info-section-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--ios-blue), var(--ios-teal));
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.info-section:hover .info-section-icon {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 8px 25px rgba(0, 122, 255, 0.4);
+}
+
+/* Promotion Card */
+.promotion-card {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.05));
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.promotion-card::before {
+    content: '🎁';
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 3rem;
+    opacity: 0.1;
+}
+
+.promotion-title {
+    color: var(--ios-green);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+}
+
+.promotion-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--ios-green);
+}
+
+.promotion-discount {
+    background: linear-gradient(135deg, var(--ios-green), #059669);
+    color: #ffffff;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-left: 0.5rem;
+}
+
+/* Enhanced Pricing Card */
+.pricing-card {
+    background: linear-gradient(135deg,
+            rgba(34, 197, 94, 0.08) 0%,
+            rgba(16, 185, 129, 0.04) 100%);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 20px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.pricing-card::before {
+    content: '💰';
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 2rem;
+    opacity: 0.1;
+}
+
+.pricing-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    background: linear-gradient(135deg,
+            rgba(102, 126, 234, 0.12) 0%,
+            rgba(59, 130, 246, 0.08) 100%);
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    border-radius: 16px;
+    margin-bottom: 1rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.pricing-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--ios-blue), var(--ios-teal));
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+}
+
+.pricing-item:hover {
+    background: linear-gradient(135deg,
+            rgba(102, 126, 234, 0.2) 0%,
+            rgba(59, 130, 246, 0.15) 100%);
+    transform: translateX(8px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    border-color: rgba(102, 126, 234, 0.5);
+}
+
+.pricing-item:hover::before {
+    transform: scaleY(1);
+}
+
+.charger-type {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-weight: 600;
+    flex: 1;
+}
+
+.charger-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--ios-blue), var(--ios-teal));
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.pricing-item:hover .charger-icon {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 8px 25px rgba(0, 122, 255, 0.4);
+}
+
+.charger-type-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.charger-type-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.charger-type-desc {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.price-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--ios-green);
+    text-align: right;
+    text-shadow: 0 2px 10px rgba(34, 197, 94, 0.3);
+}
+
+.price-unit {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 0.25rem;
+    font-weight: 500;
+}
+
+/* Enhanced Amenities Grid */
+.amenities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1.5rem;
+}
+
+.amenity-item {
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.04) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.amenity-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--ios-teal), var(--ios-green));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.amenity-item:hover {
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.15) 0%,
+            rgba(255, 255, 255, 0.08) 100%);
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.amenity-item:hover::before {
+    transform: scaleX(1);
+}
+
+.amenity-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    display: block;
+    background: linear-gradient(135deg, var(--ios-teal), var(--ios-green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: all 0.3s ease;
+}
+
+.amenity-item:hover .amenity-icon {
+    transform: scale(1.2);
+    filter: drop-shadow(0 4px 8px rgba(0, 255, 255, 0.3));
+}
+
+.amenity-text {
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Contact Info */
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.contact-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.contact-icon {
+    width: 35px;
+    height: 35px;
+    background: linear-gradient(135deg, var(--ios-teal), var(--ios-blue));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.contact-text {
+    flex: 1;
+    font-weight: 500;
+}
+
+/* Operating Hours */
+.operating-hours {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 152, 0, 0.05));
+    border: 1px solid rgba(255, 193, 7, 0.2);
+    border-radius: 12px;
+}
+
+.hours-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--ios-yellow), var(--ios-orange));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.hours-text {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--ios-yellow);
+}
+
+/* Enhanced Action Buttons */
+.station-actions {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 3rem;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    flex: 1;
+    min-width: 220px;
+    padding: 1.25rem 2.5rem;
+    border: none;
+    border-radius: 16px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.action-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.action-btn:hover::before {
+    left: 100%;
+}
+
+.action-btn.primary {
+    background: linear-gradient(135deg, var(--ios-blue), var(--ios-teal));
+    color: #ffffff;
+    box-shadow:
+        0 8px 25px rgba(0, 122, 255, 0.4),
+        0 4px 15px rgba(0, 122, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.action-btn.primary:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow:
+        0 15px 40px rgba(0, 122, 255, 0.5),
+        0 8px 25px rgba(0, 122, 255, 0.4);
+}
+
+.action-btn.secondary {
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.1) 0%,
+            rgba(255, 255, 255, 0.05) 100%);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(20px);
+}
+
+.action-btn.secondary:hover {
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.2) 0%,
+            rgba(255, 255, 255, 0.1) 100%);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 30px rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.action-btn-icon {
+    font-size: 1.3rem;
+    transition: transform 0.3s ease;
+}
+
+.action-btn:hover .action-btn-icon {
+    transform: scale(1.2);
+}
+
+/* Reviews Section */
+.reviews-section {
+    margin-top: 3rem;
+}
+
+.reviews-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.reviews-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.review-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.reviewer-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.reviewer-avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--ios-pink), var(--ios-orange));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.reviewer-name {
+    font-weight: 600;
+    margin: 0;
+}
+
+.review-date {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.review-comment {
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .station-detail-container {
+        padding: 0.5rem;
+    }
+
+    .station-header-card {
+        padding: 1.5rem;
+    }
+
+    .station-title {
+        font-size: 1.5rem;
+    }
+
+    .station-info-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .pricing-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+
+    .amenities-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .station-actions {
+        flex-direction: column;
+    }
+
+    .action-btn {
+        min-width: auto;
+    }
+}
+
+/* ===== CHARGER TYPES & PRICING STYLES ===== */
+/* Charger Types Grid */
+.charger-types-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+/* Charger Type Card */
+.charger-type-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+}
+
+.charger-type-card:hover {
+    border-color: rgba(102, 126, 234, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.charger-type-card.selected {
+    border-color: var(--ios-blue);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(59, 130, 246, 0.05));
+    box-shadow: 0 0 0 1px rgba(102, 126, 234, 0.3), 0 8px 25px rgba(102, 126, 234, 0.2);
+}
+
+.charger-type-card.selected::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ios-blue), var(--ios-teal));
+}
+
+/* Charger Header */
+.charger-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+    cursor: pointer;
+    position: relative;
+}
+
+.charger-checkbox {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.charger-icon {
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(59, 130, 246, 0.1));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(102, 126, 234, 0.3);
+}
+
+.charger-type-card.selected .charger-icon {
+    background: linear-gradient(135deg, var(--ios-blue), var(--ios-teal));
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.charger-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.charger-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+}
+
+.charger-desc {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+}
+
+.charger-time {
+    font-size: 0.85rem;
+    color: var(--ios-green);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.check-indicator {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: transparent;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.charger-type-card.selected .check-indicator {
+    background: var(--ios-green);
+    border-color: var(--ios-green);
+    color: #ffffff;
+    transform: scale(1.1);
+}
+
+/* Charger Price Section */
+.charger-price-section {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.price-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 1rem 0 0.5rem 0;
+}
+
+.price-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.price-input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.price-input:focus {
+    outline: none;
+    border-color: var(--ios-blue);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.price-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.price-range {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+}
+
+/* Price Input Styling */
+.price-input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.price-input[type="number"]::-webkit-outer-spin-button,
+.price-input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Charger Types Section Header */
+.charger-types-section .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.charger-types-section .field-hint {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+
+/* Pricing Summary */
+.pricing-summary {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.05));
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 1.5rem;
+}
+
+.pricing-summary-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ios-green);
+    margin: 0 0 0.75rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pricing-summary-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.pricing-summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.pricing-summary-charger {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.pricing-summary-price {
+    color: var(--ios-green);
+    font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .charger-types-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .charger-header {
+        padding: 1rem;
+        gap: 0.75rem;
+    }
+
+    .charger-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 2rem;
+    }
+
+    .charger-name {
+        font-size: 1.1rem;
+    }
+
+    .charger-price-section {
+        padding: 0 1rem 1rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .charger-types-grid {
+        gap: 0.75rem;
+    }
+
+    .charger-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .charger-icon {
+        align-self: center;
+    }
+
+    .check-indicator {
+        align-self: center;
+    }
+}
+
+/* ===
+== ENHANCED CHARGER TYPES STYLES ===== */
+
+/* Charger Type Card Enhancements */
+.charger-type-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.charger-type-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.charger-type-card:hover::after {
+    left: 100%;
+}
+
+/* Power Badge */
+.charger-power-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: linear-gradient(135deg, var(--ios-orange), var(--ios-red));
+    color: #ffffff;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Vehicle Type Indicators */
+.vehicle-indicators {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.vehicle-indicator {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.charger-type-card.selected .vehicle-indicator {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+}
+
+/* Price Input Enhancements */
+.price-input-container {
+    position: relative;
+}
+
+.price-input-container::before {
+    content: 'VNĐ';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    pointer-events: none;
+}
+
+.price-input {
+    padding-right: 3rem;
+}
+
+/* Price Validation */
+.price-input.error {
+    border-color: var(--ios-red);
+    background: rgba(255, 59, 48, 0.1);
+}
+
+.price-error-message {
+    color: var(--ios-red);
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* Recommended Price Badge */
+.recommended-price {
+    background: linear-gradient(135deg, var(--ios-green), #059669);
+    color: #ffffff;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* Charger Selection Counter */
+.charger-selection-counter {
+    background: linear-gradient(135deg, var(--ios-blue), var(--ios-teal));
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Total Revenue Estimate */
+.revenue-estimate {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 152, 0, 0.05));
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.revenue-estimate-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ios-yellow);
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.revenue-estimate-text {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+}
+
+/* Loading States */
+.charger-type-card.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.charger-type-card.loading .charger-icon {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Success Animation */
+.charger-type-card.selected .charger-icon {
+    animation: successPulse 0.6s ease-out;
+}
+
+@keyframes successPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1.05);
+    }
+}
+
+/* Pricing Tier Indicators */
+.pricing-tier {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.pricing-tier.budget {
+    background: var(--ios-green);
+}
+
+.pricing-tier.standard {
+    background: var(--ios-yellow);
+}
+
+.pricing-tier.premium {
+    background: var(--ios-red);
+}
+
+/* Charger Comparison */
+.charger-comparison-note {
+    background: rgba(59, 130, 246, 0.1);
+    border-left: 4px solid var(--ios-blue);
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: 0 8px 8px 0;
+}
+
+.comparison-note-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ios-blue);
+    margin: 0 0 0.5rem 0;
+}
+
+.comparison-note-text {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+}
+
+/* Mobile Enhancements */
+@media (max-width: 768px) {
+    .charger-power-badge {
+        position: static;
+        margin-top: 0.5rem;
+        align-self: flex-start;
+    }
+
+    .vehicle-indicators {
+        justify-content: center;
+    }
+
+    .pricing-summary {
+        margin-top: 1rem;
+    }
+}
+
+/* Dark Mode Specific Adjustments */
+@media (prefers-color-scheme: dark) {
+    .charger-type-card {
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .charger-type-card.selected {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(59, 130, 246, 0.08));
+    }
+}
+
+/* ==
+=== CHARGER TYPES & PRICING STYLES ===== */
+
+/* Charger Types Grid */
+.charger-types-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+/* Charger Type Card */
+.charger-type-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+}
+
+.charger-type-card:hover {
+    border-color: rgba(102, 126, 234, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.charger-type-card.selected {
+    border-color: var(--ios-blue);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(59, 130, 246, 0.05));
+    box-shadow: 0 0 0 1px rgba(102, 126, 234, 0.3), 0 8px 25px rgba(102, 126, 234, 0.2);
+}
+
+.charger-type-card.selected::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ios-blue), var(--ios-teal));
+}
+
+/* Shimmer Effect */
+.charger-type-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.charger-type-card:hover::after {
+    left: 100%;
+}
+
+/* Power Badge */
+.charger-power-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: linear-gradient(135deg, var(--ios-orange), var(--ios-red));
+    color: #ffffff;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 2;
+}
+
+/* Charger Header */
+.charger-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+    cursor: pointer;
+    position: relative;
+}
+
+.charger-checkbox {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.charger-icon {
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(59, 130, 246, 0.1));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(102, 126, 234, 0.3);
+}
+
+.charger-type-card.selected .charger-icon {
+    background: linear-gradient(135deg, var(--ios-blue), var(--ios-teal));
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+    animation: successPulse 0.6s ease-out;
+}
+
+@keyframes successPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1.05);
+    }
+}
+
+.charger-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.charger-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+}
+
+.charger-desc {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+}
+
+.charger-time {
+    font-size: 0.85rem;
+    color: var(--ios-green);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* Vehicle Type Indicators */
+.vehicle-indicators {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.vehicle-indicator {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.charger-type-card.selected .vehicle-indicator {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+}
+
+.check-indicator {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: transparent;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.charger-type-card.selected .check-indicator {
+    background: var(--ios-green);
+    border-color: var(--ios-green);
+    color: #ffffff;
+    transform: scale(1.1);
+}
+
+/* Charger Price Section */
+.charger-price-section {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.price-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 1rem 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.recommended-price {
+    background: linear-gradient(135deg, var(--ios-green), #059669);
+    color: #ffffff;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.price-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.price-input-container {
+    position: relative;
+}
+
+.price-input-container::before {
+    content: 'VNĐ';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    pointer-events: none;
+}
+
+.price-input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 0.75rem 3rem 0.75rem 1rem;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.price-input:focus {
+    outline: none;
+    border-color: var(--ios-blue);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.price-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.price-range {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+}
+
+/* Price Input Number Styling */
+.price-input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.price-input[type="number"]::-webkit-outer-spin-button,
+.price-input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Charger Types Section Header */
+.charger-types-section .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.charger-types-section .field-hint {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+
+/* Charger Selection Counter */
+.charger-selection-counter {
+    background: linear-gradient(135deg, var(--ios-blue), var(--ios-teal));
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Pricing Summary */
+.pricing-summary {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.05));
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 1.5rem;
+}
+
+.pricing-summary-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ios-green);
+    margin: 0 0 0.75rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pricing-summary-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.pricing-summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.pricing-summary-charger {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.pricing-summary-price {
+    color: var(--ios-green);
+    font-weight: 600;
+}
+
+/* Revenue Estimate */
+.revenue-estimate {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 152, 0, 0.05));
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.revenue-estimate-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ios-yellow);
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.revenue-estimate-text {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .charger-types-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .charger-header {
+        padding: 1rem;
+        gap: 0.75rem;
+    }
+
+    .charger-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 2rem;
+    }
+
+    .charger-name {
+        font-size: 1.1rem;
+    }
+
+    .charger-price-section {
+        padding: 0 1rem 1rem 1rem;
+    }
+
+    .charger-power-badge {
+        position: static;
+        margin-top: 0.5rem;
+        align-self: flex-start;
+    }
+
+    .vehicle-indicators {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .charger-types-grid {
+        gap: 0.75rem;
+    }
+
+    .charger-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .charger-icon {
+        align-self: center;
+    }
+
+    .check-indicator {
+        align-self: center;
+    }
+
+    .pricing-summary {
+        margin-top: 1rem;
+    }
+}
+
+/* 
+===== CHARGER TYPES & PRICING STYLES ===== */
+
+/* Charger Types Grid */
+.charger-types-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+/* Charger Type Card */
+.charger-type-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+}
+
+.charger-type-card:hover {
+    border-color: rgba(102, 126, 234, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.charger-type-card.selected {
+    border-color: var(--ios-blue);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(59, 130, 246, 0.05));
+    box-shadow: 0 0 0 1px rgba(102, 126, 234, 0.3), 0 8px 25px rgba(102, 126, 234, 0.2);
+}
+
+.charger-type-card.selected::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ios-blue), var(--ios-teal));
+}
+
+/* Power Badge */
+.charger-power-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: linear-gradient(135deg, var(--ios-orange), var(--ios-red));
+    color: #ffffff;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 2;
+}
+
+/* Charger Header */
+.charger-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+    cursor: pointer;
+    position: relative;
+}
+
+.charger-checkbox {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.charger-icon {
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(59, 130, 246, 0.1));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(102, 126, 234, 0.3);
+}
+
+.charger-type-card.selected .charger-icon {
+    background: linear-gradient(135deg, var(--ios-blue), var(--ios-teal));
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.charger-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.charger-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+}
+
+.charger-desc {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+}
+
+.charger-time {
+    font-size: 0.85rem;
+    color: var(--ios-green);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* Vehicle Type Indicators */
+.vehicle-indicators {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.vehicle-indicator {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.charger-type-card.selected .vehicle-indicator {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+}
+
+.check-indicator {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: transparent;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.charger-type-card.selected .check-indicator {
+    background: var(--ios-green);
+    border-color: var(--ios-green);
+    color: #ffffff;
+    transform: scale(1.1);
+}
+
+/* Charger Price Section */
+.charger-price-section {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.price-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 1rem 0 0.5rem 0;
+}
+
+.recommended-price {
+    background: linear-gradient(135deg, var(--ios-green), #059669);
+    color: #ffffff;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.price-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.price-input-container {
+    position: relative;
+}
+
+.price-input-container::before {
+    content: 'VNĐ';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    pointer-events: none;
+}
+
+.price-input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 0.75rem 3rem 0.75rem 1rem;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.price-input:focus {
+    outline: none;
+    border-color: var(--ios-blue);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.price-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.price-range {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+}
+
+/* Price Input Number Styling */
+.price-input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.price-input[type="number"]::-webkit-outer-spin-button,
+.price-input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Charger Types Section Header */
+.charger-types-section .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.charger-types-section .field-hint {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+
+/* Charger Selection Counter */
+.charger-selection-counter {
+    background: linear-gradient(135deg, var(--ios-blue), var(--ios-teal));
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Pricing Summary */
+.pricing-summary {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.05));
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 1.5rem;
+}
+
+.pricing-summary-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ios-green);
+    margin: 0 0 0.75rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pricing-summary-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.pricing-summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.pricing-summary-charger {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.pricing-summary-price {
+    color: var(--ios-green);
+    font-weight: 600;
+}
+
+/* Revenue Estimate */
+.revenue-estimate {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 152, 0, 0.05));
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.revenue-estimate-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ios-yellow);
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.revenue-estimate-text {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .charger-types-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .charger-header {
+        padding: 1rem;
+        gap: 0.75rem;
+    }
+
+    .charger-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 2rem;
+    }
+
+    .charger-name {
+        font-size: 1.1rem;
+    }
+
+    .charger-price-section {
+        padding: 0 1rem 1rem 1rem;
+    }
+
+    .charger-power-badge {
+        position: static;
+        margin-top: 0.5rem;
+        align-self: flex-start;
+    }
+
+    .vehicle-indicators {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .charger-types-grid {
+        gap: 0.75rem;
+    }
+
+    .charger-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .charger-icon {
+        align-self: center;
+    }
+
+    .check-indicator {
+        align-self: center;
+    }
+
+    .pricing-summary {
+        margin-top: 1rem;
+    }
+}
+
+/* =
+==== CHARGER TYPES & PRICING STYLES ===== */
+
+.charger-types-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.charger-type-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+}
+
+.charger-type-card:hover {
+    border-color: rgba(102, 126, 234, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.charger-type-card.selected {
+    border-color: var(--ios-blue);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(59, 130, 246, 0.05));
+    box-shadow: 0 0 0 1px rgba(102, 126, 234, 0.3), 0 8px 25px rgba(102, 126, 234, 0.2);
+}
+
+.charger-type-card.selected::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ios-blue), var(--ios-teal));
+}
+
+.charger-power-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: linear-gradient(135deg, var(--ios-orange), var(--ios-red));
+    color: #ffffff;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 2;
+}
+
+.charger-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+    cursor: pointer;
+    position: relative;
+}
+
+.charger-checkbox {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.charger-icon {
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(59, 130, 246, 0.1));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(102, 126, 234, 0.3);
+}
+
+.charger-type-card.selected .charger-icon {
+    background: linear-gradient(135deg, var(--ios-blue), var(--ios-teal));
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.charger-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.charger-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+}
+
+.charger-desc {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+}
+
+.charger-time {
+    font-size: 0.85rem;
+    color: var(--ios-green);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.vehicle-indicators {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.vehicle-indicator {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.charger-type-card.selected .vehicle-indicator {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+}
+
+.check-indicator {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: transparent;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.charger-type-card.selected .check-indicator {
+    background: var(--ios-green);
+    border-color: var(--ios-green);
+    color: #ffffff;
+    transform: scale(1.1);
+}
+
+.charger-price-section {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.price-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 1rem 0 0.5rem 0;
+}
+
+.recommended-price {
+    background: linear-gradient(135deg, var(--ios-green), #059669);
+    color: #ffffff;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.price-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.price-input-container {
+    position: relative;
+}
+
+.price-input-container::before {
+    content: 'VNĐ';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    pointer-events: none;
+}
+
+.price-input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 0.75rem 3rem 0.75rem 1rem;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.price-input:focus {
+    outline: none;
+    border-color: var(--ios-blue);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.price-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.price-range {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+}
+
+.price-input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.price-input[type="number"]::-webkit-outer-spin-button,
+.price-input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.charger-types-section .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.charger-types-section .field-hint {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+
+.charger-selection-counter {
+    background: linear-gradient(135deg, var(--ios-blue), var(--ios-teal));
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.pricing-summary {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.05));
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 1.5rem;
+}
+
+.pricing-summary-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ios-green);
+    margin: 0 0 0.75rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pricing-summary-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.pricing-summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.pricing-summary-charger {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.pricing-summary-price {
+    color: var(--ios-green);
+    font-weight: 600;
+}
+
+.revenue-estimate {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 152, 0, 0.05));
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.revenue-estimate-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ios-yellow);
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.revenue-estimate-text {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+    .charger-types-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .charger-header {
+        padding: 1rem;
+        gap: 0.75rem;
+    }
+
+    .charger-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 2rem;
+    }
+
+    .charger-name {
+        font-size: 1.1rem;
+    }
+
+    .charger-price-section {
+        padding: 0 1rem 1rem 1rem;
+    }
+
+    .charger-power-badge {
+        position: static;
+        margin-top: 0.5rem;
+        align-self: flex-start;
+    }
+
+    .vehicle-indicators {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .charger-types-grid {
+        gap: 0.75rem;
+    }
+
+    .charger-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .charger-icon {
+        align-self: center;
+    }
+
+    .check-indicator {
+        align-self: center;
+    }
+
+    .pricing-summary {
+        margin-top: 1rem;
+    }
+}
+
+/* Enhanced Contact Info */
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.04) 100%);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.contact-item:hover {
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.15) 0%,
+            rgba(255, 255, 255, 0.08) 100%);
+    transform: translateX(8px);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.contact-icon {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, var(--ios-teal), var(--ios-blue));
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.contact-item:hover .contact-icon {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 8px 25px rgba(0, 122, 255, 0.4);
+}
+
+.contact-text {
+    flex: 1;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+}
+
+/* Enhanced Operating Hours */
+.operating-hours {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg,
+            rgba(255, 193, 7, 0.15) 0%,
+            rgba(255, 152, 0, 0.08) 100%);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.operating-hours::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ios-yellow), var(--ios-orange));
+}
+
+.hours-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--ios-yellow), var(--ios-orange));
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.4);
+    animation: clockTick 2s ease-in-out infinite;
+}
+
+@keyframes clockTick {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(5deg);
+    }
+
+    75% {
+        transform: rotate(-5deg);
+    }
+}
+
+.hours-text {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--ios-yellow);
+    text-shadow: 0 2px 10px rgba(255, 193, 7, 0.3);
+}
+
+/* Enhanced Reviews Section */
+.reviews-section {
+    margin-top: 3rem;
+}
+
+.reviews-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.04) 100%);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.reviews-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+    background: linear-gradient(135deg, #ffffff, #e0f2fe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.review-item {
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.04) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.review-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--ios-pink), var(--ios-orange));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.review-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.review-item:hover::before {
+    transform: scaleX(1);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.reviewer-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.reviewer-avatar {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--ios-pink), var(--ios-orange));
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 15px rgba(255, 119, 198, 0.3);
+}
+
+.reviewer-name {
+    font-weight: 700;
+    margin: 0;
+    font-size: 1.1rem;
+    color: #ffffff;
+}
+
+.review-date {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+}
+
+.review-comment {
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+/* Responsive Enhancements */
+@media (max-width: 768px) {
+    .station-detail-container {
+        padding: 0.5rem;
+    }
+
+    .station-header-card {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .station-title {
+        font-size: 2rem;
+    }
+
+    .station-info-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .pricing-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+        padding: 1.5rem;
+    }
+
+    .amenities-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .station-actions {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .action-btn {
+        min-width: auto;
+    }
+
+    .operating-hours {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .station-title {
+        font-size: 1.8rem;
+    }
+
+    .amenities-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .info-section {
+        padding: 1.5rem;
+    }
+
+    .pricing-item {
+        padding: 1rem;
+    }
+}
+
+/* Loading Animation for Station Details */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Staggered Animation for Info Sections */
+.info-section:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.info-section:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.info-section:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.info-section:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.info-section {
+    animation: slideInUp 0.6s ease-out both;
+}
+
+/*
+ ===== SPECIAL STATION DETAIL COMPONENTS ===== */
+
+/* Promotion Card Enhancement */
+.promotion-card {
+    background: linear-gradient(135deg,
+            rgba(34, 197, 94, 0.15) 0%,
+            rgba(16, 185, 129, 0.08) 50%,
+            rgba(5, 150, 105, 0.05) 100%);
+    border: 1px solid rgba(34, 197, 94, 0.4);
+    border-radius: 24px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+    animation: slideInUp 0.6s ease-out;
+}
+
+.promotion-card::before {
+    content: '🎁';
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    font-size: 4rem;
+    opacity: 0.1;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-10px) rotate(5deg);
+    }
+}
+
+.promotion-title {
+    color: var(--ios-green);
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0 0 1.5rem 0;
+    text-shadow: 0 2px 10px rgba(34, 197, 94, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.promotion-title::before {
+    content: '🔥';
+    font-size: 1.2rem;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.promotion-item {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--ios-green);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.promotion-item:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateX(8px);
+    box-shadow: 0 8px 25px rgba(34, 197, 94, 0.2);
+}
+
+.promotion-discount {
+    background: linear-gradient(135deg, var(--ios-green), #059669);
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    display: inline-block;
+    margin-left: 1rem;
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Station Status Indicators */
+.station-status-bar {
+    display: flex;
+    gap: 1rem;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.status-indicator.online {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(16, 185, 129, 0.1));
+    border: 1px solid rgba(34, 197, 94, 0.4);
+    color: var(--ios-green);
+}
+
+.status-indicator.busy {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 152, 0, 0.1));
+    border: 1px solid rgba(255, 193, 7, 0.4);
+    color: var(--ios-yellow);
+}
+
+.status-indicator.offline {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.1));
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: var(--ios-red);
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.status-indicator.online .status-dot {
+    background: var(--ios-green);
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
+}
+
+.status-indicator.busy .status-dot {
+    background: var(--ios-yellow);
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.6);
+}
+
+.status-indicator.offline .status-dot {
+    background: var(--ios-red);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
+}
+
+/* Quick Stats Cards */
+.quick-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.stat-card {
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.1) 0%,
+            rgba(255, 255, 255, 0.05) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ios-blue), var(--ios-teal));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.stat-card:hover::before {
+    transform: scaleX(1);
+}
+
+.stat-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--ios-blue), var(--ios-teal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Enhanced Map Integration */
+.station-map-preview {
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.08) 0%,
+            rgba(255, 255, 255, 0.04) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.map-preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.map-preview-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.map-placeholder {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg,
+            rgba(0, 122, 255, 0.1) 0%,
+            rgba(88, 196, 250, 0.05) 100%);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0, 122, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.map-placeholder::before {
+    content: '🗺️';
+    font-size: 3rem;
+    opacity: 0.3;
+}
+
+.view-full-map-btn {
+    background: linear-gradient(135deg, var(--ios-blue), var(--ios-teal));
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.view-full-map-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 122, 255, 0.4);
+}
+
+/* Accessibility Enhancements */
+.accessibility-info {
+    background: linear-gradient(135deg,
+            rgba(139, 92, 246, 0.1) 0%,
+            rgba(124, 58, 237, 0.05) 100%);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.accessibility-title {
+    color: var(--ios-teal);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.accessibility-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.accessibility-feature {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.accessibility-feature:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(4px);
+}
+
+.accessibility-icon {
+    font-size: 1.2rem;
+    color: var(--ios-teal);
+}
+
+.accessibility-text {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+    .quick-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .stat-card {
+        padding: 1rem;
+    }
+
+    .stat-icon {
+        font-size: 2rem;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+
+    .station-status-bar {
+        justify-content: center;
+    }
+
+    .accessibility-features {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .quick-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .promotion-card {
+        padding: 1.5rem;
+    }
+
+    .map-placeholder {
+        height: 150px;
+    }
+}

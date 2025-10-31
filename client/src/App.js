@@ -14,7 +14,7 @@ import CreateStation from './pages/CreateStation';
 import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
 import Chat from './pages/Chat';
-import './App-simple.css';
+import './App-clean.css';
 
 function App() {
   return (
