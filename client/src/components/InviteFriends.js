@@ -12,6 +12,7 @@ const InviteFriends = () => {
   const brandName = 'Sạc Vui';
   const hashtags = '#SacVui #XeDien #TramSac #EV #Vietnam #GreenEnergy #SustainableTransport #ElectricVehicle';
   
+  // eslint-disable-next-line no-unused-vars
   const inviteMessage = `🔋 ${brandName} - Ứng dụng tìm trạm sạc xe điện thông minh nhất Việt Nam!
 
 ✨ TÍNH NĂNG NỔI BẬT:
