@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { saveToLocalStorage, getFromLocalStorage } from '../utils/mockData';
 import provincesData from '../data/provinces.json';
 import chargerTypesData from '../data/chargerTypes.json';
+import '../charger-styles.css';
 
 const CreateStation = () => {
   const [formData, setFormData] = useState({
@@ -28,6 +29,7 @@ const CreateStation = () => {
   const [dataLoaded, setDataLoaded] = useState(false);
   const [locationDetected, setLocationDetected] = useState(false);
   const [addressSuggestion, setAddressSuggestion] = useState('');
+  const [geocodingStatus, setGeocodingStatus] = useState('');
 
   const { user, updateUser } = useAuth();
   const navigate = useNavigate();
@@ -54,10 +56,32 @@ const CreateStation = () => {
     return selectedDistrict?.wards || [];
   };
 
-  // Reverse geocoding để đoán tỉnh/huyện từ tọa độ
-  const reverseGeocode = useCallback(async (lat, lng) => {
+  // Ước tính tỉnh dựa trên tọa độ (offline fallback)
+  const estimateProvinceFromCoords = (lat, lng) => {
+    // Các vùng chính của Việt Nam
+    if (lat >= 21.0 && lat <= 23.5 && lng >= 105.0 && lng <= 106.5) return 'HN'; // Hà Nội
+    if (lat >= 10.5 && lat <= 11.0 && lng >= 106.0 && lng <= 107.0) return 'HCM'; // TP.HCM
+    if (lat >= 15.8 && lat <= 16.3 && lng >= 107.8 && lng <= 108.5) return 'DN'; // Đà Nẵng
+    if (lat >= 20.7 && lat <= 21.2 && lng >= 106.0 && lng <= 106.8) return 'HP'; // Hải Phòng
+    if (lat >= 10.0 && lat <= 10.5 && lng >= 105.5 && lng <= 106.5) return 'CT'; // Cần Thơ
+    
+    // Miền Bắc
+    if (lat >= 20.0) return 'HN';
+    // Miền Trung
+    if (lat >= 14.0 && lat < 20.0) return 'DN';
+    // Miền Nam
+    return 'HCM';
+  };
+
+  // Reverse geocoding để đoán tỉnh/huyện từ tọa độ với retry logic
+  const reverseGeocode = useCallback(async (lat, lng, retryCount = 0) => {
     try {
       console.log('🔍 Đang reverse geocoding cho tọa độ:', lat, lng);
+      setGeocodingStatus(retryCount > 0 ? `Đang thử lại... (${retryCount + 1}/3)` : 'Đang tìm địa chỉ...');
+      
+      // Tạo AbortController để timeout sau 5 giây
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
       
       // Sử dụng Nominatim API (OpenStreetMap) - miễn phí với CORS headers
       const response = await fetch(
@@ -66,9 +90,12 @@ const CreateStation = () => {
           method: 'GET',
           headers: {
             'User-Agent': 'SacVui/1.0'
-          }
+          },
+          signal: controller.signal
         }
       );
+      
+      clearTimeout(timeoutId);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -82,6 +109,7 @@ const CreateStation = () => {
         const address = data.address;
         const fullAddress = data.display_name;
         setAddressSuggestion(fullAddress);
+        setGeocodingStatus('');
         
         console.log('🏠 Address object:', address);
         
@@ -227,12 +255,36 @@ const CreateStation = () => {
       }
     } catch (error) {
       console.error('❌ Reverse geocoding error:', error);
-      // Fallback: mặc định HCM và thông báo cho user
+      
+      // Retry logic - thử lại tối đa 2 lần
+      if (retryCount < 2 && (error.name === 'AbortError' || error.message.includes('Failed to fetch'))) {
+        console.log(`🔄 Thử lại lần ${retryCount + 1}/2...`);
+        setGeocodingStatus(`Kết nối chậm, đang thử lại... (${retryCount + 2}/3)`);
+        setTimeout(() => {
+          reverseGeocode(lat, lng, retryCount + 1);
+        }, 2000); // Đợi 2 giây trước khi thử lại
+        return;
+      }
+      
+      // Xử lý các loại lỗi khác nhau
+      let errorMessage = 'Không thể tự động đoán địa chỉ. Vui lòng nhập thủ công.';
+      
+      if (error.name === 'AbortError') {
+        errorMessage = 'Kết nối mạng chậm. Đã thử 3 lần. Vui lòng nhập địa chỉ thủ công.';
+        console.log('⏰ Geocoding timeout sau nhiều lần thử');
+      } else if (error.message.includes('Failed to fetch')) {
+        errorMessage = 'Không có kết nối mạng. Vui lòng kiểm tra internet và nhập địa chỉ thủ công.';
+        console.log('🌐 Không có kết nối mạng sau nhiều lần thử');
+      }
+      
+      // Fallback: ước tính tỉnh dựa trên tọa độ (offline)
+      const estimatedProvince = estimateProvinceFromCoords(lat, lng);
       setFormData(prev => ({
         ...prev,
-        province: 'HCM'
+        province: estimatedProvince
       }));
-      setAddressSuggestion('Không thể tự động đoán địa chỉ. Vui lòng nhập thủ công.');
+      setAddressSuggestion(`${errorMessage} (Ước tính: ${provinces.find(p => p.code === estimatedProvince)?.name || 'TP.HCM'})`);
+      setGeocodingStatus('');
     }
   }, [provinces]);
 
@@ -652,6 +704,12 @@ const CreateStation = () => {
                 📍 Tọa độ: {formData.lat}, {formData.lng}
               </div>
               
+              {geocodingStatus && (
+                <div className="location-address" style={{ color: '#f59e0b' }}>
+                  🔄 {geocodingStatus}
+                </div>
+              )}
+              
               {addressSuggestion && (
                 <div className="location-address">
                   🏠 Địa chỉ gợi ý: {addressSuggestion}
@@ -665,6 +723,7 @@ const CreateStation = () => {
                     setLocationDetected(false);
                     setFormData(prev => ({ ...prev, lat: null, lng: null, province: '', district: '', ward: '' }));
                     setAddressSuggestion('');
+                    setGeocodingStatus('');
                   }}
                   className="retry-location-btn"
                 >
@@ -823,11 +882,18 @@ const CreateStation = () => {
         
 
         {/* Loại sạc và giá cả */}
-        <div className="form-section">
+        <div className="form-section charger-types-section">
           <h3 className="section-title">🔌 Loại sạc và giá cả</h3>
-          <p className="field-hint" style={{ marginBottom: '1rem' }}>
-            Chọn các loại sạc có tại trạm và thiết lập giá cả phù hợp
-          </p>
+          <div className="field-hint">
+            <strong>💡 Hướng dẫn:</strong> Chọn các loại sạc có tại trạm của bạn và thiết lập mức giá cạnh tranh. 
+            Giá cả hợp lý sẽ thu hút nhiều khách hàng hơn và tăng doanh thu.
+          </div>
+          
+          {formData.chargerTypes.length > 0 && (
+            <div className="charger-selection-counter">
+              ✅ Đã chọn {formData.chargerTypes.length} loại sạc
+            </div>
+          )}
           
           <div className="charger-types-grid">
             {chargerTypes.map((charger) => {
@@ -836,6 +902,7 @@ const CreateStation = () => {
               
               return (
                 <div key={charger.id} className={`charger-type-card ${isSelected ? 'selected' : ''}`}>
+                  <div className="charger-power-badge">{charger.power}</div>
                   <label className="charger-header">
                     <input
                       type="checkbox"
@@ -846,26 +913,41 @@ const CreateStation = () => {
                     <div className="charger-icon">{charger.icon}</div>
                     <div className="charger-info">
                       <div className="charger-name">{charger.name}</div>
-                      <div className="charger-desc">{charger.description} ({charger.power})</div>
+                      <div className="charger-desc">{charger.description}</div>
                       <div className="charger-time">⏱️ {charger.chargingTime}</div>
+                      <div className="vehicle-indicators">
+                        {charger.vehicleTypes.map(vehicle => (
+                          <span key={vehicle} className="vehicle-indicator">
+                            {vehicle === 'car' ? '🚗 Ô tô' : '🏍️ Xe máy'}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                     <div className="check-indicator">✓</div>
                   </label>
                   
                   {isSelected && (
                     <div className="charger-price-section">
-                      <label className="price-label">💰 Giá (VNĐ/giờ):</label>
+                      <label className="price-label">
+                        💰 Giá (VNĐ/giờ):
+                        <span className="recommended-price">
+                          💡 Đề xuất: {charger.defaultPrice.toLocaleString()}đ
+                        </span>
+                      </label>
                       <div className="price-input-group">
-                        <input
-                          type="number"
-                          value={selectedCharger?.price || charger.defaultPrice}
-                          onChange={(e) => handleChargerPriceChange(charger.id, e.target.value)}
-                          min={charger.priceRange.min}
-                          max={charger.priceRange.max}
-                          className="price-input"
-                        />
+                        <div className="price-input-container">
+                          <input
+                            type="number"
+                            value={selectedCharger?.price || charger.defaultPrice}
+                            onChange={(e) => handleChargerPriceChange(charger.id, e.target.value)}
+                            min={charger.priceRange.min}
+                            max={charger.priceRange.max}
+                            className="price-input"
+                            placeholder={charger.defaultPrice.toString()}
+                          />
+                        </div>
                         <span className="price-range">
-                          ({charger.priceRange.min.toLocaleString()} - {charger.priceRange.max.toLocaleString()})
+                          Khoảng giá thị trường: {charger.priceRange.min.toLocaleString()}đ - {charger.priceRange.max.toLocaleString()}đ
                         </span>
                       </div>
                     </div>
@@ -874,6 +956,61 @@ const CreateStation = () => {
               );
             })}
           </div>
+          
+          {/* Pricing Summary */}
+          {formData.chargerTypes.length > 0 && (
+            <div className="pricing-summary">
+              <h4 className="pricing-summary-title">
+                💰 Tóm tắt giá cả ({formData.chargerTypes.length} loại sạc)
+              </h4>
+              <div className="pricing-summary-list">
+                {formData.chargerTypes.map((chargerType) => {
+                  const charger = chargerTypes.find(ct => ct.id === chargerType.id);
+                  return (
+                    <div key={chargerType.id} className="pricing-summary-item">
+                      <span className="pricing-summary-charger">
+                        {charger?.icon} {charger?.name}
+                      </span>
+                      <span className="pricing-summary-price">
+                        {parseInt(chargerType.price || charger?.defaultPrice || 0).toLocaleString('vi-VN')}đ/giờ
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+          
+          {/* Revenue Estimate */}
+          {formData.chargerTypes.length > 0 && (
+            <div className="revenue-estimate">
+              <h4 className="revenue-estimate-title">
+                📊 Ước tính doanh thu
+              </h4>
+              <div className="revenue-estimate-text">
+                Với {formData.chargerTypes.length} loại sạc và giá trung bình{' '}
+                {Math.round(
+                  formData.chargerTypes.reduce((sum, ct) => {
+                    const charger = chargerTypes.find(c => c.id === ct.id);
+                    return sum + parseInt(ct.price || charger?.defaultPrice || 0);
+                  }, 0) / formData.chargerTypes.length
+                ).toLocaleString()}đ/giờ, 
+                bạn có thể thu về <strong>
+                  {(Math.round(
+                    formData.chargerTypes.reduce((sum, ct) => {
+                      const charger = chargerTypes.find(c => c.id === ct.id);
+                      return sum + parseInt(ct.price || charger?.defaultPrice || 0);
+                    }, 0) / formData.chargerTypes.length
+                  ) * 8 * 30).toLocaleString()}đ - {(Math.round(
+                    formData.chargerTypes.reduce((sum, ct) => {
+                      const charger = chargerTypes.find(c => c.id === ct.id);
+                      return sum + parseInt(ct.price || charger?.defaultPrice || 0);
+                    }, 0) / formData.chargerTypes.length
+                  ) * 12 * 30).toLocaleString()}đ/tháng
+                </strong> (ước tính 8-12 giờ sử dụng/ngày).
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Hình ảnh trạm sạc */}
