@@ -10,7 +10,7 @@ const Navbar = () => {
     <nav className="navbar">
       <h1>
         <Link to="/" style={{ textDecoration: 'none' }}>
-          ⚡ ChargeFinder
+          ⚡ Sạc Vui
         </Link>
       </h1>
       <ul className="nav-links">
