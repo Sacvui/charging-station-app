@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "name": "sacvui-charging-station",
   "builds": [
     {
       "src": "client/package.json",
@@ -23,8 +24,19 @@
       "dest": "/client/build/manifest.json"
     },
     {
+      "src": "/logo192.png",
+      "dest": "/client/build/logo192.png"
+    },
+    {
+      "src": "/logo512.png", 
+      "dest": "/client/build/logo512.png"
+    },
+    {
       "src": "/(.*)",
       "dest": "/client/build/index.html"
     }
-  ]
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
 }
