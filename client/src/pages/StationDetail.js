@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getStationById, getReviewsByStationId, saveToLocalStorage, getFromLocalStorage, generateId } from '../utils/mockData';
+import StarRating from '../components/StarRating';
 
 const StationDetail = () => {
   const { id } = useParams();
@@ -89,9 +90,7 @@ const StationDetail = () => {
     alert('Cảm ơn bạn đã đánh giá! Bạn được thưởng 10 điểm.');
   };
 
-  const getRatingStars = (rating) => {
-    return '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating));
-  };
+
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN').format(price);
@@ -115,57 +114,70 @@ const StationDetail = () => {
   }
 
   return (
-    <div style={{ padding: '2rem 1rem', maxWidth: '1200px', margin: '0 auto' }}>
+    <div className="station-detail-container">
       {/* Header */}
-      <div className="station-card" style={{ marginBottom: '2rem' }}>
+      <div className="station-header-card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
           <div>
-            <h1 style={{ margin: 0, marginBottom: '0.5rem' }}>⚡ {station.name}</h1>
-            <p style={{ color: '#6b7280', margin: 0, fontSize: '1.1rem' }}>📍 {station.address}</p>
+            <h1 className="station-title">⚡ {station.name}</h1>
+            <p className="station-address">📍 {station.address}</p>
           </div>
           {station.isVerified && (
-            <span style={{ background: 'rgba(34, 197, 94, 0.1)', color: '#059669', padding: '0.5rem 1rem', borderRadius: '12px', fontSize: '0.9rem', fontWeight: '600' }}>
+            <span className="verified-badge">
               ✅ Đã xác minh
             </span>
           )}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginTop: '1.5rem' }}>
-          <div>
+        <div className="station-info-grid">
+          <div className="info-section">
             <h3>⭐ Đánh giá</h3>
-            <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>
-              <span className="rating">{getRatingStars(station.rating)}</span>
-              <span style={{ marginLeft: '0.5rem', fontSize: '1rem', color: '#6b7280' }}>
-                {station.rating}/5 ({station.totalRatings} đánh giá)
-              </span>
+            <StarRating 
+              rating={station.rating} 
+              totalRatings={station.totalRatings}
+              size="large"
+            />
+          </div>
+
+          <div className="info-section">
+            <h3>🕒 Giờ hoạt động</h3>
+            <div className="operating-hours">
+              <div className="hours-icon">🕒</div>
+              <div className="hours-text">
+                {station.operatingHours.is24Hours ? '24/7' : `${station.operatingHours.open} - ${station.operatingHours.close}`}
+              </div>
             </div>
           </div>
 
-          <div>
-            <h3>🕒 Giờ hoạt động</h3>
-            <p style={{ fontSize: '1.1rem', margin: 0 }}>
-              {station.operatingHours.is24Hours ? '24/7' : `${station.operatingHours.open} - ${station.operatingHours.close}`}
-            </p>
-          </div>
-
-          <div>
+          <div className="info-section">
             <h3>📞 Liên hệ</h3>
-            <p style={{ margin: 0 }}>👤 {station.owner.name}</p>
-            <p style={{ margin: 0 }}>📱 {station.owner.phone}</p>
+            <div className="contact-info">
+              <div className="contact-item">
+                <div className="contact-icon">👤</div>
+                <div className="contact-text">{station.owner.name}</div>
+              </div>
+              <div className="contact-item">
+                <div className="contact-icon">📱</div>
+                <div className="contact-text">{station.owner.phone}</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Promotions */}
       {station.promotions.length > 0 && (
-        <div className="station-card" style={{ marginBottom: '2rem', background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
-          <h3 style={{ color: '#059669', marginBottom: '1rem' }}>🎁 Khuyến mãi đặc biệt</h3>
+        <div className="promotion-card">
+          <h3 className="promotion-title">🎁 Khuyến mãi đặc biệt</h3>
           {station.promotions.map((promo, index) => (
-            <div key={index} style={{ marginBottom: '1rem' }}>
-              <h4 style={{ color: '#059669', margin: 0 }}>{promo.title} - Giảm {promo.discount}%</h4>
-              <p style={{ margin: '0.25rem 0', color: '#6b7280' }}>{promo.description}</p>
-              <p style={{ margin: 0, fontSize: '0.9rem', color: '#6b7280' }}>
-                Có hiệu lực: {formatDate(promo.validFrom)} - {formatDate(promo.validTo)}
+            <div key={index} className="promotion-item">
+              <h4 style={{ color: 'var(--ios-green)', margin: '0 0 0.5rem 0' }}>
+                {promo.title}
+                <span className="promotion-discount">-{promo.discount}%</span>
+              </h4>
+              <p style={{ margin: '0.25rem 0', color: 'rgba(255, 255, 255, 0.7)' }}>{promo.description}</p>
+              <p style={{ margin: 0, fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.6)' }}>
+                📅 Có hiệu lực: {formatDate(promo.validFrom)} - {formatDate(promo.validTo)}
               </p>
             </div>
           ))}
@@ -174,18 +186,18 @@ const StationDetail = () => {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '2rem' }}>
         {/* Pricing & Charger Types */}
-        <div className="station-card">
+        <div className="pricing-card">
           <h3>💰 Bảng giá & Loại sạc</h3>
           <div style={{ display: 'grid', gap: '1rem' }}>
             {station.pricing.map((price, index) => (
-              <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: 'rgba(102, 126, 234, 0.1)', borderRadius: '12px' }}>
-                <div>
-                  <strong>🔌 {price.chargerType}</strong>
+              <div key={index} className="pricing-item">
+                <div className="charger-type">
+                  <div className="charger-icon">🔌</div>
+                  <strong>{price.chargerType}</strong>
                 </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: '1.2rem', fontWeight: '700', color: '#667eea' }}>
-                    {formatPrice(price.pricePerHour)}đ/giờ
-                  </div>
+                <div className="price-value">
+                  <div>{formatPrice(price.pricePerHour)}đ</div>
+                  <div className="price-unit">per hour</div>
                 </div>
               </div>
             ))}
@@ -193,22 +205,82 @@ const StationDetail = () => {
         </div>
 
         {/* Amenities */}
-        <div className="station-card">
+        <div className="pricing-card">
           <h3>🎯 Tiện ích</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '0.75rem' }}>
-            {station.amenities.map((amenity, index) => (
-              <div key={index} style={{ padding: '0.75rem', background: 'rgba(102, 126, 234, 0.1)', borderRadius: '12px', textAlign: 'center', fontSize: '0.9rem', fontWeight: '500' }}>
-                {amenity}
-              </div>
-            ))}
+          <div className="amenities-grid">
+            {station.amenities.map((amenity, index) => {
+              const getAmenityIcon = (amenity) => {
+                const icons = {
+                  'WiFi': '📶',
+                  'Parking': '🅿️',
+                  'Cafe': '☕',
+                  'Shopping Mall': '🛍️',
+                  'Food Court': '🍽️',
+                  'Security': '🔒',
+                  'Air Conditioning': '❄️',
+                  'Restaurant': '🍴',
+                  'Cinema': '🎬',
+                  'ATM': '🏧',
+                  'Convenience Store': '🏪',
+                  'Gas Station': '⛽',
+                  'CCTV': '📹',
+                  'Toilet': '🚻',
+                  'Vending Machine': '🥤',
+                  'Pharmacy': '💊',
+                  'Supermarket': '🛒'
+                };
+                return icons[amenity] || '✨';
+              };
+              
+              return (
+                <div key={index} className="amenity-item">
+                  <span className="amenity-icon">{getAmenityIcon(amenity)}</span>
+                  <span className="amenity-text">{amenity}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
 
+      {/* Action Buttons */}
+      <div className="station-actions">
+        <button 
+          className="action-btn primary"
+          onClick={() => {
+            const url = `https://www.google.com/maps/dir/?api=1&destination=${station.latitude},${station.longitude}&travelmode=driving`;
+            window.open(url, '_blank');
+          }}
+        >
+          🧭 Chỉ đường
+        </button>
+        <button 
+          className="action-btn secondary"
+          onClick={() => {
+            const text = `Tôi đang ở trạm sạc ${station.name} - ${station.address}. Bạn có muốn đến không?`;
+            if (navigator.share) {
+              navigator.share({
+                title: station.name,
+                text: text,
+                url: window.location.href
+              });
+            } else {
+              navigator.clipboard.writeText(`${text} ${window.location.href}`);
+              alert('Đã copy link chia sẻ!');
+            }
+          }}
+        >
+          📤 Chia sẻ
+        </button>
+        <Link to={`/chat/${station.owner.phone}`} className="action-btn secondary">
+          💬 Nhắn tin chủ trạm
+        </Link>
+      </div>
+
       {/* Reviews Section */}
-      <div className="station-card" style={{ marginTop: '2rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-          <h3>💬 Đánh giá từ khách hàng ({reviews.length})</h3>
+      <div className="reviews-section">
+        <div className="reviews-header">
+          <h3 className="reviews-title">💬 Đánh giá từ khách hàng ({reviews.length})</h3>
           {user && (
             <button 
               onClick={() => setShowReviewForm(!showReviewForm)}
@@ -381,24 +453,35 @@ const StationDetail = () => {
         <div style={{ display: 'grid', gap: '1rem' }}>
           {reviews.length > 0 ? (
             reviews.map((review) => (
-              <div key={review.id} style={{ padding: '1.5rem', background: 'rgba(255, 255, 255, 0.5)', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.2)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-                  <div>
-                    <strong>👤 {review.user.name}</strong>
-                    <div style={{ marginTop: '0.25rem' }}>
-                      <span className="rating">{getRatingStars(review.rating)}</span>
-                      <span style={{ marginLeft: '0.5rem', fontSize: '0.9rem', color: '#6b7280' }}>
-                        {formatDate(review.createdAt)}
-                      </span>
+              <div key={review.id} className="review-item">
+                <div className="review-header">
+                  <div className="reviewer-info">
+                    <div className="reviewer-avatar">👤</div>
+                    <div>
+                      <h4 className="reviewer-name">{review.user.name}</h4>
+                      <div style={{ marginTop: '0.25rem' }}>
+                        <StarRating rating={review.rating} size="small" />
+                      </div>
                     </div>
                   </div>
+                  <div className="review-date">
+                    {formatDate(review.createdAt)}
+                  </div>
                 </div>
-                <p style={{ margin: 0, lineHeight: 1.6 }}>{review.comment}</p>
+                <p className="review-comment">{review.comment}</p>
               </div>
             ))
           ) : (
-            <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
-              <p>Chưa có đánh giá nào. Hãy là người đầu tiên đánh giá trạm sạc này!</p>
+            <div style={{ 
+              textAlign: 'center', 
+              padding: '3rem 2rem', 
+              background: 'rgba(255, 255, 255, 0.03)',
+              borderRadius: '16px',
+              border: '1px solid rgba(255, 255, 255, 0.1)'
+            }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem', opacity: 0.5 }}>💬</div>
+              <h3 style={{ margin: '0 0 0.5rem 0', color: 'rgba(255, 255, 255, 0.8)' }}>Chưa có đánh giá nào</h3>
+              <p style={{ margin: 0, color: 'rgba(255, 255, 255, 0.6)' }}>Hãy là người đầu tiên đánh giá trạm sạc này!</p>
             </div>
           )}
         </div>

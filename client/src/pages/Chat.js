@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getUserById, getChatMessages, sendChatMessage } from '../utils/mockData';
@@ -10,11 +10,26 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('chat');
   const messagesEndRef = useRef(null);
+
+  const loadChatData = async () => {
+    try {
+      const userData = getUserById(userId);
+      const chatMessages = getChatMessages(userId);
+      
+      setTargetUser(userData);
+      setMessages(chatMessages);
+    } catch (error) {
+      console.error('Error loading chat data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     loadChatData();
-  }, [userId, loadChatData]);
+  }, [userId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     scrollToBottom();
@@ -31,20 +46,6 @@ const Chat = () => {
 
     return () => clearInterval(interval);
   }, [userId]);
-
-  const loadChatData = async () => {
-    try {
-      const userData = getUserById(userId);
-      const chatMessages = getChatMessages(userId);
-      
-      setTargetUser(userData);
-      setMessages(chatMessages);
-    } catch (error) {
-      console.error('Error loading chat data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -93,22 +94,73 @@ const Chat = () => {
     <div className="chat-container">
       {/* Chat Header */}
       <div className="chat-header">
-        <Link to="/map" className="back-btn">←</Link>
-        <div className="chat-user-info">
-          <div className="user-avatar-small">
-            <span>{targetUser.avatar}</span>
-            {targetUser.isOnline && <div className="online-indicator-small"></div>}
-          </div>
-          <div>
-            <h2>{targetUser.name}</h2>
-            <p className="user-status-small">
-              {targetUser.isOnline ? '🟢 Đang online' : `🕒 Hoạt động ${formatMessageTime(targetUser.lastSeen)}`}
-            </p>
+        <div className="chat-header-left">
+          <Link to="/map" className="back-btn">
+            <span className="back-icon">←</span>
+          </Link>
+          <div className="chat-user-info">
+            <div className="user-avatar">
+              <span className="avatar-emoji">{targetUser.avatar}</span>
+              {targetUser.isOnline && <div className="online-indicator"></div>}
+            </div>
+            <div className="user-details">
+              <h2 className="user-name">{targetUser.name}</h2>
+              <p className="user-status">
+                {targetUser.isOnline ? (
+                  <><span className="status-dot online"></span>Đang online</>
+                ) : (
+                  <><span className="status-dot offline"></span>Hoạt động {formatMessageTime(targetUser.lastSeen)}</>
+                )}
+              </p>
+            </div>
           </div>
         </div>
-        <div className="chat-actions">
-          <span className="user-vehicle-small">{targetUser.vehicle}</span>
+        
+        <div className="chat-header-right">
+          <div className="user-vehicle">{targetUser.vehicle}</div>
+          <div className="chat-menu">
+            <button className="menu-btn">⋮</button>
+          </div>
         </div>
+      </div>
+
+      {/* Chat Navigation Menu */}
+      <div className="chat-nav-menu">
+        <button 
+          className={`nav-item ${activeTab === 'chat' ? 'active' : ''}`}
+          onClick={() => setActiveTab('chat')}
+        >
+          <span className="nav-icon">💬</span>
+          <span className="nav-text">Chat</span>
+        </button>
+        <button 
+          className={`nav-item ${activeTab === 'location' ? 'active' : ''}`}
+          onClick={() => setActiveTab('location')}
+        >
+          <span className="nav-icon">📍</span>
+          <span className="nav-text">Vị trí</span>
+        </button>
+        <button 
+          className={`nav-item ${activeTab === 'rating' ? 'active' : ''}`}
+          onClick={() => setActiveTab('rating')}
+        >
+          <span className="nav-icon">⭐</span>
+          <span className="nav-text">Đánh giá</span>
+        </button>
+        <button 
+          className={`nav-item ${activeTab === 'contact' ? 'active' : ''}`}
+          onClick={() => setActiveTab('contact')}
+        >
+          <span className="nav-icon">📞</span>
+          <span className="nav-text">Liên hệ</span>
+        </button>
+        <button 
+          className={`nav-item ${activeTab === 'share' ? 'active' : ''}`}
+          onClick={() => setActiveTab('share')}
+        >
+          <span className="nav-icon">🔗</span>
+          <span className="nav-text">Chia sẻ</span>
+        </button>
       </div>
 
       {/* Messages */}
@@ -162,30 +214,53 @@ const Chat = () => {
 
       {/* Quick Messages */}
       <div className="quick-messages">
-        <button 
-          className="quick-msg-btn"
-          onClick={() => setNewMessage('Chào bạn! 👋')}
-        >
-          👋 Chào bạn
-        </button>
-        <button 
-          className="quick-msg-btn"
-          onClick={() => setNewMessage('Bạn đang ở trạm sạc nào vậy?')}
-        >
-          📍 Hỏi vị trí
-        </button>
-        <button 
-          className="quick-msg-btn"
-          onClick={() => setNewMessage('Trạm này sạc nhanh không bạn?')}
-        >
-          ⚡ Hỏi tốc độ sạc
-        </button>
-        <button 
-          className="quick-msg-btn"
-          onClick={() => setNewMessage('Cảm ơn bạn! 😊')}
-        >
-          😊 Cảm ơn
-        </button>
+        <div className="quick-messages-header">
+          <span className="quick-title">Tin nhắn nhanh</span>
+        </div>
+        <div className="quick-messages-grid">
+          <button 
+            className="quick-msg-btn"
+            onClick={() => setNewMessage('Chào bạn! 👋')}
+          >
+            <span className="quick-icon">👋</span>
+            <span className="quick-text">Chào bạn</span>
+          </button>
+          <button 
+            className="quick-msg-btn"
+            onClick={() => setNewMessage('Bạn đang ở trạm sạc nào vậy?')}
+          >
+            <span className="quick-icon">📍</span>
+            <span className="quick-text">Hỏi vị trí</span>
+          </button>
+          <button 
+            className="quick-msg-btn"
+            onClick={() => setNewMessage('Trạm này sạc nhanh không bạn?')}
+          >
+            <span className="quick-icon">⚡</span>
+            <span className="quick-text">Hỏi tốc độ</span>
+          </button>
+          <button 
+            className="quick-msg-btn"
+            onClick={() => setNewMessage('Cảm ơn bạn! 😊')}
+          >
+            <span className="quick-icon">😊</span>
+            <span className="quick-text">Cảm ơn</span>
+          </button>
+          <button 
+            className="quick-msg-btn"
+            onClick={() => setNewMessage('Bạn có thể chia sẻ kinh nghiệm không?')}
+          >
+            <span className="quick-icon">💡</span>
+            <span className="quick-text">Hỏi kinh nghiệm</span>
+          </button>
+          <button 
+            className="quick-msg-btn"
+            onClick={() => setNewMessage('Hẹn gặp lại! 👋')}
+          >
+            <span className="quick-icon">👋</span>
+            <span className="quick-text">Tạm biệt</span>
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -10,7 +10,7 @@ const Footer = () => {
           <span className="footer-author">Lê Phúc Hải</span>
         </div>
         <div className="footer-links">
-          <span className="footer-year">© 2024</span>
+          <span className="footer-year">© 2025</span>
           <span className="footer-separator">•</span>
           <span className="footer-version">v1.0</span>
         </div>

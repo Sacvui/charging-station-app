@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getStationsNearby } from '../utils/mockData';
+import StarRating from '../components/StarRating';
 
 const Home = () => {
   const { user } = useAuth();
@@ -101,9 +102,7 @@ const Home = () => {
     window.open(url, '_blank');
   };
 
-  const getRatingStars = (rating) => {
-    return '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating));
-  };
+
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN').format(price);
@@ -113,10 +112,14 @@ const Home = () => {
   if (!user) {
     return (
       <div className="home-guest">
+        <div className="guest-header">
+          <div className="guest-brand">⚡ Sạc Vui</div>
+        </div>
+        
         <div className="guest-hero">
           <div className="hero-icon">⚡</div>
-          <h1>ChargeFinder</h1>
-          <p>Tìm trạm sạc pin xe máy gần bạn nhất</p>
+          <h1>Sạc Vui</h1>
+          <p>Tìm trạm sạc xe điện gần bạn nhất</p>
           
           <div className="guest-actions">
             <Link to="/quick-register" className="btn-primary-ios">
@@ -232,8 +235,11 @@ const Home = () => {
                   
                   <div className="station-details-compact">
                     <div className="detail-item">
-                      <span className="rating">{getRatingStars(station.rating)}</span>
-                      <span className="rating-text">{station.rating}</span>
+                      <StarRating 
+                        rating={station.rating} 
+                        totalRatings={station.totalRatings}
+                        size="small"
+                      />
                     </div>
                     
                     <div className="detail-item">

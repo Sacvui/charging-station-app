@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { saveToLocalStorage, getFromLocalStorage } from '../utils/mockData';
@@ -32,8 +32,8 @@ const CreateStation = () => {
   const { user, updateUser } = useAuth();
   const navigate = useNavigate();
 
-  const provinces = provincesData?.provinces || [];
-  const chargerTypes = chargerTypesData?.chargerTypes || [];
+  const provinces = useMemo(() => provincesData?.provinces || [], []);
+  const chargerTypes = useMemo(() => chargerTypesData?.chargerTypes || [], []);
 
   useEffect(() => {
     // Ensure data is loaded
@@ -55,14 +55,25 @@ const CreateStation = () => {
   };
 
   // Reverse geocoding để đoán tỉnh/huyện từ tọa độ
-  const reverseGeocode = async (lat, lng) => {
+  const reverseGeocode = useCallback(async (lat, lng) => {
     try {
       console.log('🔍 Đang reverse geocoding cho tọa độ:', lat, lng);
       
-      // Sử dụng Nominatim API (OpenStreetMap) - miễn phí
+      // Sử dụng Nominatim API (OpenStreetMap) - miễn phí với CORS headers
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&accept-language=vi`
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&accept-language=vi`,
+        {
+          method: 'GET',
+          headers: {
+            'User-Agent': 'SacVui/1.0'
+          }
+        }
       );
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
       
       console.log('📍 Dữ liệu từ Nominatim API:', data);
@@ -216,13 +227,14 @@ const CreateStation = () => {
       }
     } catch (error) {
       console.error('❌ Reverse geocoding error:', error);
-      // Fallback: mặc định HCM
+      // Fallback: mặc định HCM và thông báo cho user
       setFormData(prev => ({
         ...prev,
         province: 'HCM'
       }));
+      setAddressSuggestion('Không thể tự động đoán địa chỉ. Vui lòng nhập thủ công.');
     }
-  };
+  }, [provinces]);
 
   // Compress image before upload
   const compressImage = (file, maxWidth = 800, quality = 0.8) => {
@@ -283,7 +295,7 @@ const CreateStation = () => {
     }
   };
 
-  const getCurrentLocation = () => {
+  const getCurrentLocation = useCallback(() => {
     setGettingLocation(true);
     setError('');
     
@@ -292,29 +304,40 @@ const CreateStation = () => {
       
       navigator.geolocation.getCurrentPosition(
         async (position) => {
-          const lat = parseFloat(position.coords.latitude.toFixed(6));
-          const lng = parseFloat(position.coords.longitude.toFixed(6));
-          const accuracy = position.coords.accuracy;
-          
-          console.log('📍 Tọa độ GPS nhận được:', {
-            lat,
-            lng,
-            accuracy: `${accuracy}m`,
-            timestamp: new Date(position.timestamp).toLocaleString()
-          });
-          
-          setFormData(prev => ({
-            ...prev,
-            lat,
-            lng
-          }));
-          
-          setLocationDetected(true);
-          setGettingLocation(false);
-          
-          // Tự động đoán địa chỉ
-          console.log('🔍 Bắt đầu reverse geocoding...');
-          await reverseGeocode(lat, lng);
+          try {
+            const lat = parseFloat(position.coords.latitude.toFixed(6));
+            const lng = parseFloat(position.coords.longitude.toFixed(6));
+            const accuracy = position.coords.accuracy;
+            
+            console.log('📍 Tọa độ GPS nhận được:', {
+              lat,
+              lng,
+              accuracy: `${accuracy}m`,
+              timestamp: new Date(position.timestamp).toLocaleString()
+            });
+            
+            setFormData(prev => ({
+              ...prev,
+              lat,
+              lng
+            }));
+            
+            setLocationDetected(true);
+            setGettingLocation(false);
+            
+            // Tự động đoán địa chỉ (có thể bỏ qua nếu lỗi)
+            console.log('🔍 Bắt đầu reverse geocoding...');
+            try {
+              await reverseGeocode(lat, lng);
+            } catch (geocodeError) {
+              console.log('⚠️ Bỏ qua reverse geocoding, user có thể nhập thủ công:', geocodeError);
+              // Không làm gì, để user tự chọn tỉnh/huyện
+            }
+          } catch (positionError) {
+            console.error('❌ Lỗi xử lý vị trí:', positionError);
+            setError('Lỗi xử lý dữ liệu vị trí. Vui lòng thử lại.');
+            setGettingLocation(false);
+          }
         },
         (error) => {
           console.error('❌ Lỗi lấy vị trí GPS:', error);
@@ -322,13 +345,13 @@ const CreateStation = () => {
           
           switch(error.code) {
             case error.PERMISSION_DENIED:
-              errorMessage += 'Vui lòng cho phép truy cập vị trí trong trình duyệt.';
+              errorMessage += 'Vui lòng cho phép truy cập vị trí trong trình duyệt và thử lại.';
               break;
             case error.POSITION_UNAVAILABLE:
-              errorMessage += 'Thông tin vị trí không khả dụng.';
+              errorMessage += 'Thông tin vị trí không khả dụng. Hãy kiểm tra GPS/WiFi.';
               break;
             case error.TIMEOUT:
-              errorMessage += 'Hết thời gian chờ lấy vị trí.';
+              errorMessage += 'Hết thời gian chờ lấy vị trí. Vui lòng thử lại.';
               break;
             default:
               errorMessage += 'Vui lòng thử lại hoặc nhập thủ công.';
@@ -340,21 +363,25 @@ const CreateStation = () => {
         },
         {
           enableHighAccuracy: true,
-          timeout: 15000, // Tăng timeout lên 15s
-          maximumAge: 60000 // Giảm xuống 1 phút để có dữ liệu mới hơn
+          timeout: 20000, // Tăng timeout lên 20s
+          maximumAge: 30000 // Giảm xuống 30s để có dữ liệu mới hơn
         }
       );
     } else {
       setError('Trình duyệt không hỗ trợ định vị GPS. Vui lòng nhập thông tin thủ công.');
       setGettingLocation(false);
     }
-  };
+  }, [reverseGeocode]); // Thêm reverseGeocode dependency
 
   // Auto-detect location khi component mount
   useEffect(() => {
     if (dataLoaded && !locationDetected) {
       // Tự động lấy vị trí khi trang load
-      getCurrentLocation();
+      const timer = setTimeout(() => {
+        getCurrentLocation();
+      }, 500); // Delay nhỏ để đảm bảo component đã render xong
+      
+      return () => clearTimeout(timer);
     }
   }, [dataLoaded, locationDetected, getCurrentLocation]);
 
@@ -529,25 +556,90 @@ const CreateStation = () => {
               <p style={{ margin: '0 0 1rem 0', fontSize: '0.9rem', color: '#6b7280' }}>
                 Nhấn nút bên dưới để tự động lấy tọa độ GPS và đoán địa chỉ
               </p>
-              <button 
-                type="button"
-                onClick={getCurrentLocation}
-                disabled={gettingLocation}
-                className="location-btn"
-                style={{
-                  background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
-                  color: 'white',
-                  border: 'none',
-                  padding: '0.75rem 1.5rem',
+              
+              {error && (
+                <div style={{ 
+                  background: 'rgba(239, 68, 68, 0.1)', 
+                  border: '1px solid rgba(239, 68, 68, 0.3)',
                   borderRadius: '8px',
-                  fontSize: '1rem',
-                  fontWeight: '600',
-                  cursor: gettingLocation ? 'not-allowed' : 'pointer',
-                  opacity: gettingLocation ? 0.7 : 1
-                }}
-              >
-                {gettingLocation ? '🔄 Đang lấy vị trí...' : '🎯 Lấy vị trí hiện tại'}
-              </button>
+                  padding: '0.75rem',
+                  marginBottom: '1rem',
+                  color: '#fca5a5'
+                }}>
+                  <div style={{ fontWeight: '600', marginBottom: '0.5rem' }}>❌ Lỗi lấy vị trí:</div>
+                  <div style={{ fontSize: '0.9rem' }}>{error}</div>
+                </div>
+              )}
+              
+              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <button 
+                  type="button"
+                  onClick={getCurrentLocation}
+                  disabled={gettingLocation}
+                  className="location-btn"
+                  style={{
+                    background: gettingLocation ? 'rgba(59, 130, 246, 0.5)' : 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+                    color: 'white',
+                    border: 'none',
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '8px',
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    cursor: gettingLocation ? 'not-allowed' : 'pointer',
+                    opacity: gettingLocation ? 0.7 : 1,
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  {gettingLocation ? '🔄 Đang lấy vị trí...' : '🎯 Lấy vị trí hiện tại'}
+                </button>
+                
+                <button 
+                  type="button"
+                  onClick={() => {
+                    setLocationDetected(true);
+                    setFormData(prev => ({ ...prev, lat: 10.7769, lng: 106.7009, province: 'HCM' }));
+                    setError('');
+                  }}
+                  className="manual-location-btn"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '8px',
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.background = 'rgba(255, 255, 255, 0.2)';
+                    e.target.style.color = '#ffffff';
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+                    e.target.style.color = 'rgba(255, 255, 255, 0.8)';
+                  }}
+                >
+                  📝 Nhập thủ công
+                </button>
+              </div>
+              
+              <div style={{ 
+                marginTop: '1rem', 
+                padding: '0.75rem', 
+                background: 'rgba(59, 130, 246, 0.1)',
+                borderRadius: '8px',
+                fontSize: '0.85rem',
+                color: 'rgba(255, 255, 255, 0.7)'
+              }}>
+                💡 <strong>Mẹo:</strong> Để lấy vị trí chính xác, hãy đảm bảo:
+                <ul style={{ margin: '0.5rem 0 0 1rem', paddingLeft: '1rem' }}>
+                  <li>Cho phép truy cập vị trí trong trình duyệt</li>
+                  <li>Bật GPS/Location Services trên thiết bị</li>
+                  <li>Kết nối WiFi hoặc dữ liệu di động ổn định</li>
+                </ul>
+              </div>
             </div>
           ) : (
             <div className="location-success">
@@ -596,8 +688,8 @@ const CreateStation = () => {
         </div>
       
       <form onSubmit={handleSubmit}>
-        {/* Chỉ hiển thị form khi đã có tọa độ GPS */}
-        {locationDetected && (
+        {/* Hiển thị form khi đã có tọa độ GPS hoặc user chọn nhập thủ công */}
+        {(locationDetected || formData.lat !== null) && (
           <>
             {/* Địa chỉ - Bước 2 */}
             <div className="form-section">

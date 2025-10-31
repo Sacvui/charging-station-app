@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getStationsNearby } from '../utils/mockData';
+import StarRating from '../components/StarRating';
 
 const NearbyStations = () => {
   const { user } = useAuth();
@@ -56,9 +57,7 @@ const NearbyStations = () => {
     setLoading(false);
   };
 
-  const getRatingStars = (rating) => {
-    return '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating));
-  };
+
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN').format(price);
@@ -186,8 +185,11 @@ const NearbyStations = () => {
                 <div className="detail-row">
                   <span className="detail-label">⭐ Đánh giá</span>
                   <span className="detail-value">
-                    <span className="rating">{getRatingStars(station.rating)}</span>
-                    <span className="rating-text">{station.rating} ({station.totalRatings})</span>
+                    <StarRating 
+                      rating={station.rating} 
+                      totalRatings={station.totalRatings}
+                      size="normal"
+                    />
                   </span>
                 </div>
 
