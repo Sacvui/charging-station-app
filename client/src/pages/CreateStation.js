@@ -134,62 +134,41 @@ const CreateStation = () => {
         
         console.log('🏠 Address object:', address);
         
-        // Mapping các tên thành phố với code - mở rộng hơn
+        // Mapping các tên thành phố với code - đầy đủ tất cả tỉnh thành
         const cityMapping = {
-          // Hồ Chí Minh
-          'hồ chí minh': 'HCM',
-          'ho chi minh': 'HCM',
-          'sài gòn': 'HCM',
-          'saigon': 'HCM',
-          'thành phố hồ chí minh': 'HCM',
-          'tp hồ chí minh': 'HCM',
-          'tp. hồ chí minh': 'HCM',
+          // 6 thành phố trực thuộc TW
+          'hồ chí minh': 'HCM', 'ho chi minh': 'HCM', 'sài gòn': 'HCM', 'saigon': 'HCM',
+          'thành phố hồ chí minh': 'HCM', 'tp hồ chí minh': 'HCM', 'tp. hồ chí minh': 'HCM',
           
-          // Hà Nội
-          'hà nội': 'HN',
-          'ha noi': 'HN',
-          'hanoi': 'HN',
-          'thành phố hà nội': 'HN',
-          'tp hà nội': 'HN',
-          'tp. hà nội': 'HN',
+          'hà nội': 'HN', 'ha noi': 'HN', 'hanoi': 'HN',
+          'thành phố hà nội': 'HN', 'tp hà nội': 'HN', 'tp. hà nội': 'HN',
           
-          // Đà Nẵng
-          'đà nẵng': 'DN',
-          'da nang': 'DN',
-          'danang': 'DN',
-          'thành phố đà nẵng': 'DN',
-          'tp đà nẵng': 'DN',
-          'tp. đà nẵng': 'DN',
+          'đà nẵng': 'DN', 'da nang': 'DN', 'danang': 'DN',
+          'thành phố đà nẵng': 'DN', 'tp đà nẵng': 'DN', 'tp. đà nẵng': 'DN',
           
-          // Cần Thơ
-          'cần thơ': 'CT',
-          'can tho': 'CT',
-          'cantho': 'CT',
-          'thành phố cần thơ': 'CT',
-          'tp cần thơ': 'CT',
-          'tp. cần thơ': 'CT',
+          'cần thơ': 'CT', 'can tho': 'CT', 'cantho': 'CT',
+          'thành phố cần thơ': 'CT', 'tp cần thơ': 'CT', 'tp. cần thơ': 'CT',
           
-          // Hải Phòng
-          'hải phòng': 'HP',
-          'hai phong': 'HP',
-          'haiphong': 'HP',
-          'thành phố hải phòng': 'HP',
-          'tp hải phòng': 'HP',
-          'tp. hải phòng': 'HP',
+          'hải phòng': 'HP', 'hai phong': 'HP', 'haiphong': 'HP',
+          'thành phố hải phòng': 'HP', 'tp hải phòng': 'HP', 'tp. hải phòng': 'HP',
           
-          // Bình Dương
-          'bình dương': 'BD',
-          'binh duong': 'BD',
-          'tỉnh bình dương': 'BD',
+          // Các tỉnh miền Nam
+          'an giang': 'AG', 'bạc liêu': 'BL', 'bến tre': 'BT', 'bình dương': 'BD', 'bình phước': 'BP',
+          'bình thuận': 'BH', 'cà mau': 'CM', 'đồng nai': 'DN2', 'đồng tháp': 'DT',
+          'kiên giang': 'KG', 'long an': 'LA', 'ninh thuận': 'NT', 'sóc trăng': 'ST',
+          'tây ninh': 'TN', 'tiền giang': 'TG', 'trà vinh': 'TV', 'vĩnh long': 'VL',
           
-          // Đồng Nai
-          'đồng nai': 'DN2',
-          'dong nai': 'DN2',
-          'tỉnh đồng nai': 'DN2',
+          // Các tỉnh miền Bắc
+          'bắc kạn': 'BK', 'bắc giang': 'BG', 'bắc ninh': 'BN', 'cao bằng': 'CB',
+          'hà giang': 'HG', 'hà tĩnh': 'HT', 'hòa bình': 'HB', 'hưng yên': 'HY',
+          'lai châu': 'LC', 'lạng sơn': 'LS', 'nam định': 'ND', 'ninh bình': 'NB',
+          'quảng ninh': 'QNi', 'sơn la': 'SL', 'thái bình': 'TB', 'tuyên quang': 'TQ',
+          'vĩnh phúc': 'VP', 'yên bái': 'YB',
           
-          // Long An
-          'long an': 'LA',
-          'tỉnh long an': 'LA'
+          // Các tỉnh miền Trung
+          'đắk lắk': 'DL', 'gia lai': 'GL', 'khánh hòa': 'KH', 'kon tum': 'KT',
+          'nghệ an': 'NA', 'phú yên': 'PY', 'quảng bình': 'QB', 'quảng nam': 'QN',
+          'quảng ngãi': 'QG', 'quảng trị': 'QT', 'thừa thiên huế': 'TTH'
         };
         
         // Lấy thông tin địa chỉ từ nhiều trường
