@@ -1,0 +1,13 @@
+@echo off
+echo Testing local build...
+cd client
+echo Installing dependencies...
+call npm ci
+echo Building project...
+call npm run build
+echo Build completed!
+echo Testing build folder...
+dir build
+echo.
+echo Build test completed. Check for any errors above.
+pause
