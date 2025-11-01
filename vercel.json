@@ -13,30 +13,14 @@
   "routes": [
     {
       "src": "/static/(.*)",
-      "dest": "/client/build/static/$1"
-    },
-    {
-      "src": "/favicon.ico",
-      "dest": "/client/build/favicon.ico"
-    },
-    {
-      "src": "/manifest.json",
-      "dest": "/client/build/manifest.json"
-    },
-    {
-      "src": "/logo192.png",
-      "dest": "/client/build/logo192.png"
-    },
-    {
-      "src": "/logo512.png", 
-      "dest": "/client/build/logo512.png"
+      "dest": "/static/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "/client/build/index.html"
+      "dest": "/index.html"
     }
   ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  "buildCommand": "cd client && npm install && npm run build",
+  "outputDirectory": "client/build",
+  "installCommand": "cd client && npm install"
 }
