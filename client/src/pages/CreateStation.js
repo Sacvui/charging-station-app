@@ -99,6 +99,18 @@ const CreateStation = () => {
     let controller = null;
     let timeoutId = null;
     
+    // Cleanup function
+    const cleanup = () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+      if (controller && !controller.signal.aborted) {
+        controller.abort();
+      }
+      setIsGeocoding(false);
+    };
+    
     try {
       setIsGeocoding(true);
       console.log('🔍 Đang reverse geocoding cho tọa độ:', lat, lng, 'với', provinces.length, 'tỉnh thành');
@@ -107,24 +119,57 @@ const CreateStation = () => {
       // Tạo AbortController mới cho mỗi request
       controller = new AbortController();
       
-      // Timeout sau 8 giây (tăng thời gian chờ)
+      // Timeout sau 12 giây (tăng thời gian chờ)
       timeoutId = setTimeout(() => {
         if (controller && !controller.signal.aborted) {
+          console.log('⏰ Timeout - aborting request');
           controller.abort();
         }
-      }, 8000);
+      }, 12000);
       
-      // Sử dụng CORS proxy để bypass CORS policy
-      const corsProxy = 'https://api.allorigins.win/raw?url=';
+      // Thử nhiều CORS proxy khác nhau
+      const corsProxies = [
+        'https://api.allorigins.win/raw?url=',
+        'https://cors-anywhere.herokuapp.com/',
+        'https://api.codetabs.com/v1/proxy?quest='
+      ];
+      
       const nominatimUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&accept-language=vi`;
-      const proxyUrl = corsProxy + encodeURIComponent(nominatimUrl);
       
-      console.log('🌐 Calling API via proxy:', proxyUrl);
+      let response = null;
+      let lastError = null;
       
-      const response = await fetch(proxyUrl, {
-        method: 'GET',
-        signal: controller.signal
-      });
+      // Thử từng proxy cho đến khi thành công
+      for (let i = 0; i < corsProxies.length; i++) {
+        if (controller.signal.aborted) break;
+        
+        try {
+          const proxyUrl = corsProxies[i] + encodeURIComponent(nominatimUrl);
+          console.log(`🌐 Trying proxy ${i + 1}/${corsProxies.length}:`, proxyUrl);
+          
+          response = await fetch(proxyUrl, {
+            method: 'GET',
+            signal: controller.signal,
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+          });
+          
+          if (response.ok) {
+            console.log('✅ Proxy thành công:', corsProxies[i]);
+            break;
+          } else {
+            throw new Error(`HTTP ${response.status}`);
+          }
+        } catch (error) {
+          lastError = error;
+          console.log(`❌ Proxy ${i + 1} failed:`, error.message);
+          if (i === corsProxies.length - 1) {
+            throw lastError;
+          }
+        }
+      }
       
       // Clear timeout nếu request thành công
       if (timeoutId) {
@@ -132,8 +177,8 @@ const CreateStation = () => {
         timeoutId = null;
       }
       
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (!response || !response.ok) {
+        throw new Error(`All proxies failed. Last error: ${lastError?.message || 'Unknown error'}`);
       }
       
       const data = await response.json();
@@ -424,17 +469,15 @@ const CreateStation = () => {
         setIsGeocoding(false);
       }
     } catch (error) {
-      // Clear timeout nếu có lỗi
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-        timeoutId = null;
-      }
-      
-      setIsGeocoding(false);
+      // Cleanup resources
+      cleanup();
       console.error('❌ Reverse geocoding error:', error);
       
-      // Retry logic - thử lại tối đa 2 lần, nhưng không retry nếu là AbortError liên tục
-      if (retryCount < 2 && error.message.includes('Failed to fetch')) {
+      // Retry logic - thử lại tối đa 1 lần, và không retry nếu là AbortError
+      if (retryCount < 1 && 
+          !error.name?.includes('Abort') && 
+          !error.message?.includes('aborted') &&
+          (error.message?.includes('Failed to fetch') || error.message?.includes('HTTP'))) {
         console.log(`🔄 Thử lại lần ${retryCount + 1}/2...`);
         setGeocodingStatus(`Kết nối chậm, đang thử lại... (${retryCount + 2}/3)`);
         setTimeout(() => {

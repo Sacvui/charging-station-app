@@ -189,18 +189,85 @@ const StationDetail = () => {
         <div className="pricing-card">
           <h3>💰 Bảng giá & Loại sạc</h3>
           <div style={{ display: 'grid', gap: '1rem' }}>
-            {station.pricing.map((price, index) => (
-              <div key={index} className="pricing-item">
-                <div className="charger-type">
-                  <div className="charger-icon">🔌</div>
-                  <strong>{price.chargerType}</strong>
+            {station.pricing.map((price, index) => {
+              // Determine charger specs and icon based on type
+              const getChargerDetails = (type) => {
+                const details = {
+                  'AC Slow (3.7kW)': { 
+                    icon: '🔌', 
+                    power: '3.7kW',
+                    speed: 'Chậm',
+                    time: '6-8h đầy'
+                  },
+                  'AC Fast (7kW)': { 
+                    icon: '⚡', 
+                    power: '7kW',
+                    speed: 'Trung bình',
+                    time: '3-4h đầy'
+                  },
+                  'AC Fast (11kW)': { 
+                    icon: '⚡', 
+                    power: '11kW',
+                    speed: 'Nhanh',
+                    time: '2-3h đầy'
+                  },
+                  'AC Fast (22kW)': { 
+                    icon: '⚡', 
+                    power: '22kW',
+                    speed: 'Nhanh',
+                    time: '1-2h đầy'
+                  },
+                  'DC Fast (50kW)': { 
+                    icon: '🚀', 
+                    power: '50kW',
+                    speed: 'Siêu nhanh',
+                    time: '30-45p đầy'
+                  },
+                  'DC Ultra (150kW)': { 
+                    icon: '⚡', 
+                    power: '150kW',
+                    speed: 'Cực nhanh',
+                    time: '15-20p đầy'
+                  },
+                  'DC Ultra (350kW)': { 
+                    icon: '🔥', 
+                    power: '350kW',
+                    speed: 'Tức thời',
+                    time: '5-10p đầy'
+                  }
+                };
+                return details[type] || { 
+                  icon: '🔌', 
+                  power: 'N/A',
+                  speed: 'Tiêu chuẩn',
+                  time: 'Tùy xe'
+                };
+              };
+
+              const chargerDetails = getChargerDetails(price.chargerType);
+
+              return (
+                <div key={index} className="pricing-item">
+                  <div className="charger-type">
+                    <div className="charger-icon">{chargerDetails.icon}</div>
+                    <div className="charger-type-details">
+                      <div className="charger-type-name">{price.chargerType}</div>
+                      <div className="charger-type-specs">
+                        <span className="charging-speed">{chargerDetails.speed}</span>
+                        <span>⏱️ {chargerDetails.time}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="price-value">
+                    <div>{formatPrice(price.pricePerHour)}đ</div>
+                    <div className="price-unit">mỗi giờ</div>
+                  </div>
+                  {chargerDetails.power !== 'N/A' && (
+                    <div className="power-badge">{chargerDetails.power}</div>
+                  )}
                 </div>
-                <div className="price-value">
-                  <div>{formatPrice(price.pricePerHour)}đ</div>
-                  <div className="price-unit">per hour</div>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
