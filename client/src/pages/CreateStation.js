@@ -40,8 +40,15 @@ const CreateStation = () => {
 
   useEffect(() => {
     // Ensure data is loaded
+    console.log('📊 Data loading status:', {
+      provinces: provinces.length,
+      chargerTypes: chargerTypes.length,
+      provincesData: provinces.slice(0, 3).map(p => ({ code: p.code, name: p.name }))
+    });
+    
     if (provinces.length > 0 && chargerTypes.length > 0) {
       setDataLoaded(true);
+      console.log('✅ All data loaded successfully');
     }
   }, [provinces.length, chargerTypes.length]);
 
@@ -82,12 +89,19 @@ const CreateStation = () => {
       return;
     }
     
+    // Đảm bảo provinces data đã được load
+    if (!provinces || provinces.length === 0) {
+      console.log('⚠️ Provinces data chưa được load, bỏ qua reverse geocoding');
+      setGeocodingStatus('Đang tải dữ liệu tỉnh thành...');
+      return;
+    }
+    
     let controller = null;
     let timeoutId = null;
     
     try {
       setIsGeocoding(true);
-      console.log('🔍 Đang reverse geocoding cho tọa độ:', lat, lng);
+      console.log('🔍 Đang reverse geocoding cho tọa độ:', lat, lng, 'với', provinces.length, 'tỉnh thành');
       setGeocodingStatus(retryCount > 0 ? `Đang thử lại... (${retryCount + 1}/3)` : 'Đang tìm địa chỉ...');
       
       // Tạo AbortController mới cho mỗi request
@@ -100,17 +114,17 @@ const CreateStation = () => {
         }
       }, 8000);
       
-      // Sử dụng Nominatim API (OpenStreetMap) - miễn phí với CORS headers
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&accept-language=vi`,
-        {
-          method: 'GET',
-          headers: {
-            'User-Agent': 'SacVui/1.0'
-          },
-          signal: controller.signal
-        }
-      );
+      // Sử dụng CORS proxy để bypass CORS policy
+      const corsProxy = 'https://api.allorigins.win/raw?url=';
+      const nominatimUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&accept-language=vi`;
+      const proxyUrl = corsProxy + encodeURIComponent(nominatimUrl);
+      
+      console.log('🌐 Calling API via proxy:', proxyUrl);
+      
+      const response = await fetch(proxyUrl, {
+        method: 'GET',
+        signal: controller.signal
+      });
       
       // Clear timeout nếu request thành công
       if (timeoutId) {
@@ -130,57 +144,88 @@ const CreateStation = () => {
         const address = data.address;
         const fullAddress = data.display_name;
         setAddressSuggestion(fullAddress);
-        setGeocodingStatus('');
+        setGeocodingStatus('✅ Đã tự động điền tỉnh thành và quận huyện!');
+        
+        // Clear success message after 3 seconds
+        setTimeout(() => {
+          setGeocodingStatus('');
+        }, 3000);
         
         console.log('🏠 Address object:', address);
+        console.log('🏠 Full API response:', data);
         
-        // Mapping các tên thành phố với code - đầy đủ tất cả tỉnh thành
+        // Mapping các tên thành phố với code - đầy đủ tất cả tỉnh thành với nhiều biến thể
         const cityMapping = {
-          // 6 thành phố trực thuộc TW
-          'hồ chí minh': 'HCM', 'ho chi minh': 'HCM', 'sài gòn': 'HCM', 'saigon': 'HCM',
+          // TP. Hồ Chí Minh - nhiều biến thể
+          'hồ chí minh': 'HCM', 'ho chi minh': 'HCM', 'hcm': 'HCM', 'sài gòn': 'HCM', 'saigon': 'HCM',
           'thành phố hồ chí minh': 'HCM', 'tp hồ chí minh': 'HCM', 'tp. hồ chí minh': 'HCM',
+          'ho chi minh city': 'HCM', 'saigon city': 'HCM',
           
-          'hà nội': 'HN', 'ha noi': 'HN', 'hanoi': 'HN',
+          // Hà Nội
+          'hà nội': 'HN', 'ha noi': 'HN', 'hanoi': 'HN', 'hn': 'HN',
           'thành phố hà nội': 'HN', 'tp hà nội': 'HN', 'tp. hà nội': 'HN',
+          'hanoi city': 'HN',
           
-          'đà nẵng': 'DN', 'da nang': 'DN', 'danang': 'DN',
+          // Đà Nẵng
+          'đà nẵng': 'DN', 'da nang': 'DN', 'danang': 'DN', 'dn': 'DN',
           'thành phố đà nẵng': 'DN', 'tp đà nẵng': 'DN', 'tp. đà nẵng': 'DN',
+          'da nang city': 'DN',
           
-          'cần thơ': 'CT', 'can tho': 'CT', 'cantho': 'CT',
+          // Cần Thơ
+          'cần thơ': 'CT', 'can tho': 'CT', 'cantho': 'CT', 'ct': 'CT',
           'thành phố cần thơ': 'CT', 'tp cần thơ': 'CT', 'tp. cần thơ': 'CT',
+          'can tho city': 'CT',
           
-          'hải phòng': 'HP', 'hai phong': 'HP', 'haiphong': 'HP',
+          // Hải Phòng
+          'hải phòng': 'HP', 'hai phong': 'HP', 'haiphong': 'HP', 'hp': 'HP',
           'thành phố hải phòng': 'HP', 'tp hải phòng': 'HP', 'tp. hải phòng': 'HP',
+          'hai phong city': 'HP',
           
-          // Các tỉnh miền Nam
-          'an giang': 'AG', 'bạc liêu': 'BL', 'bến tre': 'BT', 'bình dương': 'BD', 'bình phước': 'BP',
-          'bình thuận': 'BH', 'cà mau': 'CM', 'đồng nai': 'DN2', 'đồng tháp': 'DT',
-          'kiên giang': 'KG', 'long an': 'LA', 'ninh thuận': 'NT', 'sóc trăng': 'ST',
-          'tây ninh': 'TN', 'tiền giang': 'TG', 'trà vinh': 'TV', 'vĩnh long': 'VL',
+          // Các tỉnh miền Nam với biến thể
+          'an giang': 'AG', 'bạc liêu': 'BL', 'bac lieu': 'BL', 'bến tre': 'BT', 'ben tre': 'BT',
+          'bình dương': 'BD', 'binh duong': 'BD', 'bình phước': 'BP', 'binh phuoc': 'BP',
+          'bình thuận': 'BH', 'binh thuan': 'BH', 'cà mau': 'CM', 'ca mau': 'CM',
+          'đồng nai': 'DN2', 'dong nai': 'DN2', 'đồng tháp': 'DT', 'dong thap': 'DT',
+          'kiên giang': 'KG', 'kien giang': 'KG', 'long an': 'LA',
+          'ninh thuận': 'NT', 'ninh thuan': 'NT', 'sóc trăng': 'ST', 'soc trang': 'ST',
+          'tây ninh': 'TN', 'tay ninh': 'TN', 'tiền giang': 'TG', 'tien giang': 'TG',
+          'trà vinh': 'TV', 'tra vinh': 'TV', 'vĩnh long': 'VL', 'vinh long': 'VL',
           
-          // Các tỉnh miền Bắc
-          'bắc kạn': 'BK', 'bắc giang': 'BG', 'bắc ninh': 'BN', 'cao bằng': 'CB',
-          'hà giang': 'HG', 'hà tĩnh': 'HT', 'hòa bình': 'HB', 'hưng yên': 'HY',
-          'lai châu': 'LC', 'lạng sơn': 'LS', 'nam định': 'ND', 'ninh bình': 'NB',
-          'quảng ninh': 'QNi', 'sơn la': 'SL', 'thái bình': 'TB', 'tuyên quang': 'TQ',
-          'vĩnh phúc': 'VP', 'yên bái': 'YB',
+          // Các tỉnh miền Bắc với biến thể
+          'bắc kạn': 'BK', 'bac kan': 'BK', 'bắc giang': 'BG', 'bac giang': 'BG',
+          'bắc ninh': 'BN', 'bac ninh': 'BN', 'cao bằng': 'CB', 'cao bang': 'CB',
+          'hà giang': 'HG', 'ha giang': 'HG', 'hà tĩnh': 'HT', 'ha tinh': 'HT',
+          'hòa bình': 'HB', 'hoa binh': 'HB', 'hưng yên': 'HY', 'hung yen': 'HY',
+          'lai châu': 'LC', 'lai chau': 'LC', 'lạng sơn': 'LS', 'lang son': 'LS',
+          'nam định': 'ND', 'nam dinh': 'ND', 'ninh bình': 'NB', 'ninh binh': 'NB',
+          'quảng ninh': 'QNi', 'quang ninh': 'QNi', 'sơn la': 'SL', 'son la': 'SL',
+          'thái bình': 'TB', 'thai binh': 'TB', 'tuyên quang': 'TQ', 'tuyen quang': 'TQ',
+          'vĩnh phúc': 'VP', 'vinh phuc': 'VP', 'yên bái': 'YB', 'yen bai': 'YB',
           
-          // Các tỉnh miền Trung
-          'đắk lắk': 'DL', 'gia lai': 'GL', 'khánh hòa': 'KH', 'kon tum': 'KT',
-          'nghệ an': 'NA', 'phú yên': 'PY', 'quảng bình': 'QB', 'quảng nam': 'QN',
-          'quảng ngãi': 'QG', 'quảng trị': 'QT', 'thừa thiên huế': 'TTH'
+          // Các tỉnh miền Trung với biến thể
+          'đắk lắk': 'DL', 'dak lak': 'DL', 'daklak': 'DL', 'gia lai': 'GL',
+          'khánh hòa': 'KH', 'khanh hoa': 'KH', 'kon tum': 'KT',
+          'nghệ an': 'NA', 'nghe an': 'NA', 'phú yên': 'PY', 'phu yen': 'PY',
+          'quảng bình': 'QB', 'quang binh': 'QB', 'quảng nam': 'QN', 'quang nam': 'QN',
+          'quảng ngãi': 'QG', 'quang ngai': 'QG', 'quảng trị': 'QT', 'quang tri': 'QT',
+          'thừa thiên huế': 'TTH', 'thua thien hue': 'TTH', 'huế': 'TTH', 'hue': 'TTH'
         };
         
-        // Lấy thông tin địa chỉ từ nhiều trường
+        // Lấy thông tin địa chỉ từ nhiều trường - bao gồm tất cả các trường có thể
         const addressFields = [
-          address.city, 
-          address.province, 
-          address.state,
-          address.city_district,
-          address.county,
-          address.municipality,
-          address.administrative_area_level_1,
-          address.administrative_area_level_2
+          address.state,           // Tỉnh/State
+          address.province,        // Tỉnh/Province  
+          address.city,           // Thành phố
+          address.county,         // Huyện/County
+          address.municipality,   // Thành phố/Municipality
+          address.administrative_area_level_1,  // Cấp hành chính 1
+          address.administrative_area_level_2,  // Cấp hành chính 2
+          address.city_district,  // Quận/Huyện
+          address.suburb,         // Phường/Xã
+          address.neighbourhood,  // Khu vực
+          address.quarter,        // Phường
+          // Thêm các trường từ display_name
+          ...data.display_name.split(',').map(s => s.trim())
         ].filter(Boolean);
         
         console.log('🏙️ Các trường địa chỉ tìm được:', addressFields);
@@ -189,24 +234,27 @@ const CreateStation = () => {
         
         // Tìm tỉnh phù hợp từ mapping
         for (const cityName of addressFields) {
+          if (!cityName || typeof cityName !== 'string') continue;
+          
           const normalizedCity = cityName.toLowerCase()
-            .replace(/tp\.|thành phố|tỉnh/g, '')
+            .replace(/tp\.|thành phố|tỉnh|province|city/g, '')
             .replace(/\s+/g, ' ')
             .trim();
           
-          console.log('🔍 Đang kiểm tra:', normalizedCity);
+          console.log('🔍 Đang kiểm tra:', `"${cityName}" -> "${normalizedCity}"`);
           
+          // Exact match
           if (cityMapping[normalizedCity]) {
             matchedProvinceCode = cityMapping[normalizedCity];
-            console.log('✅ Tìm thấy match:', normalizedCity, '->', matchedProvinceCode);
+            console.log('✅ Tìm thấy exact match:', normalizedCity, '->', matchedProvinceCode);
             break;
           }
           
-          // Thử tìm kiếm partial match
+          // Partial match - tìm trong cityMapping
           for (const [key, value] of Object.entries(cityMapping)) {
             if (normalizedCity.includes(key) || key.includes(normalizedCity)) {
               matchedProvinceCode = value;
-              console.log('✅ Tìm thấy partial match:', key, '->', value);
+              console.log('✅ Tìm thấy partial match:', `"${normalizedCity}" contains "${key}"`, '->', value);
               break;
             }
           }
@@ -216,14 +264,37 @@ const CreateStation = () => {
         
         // Nếu không tìm thấy trong mapping, tìm trong danh sách provinces
         if (!matchedProvinceCode) {
-          console.log('🔍 Không tìm thấy trong mapping, thử tìm trong danh sách provinces...');
+          console.log('🔍 Không tìm thấy trong mapping, thử tìm trong danh sách provinces...', provinces.length, 'provinces available');
           
           for (const cityName of addressFields) {
+            if (!cityName) continue;
+            
+            const cityNameLower = cityName.toLowerCase()
+              .replace(/tp\.|thành phố|tỉnh/g, '')
+              .replace(/\s+/g, ' ')
+              .trim();
+            
+            console.log('🔍 Đang tìm kiếm:', cityNameLower);
+            
             const matchedProvince = provinces.find(p => {
-              const provinceName = p.name.toLowerCase().replace('tp. ', '').replace('tỉnh ', '');
-              const cityNameLower = cityName.toLowerCase().replace('tp. ', '').replace('tỉnh ', '');
+              const provinceName = p.name.toLowerCase()
+                .replace(/tp\.|thành phố|tỉnh/g, '')
+                .replace(/\s+/g, ' ')
+                .trim();
               
-              return provinceName.includes(cityNameLower) || cityNameLower.includes(provinceName);
+              console.log('  - So sánh với:', provinceName);
+              
+              // Exact match
+              if (provinceName === cityNameLower) return true;
+              
+              // Contains match
+              if (provinceName.includes(cityNameLower) || cityNameLower.includes(provinceName)) return true;
+              
+              // Word match
+              const provinceWords = provinceName.split(' ');
+              const cityWords = cityNameLower.split(' ');
+              
+              return provinceWords.some(pw => cityWords.some(cw => pw.includes(cw) || cw.includes(pw)));
             });
             
             if (matchedProvince) {
@@ -231,6 +302,78 @@ const CreateStation = () => {
               console.log('✅ Tìm thấy trong provinces:', matchedProvince.name, '->', matchedProvinceCode);
               break;
             }
+          }
+        }
+        
+        // Tìm district/quận huyện
+        let matchedDistrictCode = null;
+        const finalProvinceCode = matchedProvinceCode || 'HCM';
+        const selectedProvince = provinces.find(p => p.code === finalProvinceCode);
+        
+        console.log('🏛️ Selected province:', selectedProvince?.name, 'with', selectedProvince?.districts?.length, 'districts');
+        
+        if (selectedProvince && selectedProvince.districts) {
+          const districtFields = [
+            address.city_district,
+            address.suburb,
+            address.neighbourhood,
+            address.quarter,
+            address.county,
+            address.administrative_area_level_2,
+            address.administrative_area_level_3
+          ].filter(Boolean);
+          
+          console.log('🏘️ Tìm kiếm district trong:', districtFields);
+          console.log('🏘️ Available districts:', selectedProvince.districts.map(d => d.name));
+          
+          for (const districtName of districtFields) {
+            if (!districtName) continue;
+            
+            const districtNameLower = districtName.toLowerCase()
+              .replace(/quận|huyện|thị xã|tp\.|district|ward/g, '')
+              .replace(/\s+/g, ' ')
+              .trim();
+            
+            console.log('🔍 Đang tìm district:', districtNameLower);
+            
+            const matchedDistrict = selectedProvince.districts.find(d => {
+              const dName = d.name.toLowerCase()
+                .replace(/quận|huyện|thị xã|tp\./g, '')
+                .replace(/\s+/g, ' ')
+                .trim();
+              
+              console.log('  - So sánh với district:', dName);
+              
+              // Exact match
+              if (dName === districtNameLower) return true;
+              
+              // Contains match
+              if (dName.includes(districtNameLower) || districtNameLower.includes(dName)) return true;
+              
+              // Number match for districts like "Quận 1", "Quận 7"
+              const districtNumber = districtNameLower.match(/\d+/);
+              const dNumber = dName.match(/\d+/);
+              if (districtNumber && dNumber && districtNumber[0] === dNumber[0]) return true;
+              
+              // Partial word match
+              const districtWords = districtNameLower.split(' ');
+              const dWords = dName.split(' ');
+              const hasWordMatch = districtWords.some(dw => dWords.some(w => w.includes(dw) || dw.includes(w)));
+              
+              return hasWordMatch;
+            });
+            
+            if (matchedDistrict) {
+              matchedDistrictCode = matchedDistrict.code;
+              console.log('✅ Tìm thấy district:', matchedDistrict.name, '->', matchedDistrictCode);
+              break;
+            }
+          }
+          
+          // Fallback: nếu không tìm thấy district, chọn district đầu tiên
+          if (!matchedDistrictCode && selectedProvince.districts.length > 0) {
+            matchedDistrictCode = selectedProvince.districts[0].code;
+            console.log('🔄 Fallback: Chọn district đầu tiên:', selectedProvince.districts[0].name);
           }
         }
         
@@ -242,16 +385,41 @@ const CreateStation = () => {
         ].filter(Boolean).join(' ');
         
         console.log('📍 Kết quả cuối cùng:', {
-          province: matchedProvinceCode || 'HCM',
-          suggestedAddress
+          province: finalProvinceCode,
+          district: matchedDistrictCode,
+          suggestedAddress,
+          fullAddress: data.display_name,
+          addressObject: address
         });
         
-        // Cập nhật form data
-        setFormData(prev => ({
-          ...prev,
-          province: matchedProvinceCode || 'HCM',
-          address: prev.address || suggestedAddress
-        }));
+        // Cập nhật form data với cả province và district
+        console.log('🔄 Đang cập nhật form data...');
+        
+        // Immediate update first
+        setFormData(prev => {
+          const newData = {
+            ...prev,
+            province: finalProvinceCode,
+            district: matchedDistrictCode || '',
+            address: prev.address || suggestedAddress
+          };
+          console.log('✅ Form data updated immediately:', newData);
+          return newData;
+        });
+        
+        // Force update với timeout để đảm bảo UI update
+        setTimeout(() => {
+          setFormData(prev => {
+            const newData = {
+              ...prev,
+              province: finalProvinceCode,
+              district: matchedDistrictCode || '',
+              address: prev.address || suggestedAddress
+            };
+            console.log('✅ Form data updated with timeout:', newData);
+            return newData;
+          });
+        }, 200);
         
         setIsGeocoding(false);
       }
@@ -286,14 +454,33 @@ const CreateStation = () => {
         console.log('🌐 Không có kết nối mạng sau nhiều lần thử');
       }
       
-      // Fallback: ước tính tỉnh dựa trên tọa độ (offline)
+      // Fallback: ước tính tỉnh dựa trên tọa độ (offline) và auto-select district
       const estimatedProvince = estimateProvinceFromCoords(lat, lng);
-      setFormData(prev => ({
-        ...prev,
-        province: estimatedProvince
-      }));
-      setAddressSuggestion(`${errorMessage} (Ước tính: ${provinces.find(p => p.code === estimatedProvince)?.name || 'TP.HCM'})`);
-      setGeocodingStatus('');
+      const estimatedProvinceData = provinces.find(p => p.code === estimatedProvince);
+      const firstDistrict = estimatedProvinceData?.districts?.[0]?.code || '';
+      
+      console.log('🔄 Offline fallback:', {
+        province: estimatedProvince,
+        district: firstDistrict,
+        provinceName: estimatedProvinceData?.name
+      });
+      
+      // Force update form data with both province and district
+      setTimeout(() => {
+        setFormData(prev => ({
+          ...prev,
+          province: estimatedProvince,
+          district: firstDistrict
+        }));
+      }, 100);
+      
+      setAddressSuggestion(`${errorMessage} (Ước tính: ${estimatedProvinceData?.name || 'TP.HCM'})`);
+      setGeocodingStatus('✅ Đã tự động chọn tỉnh thành dựa trên tọa độ!');
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setGeocodingStatus('');
+      }, 3000);
     }
   }, [provinces, isGeocoding]);
 
@@ -657,8 +844,16 @@ const CreateStation = () => {
                 <button 
                   type="button"
                   onClick={() => {
+                    console.log('🧪 Test button: Setting HCM + Q1');
                     setLocationDetected(true);
-                    setFormData(prev => ({ ...prev, lat: 10.7769, lng: 106.7009, province: 'HCM' }));
+                    setFormData(prev => ({ 
+                      ...prev, 
+                      lat: 10.7769, 
+                      lng: 106.7009, 
+                      province: 'HCM',
+                      district: 'Q1',
+                      address: 'Test address in District 1, Ho Chi Minh City'
+                    }));
                     setError('');
                   }}
                   className="manual-location-btn"
@@ -718,6 +913,12 @@ const CreateStation = () => {
                   🔄 {geocodingStatus}
                 </div>
               )}
+              
+              {/* Debug info */}
+              <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', marginTop: '0.5rem' }}>
+                📊 Data: {provinces.length} tỉnh thành, {chargerTypes.length} loại sạc
+                {formData.province && ` | Selected: ${provinces.find(p => p.code === formData.province)?.name || 'Unknown'}`}
+              </div>
               
               {addressSuggestion && (
                 <div className="location-address">
