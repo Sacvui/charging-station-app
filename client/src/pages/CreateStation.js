@@ -30,6 +30,7 @@ const CreateStation = () => {
   const [locationDetected, setLocationDetected] = useState(false);
   const [addressSuggestion, setAddressSuggestion] = useState('');
   const [geocodingStatus, setGeocodingStatus] = useState('');
+  const [isGeocoding, setIsGeocoding] = useState(false);
 
   const { user, updateUser } = useAuth();
   const navigate = useNavigate();
@@ -75,13 +76,29 @@ const CreateStation = () => {
 
   // Reverse geocoding để đoán tỉnh/huyện từ tọa độ với retry logic
   const reverseGeocode = useCallback(async (lat, lng, retryCount = 0) => {
+    // Tránh gọi trùng lặp
+    if (isGeocoding) {
+      console.log('🔄 Đang geocoding, bỏ qua request trùng lặp');
+      return;
+    }
+    
+    let controller = null;
+    let timeoutId = null;
+    
     try {
+      setIsGeocoding(true);
       console.log('🔍 Đang reverse geocoding cho tọa độ:', lat, lng);
       setGeocodingStatus(retryCount > 0 ? `Đang thử lại... (${retryCount + 1}/3)` : 'Đang tìm địa chỉ...');
       
-      // Tạo AbortController để timeout sau 5 giây
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      // Tạo AbortController mới cho mỗi request
+      controller = new AbortController();
+      
+      // Timeout sau 8 giây (tăng thời gian chờ)
+      timeoutId = setTimeout(() => {
+        if (controller && !controller.signal.aborted) {
+          controller.abort();
+        }
+      }, 8000);
       
       // Sử dụng Nominatim API (OpenStreetMap) - miễn phí với CORS headers
       const response = await fetch(
@@ -95,7 +112,11 @@ const CreateStation = () => {
         }
       );
       
-      clearTimeout(timeoutId);
+      // Clear timeout nếu request thành công
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -252,17 +273,26 @@ const CreateStation = () => {
           province: matchedProvinceCode || 'HCM',
           address: prev.address || suggestedAddress
         }));
+        
+        setIsGeocoding(false);
       }
     } catch (error) {
+      // Clear timeout nếu có lỗi
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+      
+      setIsGeocoding(false);
       console.error('❌ Reverse geocoding error:', error);
       
-      // Retry logic - thử lại tối đa 2 lần
-      if (retryCount < 2 && (error.name === 'AbortError' || error.message.includes('Failed to fetch'))) {
+      // Retry logic - thử lại tối đa 2 lần, nhưng không retry nếu là AbortError liên tục
+      if (retryCount < 2 && error.message.includes('Failed to fetch')) {
         console.log(`🔄 Thử lại lần ${retryCount + 1}/2...`);
         setGeocodingStatus(`Kết nối chậm, đang thử lại... (${retryCount + 2}/3)`);
         setTimeout(() => {
           reverseGeocode(lat, lng, retryCount + 1);
-        }, 2000); // Đợi 2 giây trước khi thử lại
+        }, 3000); // Tăng thời gian chờ lên 3 giây
         return;
       }
       
@@ -286,7 +316,7 @@ const CreateStation = () => {
       setAddressSuggestion(`${errorMessage} (Ước tính: ${provinces.find(p => p.code === estimatedProvince)?.name || 'TP.HCM'})`);
       setGeocodingStatus('');
     }
-  }, [provinces]);
+  }, [provinces, isGeocoding]);
 
   // Compress image before upload
   const compressImage = (file, maxWidth = 800, quality = 0.8) => {
@@ -435,7 +465,7 @@ const CreateStation = () => {
       
       return () => clearTimeout(timer);
     }
-  }, [dataLoaded, locationDetected, getCurrentLocation]);
+  }, [dataLoaded, locationDetected]);
 
   if (!user) {
     return <div>Vui lòng đăng nhập để tạo trạm sạc</div>;
