@@ -4,9 +4,10 @@
   "description": "SacVui - Trạm Sạc Thông Minh",
   "main": "index.js",
   "scripts": {
-    "build": "cd client && npm install && npm run build",
+    "build": "cd client && npm ci && npm run build",
     "start": "cd client && npm start",
-    "dev": "cd client && npm start"
+    "dev": "cd client && npm start",
+    "install": "cd client && npm install"
   },
   "repository": {
     "type": "git",
@@ -21,7 +22,7 @@
   "author": "SacVui Team",
   "license": "MIT",
   "engines": {
-    "node": ">=14.0.0",
-    "npm": ">=6.0.0"
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
   }
 }
