@@ -24,11 +24,19 @@
 ### **⚙️ Bước 3: Configure Project**
 ```
 Project Name: sacvui-charging-station
-Framework Preset: Other
+Framework Preset: Create React App
 Root Directory: ./
 Build Command: npm run build
 Output Directory: client/build
 Install Command: npm install
+```
+
+**QUAN TRỌNG:** Nếu vẫn gặp lỗi 404, thử cấu hình manual:
+```
+Framework Preset: Other
+Build Command: cd client && npm ci && npm run build
+Output Directory: client/build
+Install Command: cd client && npm install
 ```
 
 ### **🔧 Bước 4: Advanced Settings (Tùy chọn)**
@@ -101,6 +109,30 @@ Sau khi deploy, test các features:
 
 ---
 
+## 🔧 **TROUBLESHOOTING 404 ERROR:**
+
+### **❌ Nếu gặp lỗi 404 NOT_FOUND:**
+1. **Kiểm tra Build Settings trong Vercel:**
+   - Framework: `Create React App` hoặc `Other`
+   - Build Command: `npm run build`
+   - Output Directory: `client/build`
+   - Install Command: `npm install`
+
+2. **Nếu vẫn lỗi, thử Manual Config:**
+   - Build Command: `cd client && npm ci && npm run build`
+   - Install Command: `cd client && npm install`
+
+3. **Force Redeploy:**
+   - Vào Vercel Dashboard → Project Settings
+   - Click "Redeploy" với latest commit
+   - Đợi build hoàn thành (2-3 phút)
+
+4. **Check Build Logs:**
+   - Xem build logs để tìm lỗi cụ thể
+   - Đảm bảo `client/build` folder được tạo thành công
+
+---
+
 ## 🎉 **PRODUCTION URL:**
 **https://sacvui-charging-station.vercel.app**
 
@@ -112,4 +144,4 @@ Sau khi deploy, test các features:
 
 ---
 
-**🚀 Ready to deploy! Chỉ cần follow các bước trên và app sẽ live trong vài phút!**
+**🚀 Với cấu hình đã được sửa, deployment sẽ thành công! Nếu vẫn gặp lỗi, follow troubleshooting steps above.**
