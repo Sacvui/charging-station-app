@@ -1,23 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { usePageTransition } from '../hooks/usePageTransition';
 
 const Login = () => {
+  const [currentTime, setCurrentTime] = useState('');
   const [formData, setFormData] = useState({
-    email: '',
+    phone: '',
     password: ''
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { navigateWithTransition } = usePageTransition();
+
+  useEffect(() => {
+    // Update time every second
+    const updateTime = () => {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString('vi-VN', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: false 
+      });
+      setCurrentTime(timeString);
+    };
+
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleChange = (e) => {
+    let value = e.target.value;
+    
+    // Format phone number if it's phone field
+    if (e.target.name === 'phone') {
+      value = formatPhoneNumber(value);
+    }
+    
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: value
     });
+    // Clear error when user starts typing
+    if (error) setError('');
+  };
+
+  // Format phone number
+  const formatPhoneNumber = (value) => {
+    const cleaned = value.replace(/\D/g, '');
+    if (cleaned.length <= 10) {
+      return cleaned.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3');
+    }
+    return cleaned.slice(0, 10).replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3');
   };
 
   const handleSubmit = async (e) => {
@@ -25,74 +65,166 @@ const Login = () => {
     setLoading(true);
     setError('');
 
-    const result = await login(formData.email, formData.password);
+    const cleanPhone = formData.phone.replace(/\s/g, '');
+    const result = await login(cleanPhone, formData.password);
     
     if (result.success) {
-      navigate(result.redirect || '/');
+      setShowSuccess(true);
+      setTimeout(() => {
+        navigateWithTransition(result.redirect || '/home');
+      }, 1000);
     } else {
+      // Nếu số điện thoại chưa tồn tại, tự động chuyển sang đăng ký
+      if (result.phoneNotExists) {
+        // Hiển thị thông báo chuyển hướng
+        setError('Số điện thoại chưa được đăng ký. Đang chuyển đến trang đăng ký...');
+        
+        // Chuyển hướng sau 2 giây
+        setTimeout(() => {
+          setLoading(false);
+          navigateWithTransition('/register', { 
+            state: { 
+              phone: cleanPhone,
+              fromLogin: true,
+              message: 'Số điện thoại chưa được đăng ký. Chúng tôi sẽ giúp bạn tạo tài khoản mới! 🎉'
+            }
+          });
+        }, 2000);
+        return;
+      }
+      
       setError(result.message);
+      setLoading(false);
     }
-    
-    setLoading(false);
+  };
+
+  const handleBackClick = () => {
+    navigateWithTransition('/');
   };
 
   return (
-    <div style={{ padding: '1rem', minHeight: '100vh' }}>
-      {/* Back Button */}
-      <div style={{ marginBottom: '1rem' }}>
-        <button 
-          onClick={() => navigate(-1)}
-          className="back-button"
-        >
-          ← Quay lại
-        </button>
-      </div>
-      
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '80vh' }}>
-        <div className="form-container">
-          <h2>🔐 Đăng nhập</h2>
-        {error && <div className="error-message">{error}</div>}
-        
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>📧 Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Nhập email của bạn"
-              required
-            />
-          </div>
-          
-          <div className="form-group">
-            <label>🔒 Mật khẩu</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Nhập mật khẩu"
-              required
-            />
-          </div>
-          
-          <button type="submit" className="btn-primary" disabled={loading} style={{ width: '100%', marginBottom: '1rem' }}>
-            {loading ? '⏳ Đang đăng nhập...' : '🚀 Đăng nhập'}
-          </button>
-        </form>
-        
-        <p style={{ textAlign: 'center', color: '#6b7280', fontSize: '0.9rem' }}>
-          Chưa có tài khoản? <Link to="/register" style={{ color: '#667eea', fontWeight: '600', textDecoration: 'none' }}>Đăng ký ngay</Link>
-        </p>
-        
-        <div style={{ textAlign: 'center', marginTop: '1.5rem', padding: '1rem', background: 'rgba(102, 126, 234, 0.1)', borderRadius: '12px' }}>
-          <p style={{ fontSize: '0.8rem', color: '#6b7280', margin: 0 }}>
-            🎁 Đăng ký ngay để nhận 50 điểm thưởng
-          </p>
+    <div className="auth-app-container">
+      {/* Status Bar */}
+      <div className="auth-status-bar">
+        <span className="auth-time">{currentTime}</span>
+        <div className="auth-signal">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
+        <span className="auth-battery"></span>
       </div>
+
+      <div className="auth-card">
+        {/* Header */}
+        <div className="auth-header">
+          <button onClick={handleBackClick} className="auth-back-btn">
+            <span className="back-icon">←</span>
+          </button>
+          <h1 className="auth-title">Đăng nhập</h1>
+          <div className="auth-spacer"></div>
+        </div>
+
+        {/* Hero Icon */}
+        <div className="auth-hero-section">
+          <div className="auth-icon-circle">
+            <div className="auth-icon">
+              {showSuccess ? (
+                <div className="success-icon">✓</div>
+              ) : (
+                <div className="login-icon">🔐</div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Form Content */}
+        <div className="auth-form-content">
+          <div className="auth-subtitle">
+            {showSuccess ? 'Đăng nhập thành công!' : 'Chào mừng trở lại'}
+          </div>
+          
+          {!showSuccess && (
+            <form onSubmit={handleSubmit} className="auth-form">
+              {error && (
+                <div className="auth-error">
+                  <span className="error-icon">⚠️</span>
+                  <span>{error}</span>
+                </div>
+              )}
+
+              <div className="auth-form-group">
+                <label className="auth-label">
+                  <span className="label-icon">📱</span>
+                  <span>Số điện thoại</span>
+                </label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="0901 234 567"
+                  className="auth-input"
+                  maxLength={12}
+                  required
+                />
+              </div>
+              
+              <div className="auth-form-group">
+                <label className="auth-label">
+                  <span className="label-icon">🔒</span>
+                  <span>Mật khẩu</span>
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Nhập mật khẩu"
+                  className="auth-input"
+                  required
+                />
+              </div>
+
+              <button 
+                type="submit" 
+                className="auth-btn auth-btn-primary"
+                disabled={loading}
+              >
+                {loading ? (
+                  <div className="btn-loading">
+                    <div className="loading-spinner"></div>
+                    <span>Đang đăng nhập...</span>
+                  </div>
+                ) : (
+                  'Đăng nhập'
+                )}
+              </button>
+            </form>
+          )}
+
+          {showSuccess && (
+            <div className="success-message">
+              <p>Chuyển hướng đến trang chủ...</p>
+            </div>
+          )}
+        </div>
+
+        {/* Footer Actions */}
+        {!showSuccess && (
+          <div className="auth-footer">
+            <p className="auth-footer-text">
+              Chưa có tài khoản?
+            </p>
+            <button 
+              onClick={() => navigateWithTransition('/register')}
+              className="auth-link-btn"
+            >
+              Đăng ký ngay
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -111,50 +111,105 @@ const Home = () => {
   // Guest user view
   if (!user) {
     return (
-      <div className="home-guest">
-        <div className="guest-header">
-          <div className="guest-brand">⚡ Sạc Vui</div>
-        </div>
+      <div className="mobile-home-guest">
+        {/* Status Bar Spacer */}
+        <div className="status-bar-spacer"></div>
         
-        <div className="guest-hero">
-          <div className="hero-icon">⚡</div>
-          <h1>Sạc Vui</h1>
-          <p>Tìm trạm sạc xe điện gần bạn nhất</p>
-          
-          <div className="guest-actions">
-            <Link to="/quick-register" className="btn-primary-ios">
-              📱 Đăng ký nhanh bằng SĐT
-            </Link>
-            <Link to="/login" className="btn-secondary-ios">
-              🔐 Đăng nhập
-            </Link>
+        {/* App Header */}
+        <div className="mobile-header">
+          <div className="app-logo">
+            <span className="logo-icon">⚡</span>
+            <span className="logo-text">SacVui</span>
           </div>
         </div>
 
-        <div className="guest-features">
-          <div className="feature-item">
-            <div className="feature-icon">📍</div>
-            <div className="feature-text">
-              <strong>Tìm trạm gần nhất</strong>
-              <span>GPS định vị chính xác</span>
-            </div>
-          </div>
+        {/* Hero Card */}
+        <div className="hero-card">
+          <div className="hero-icon">⚡</div>
+          <h1>Tìm trạm sạc gần bạn</h1>
+          <p>Hơn 1000+ trạm sạc trên toàn quốc</p>
           
-          <div className="feature-item">
-            <div className="feature-icon">🧭</div>
-            <div className="feature-text">
-              <strong>Chỉ đường tức thì</strong>
-              <span>Kết nối Google Maps</span>
+          <div className="quick-stats">
+            <div className="stat">
+              <span className="stat-number">1000+</span>
+              <span className="stat-label">Trạm sạc</span>
+            </div>
+            <div className="stat">
+              <span className="stat-number">24/7</span>
+              <span className="stat-label">Hỗ trợ</span>
+            </div>
+            <div className="stat">
+              <span className="stat-number">50K+</span>
+              <span className="stat-label">Người dùng</span>
             </div>
           </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="mobile-actions">
+          <Link to="/register" className="btn-primary-mobile">
+            <span className="btn-icon">📱</span>
+            <div className="btn-content">
+              <span className="btn-title">Đăng ký nhanh</span>
+              <span className="btn-subtitle">Chỉ cần số điện thoại</span>
+            </div>
+            <span className="btn-arrow">→</span>
+          </Link>
           
-          <div className="feature-item">
-            <div className="feature-icon">💰</div>
-            <div className="feature-text">
-              <strong>So sánh giá cả</strong>
-              <span>Minh bạch, cập nhật</span>
+          <Link to="/login" className="btn-secondary-mobile">
+            <span className="btn-icon">🔐</span>
+            <span className="btn-text">Đăng nhập</span>
+          </Link>
+        </div>
+
+        {/* Features Grid */}
+        <div className="mobile-features">
+          <h2>Tính năng nổi bật</h2>
+          
+          <div className="feature-grid">
+            <div className="feature-item">
+              <div className="feature-icon">📍</div>
+              <div className="feature-content">
+                <h3>Định vị GPS</h3>
+                <p>Tìm trạm gần nhất</p>
+              </div>
+            </div>
+            
+            <div className="feature-item">
+              <div className="feature-icon">⚡</div>
+              <div className="feature-content">
+                <h3>Sạc nhanh</h3>
+                <p>Tiết kiệm thời gian</p>
+              </div>
+            </div>
+            
+            <div className="feature-item">
+              <div className="feature-icon">💰</div>
+              <div className="feature-content">
+                <h3>Giá rẻ</h3>
+                <p>So sánh giá tốt nhất</p>
+              </div>
+            </div>
+            
+            <div className="feature-item">
+              <div className="feature-icon">🛡️</div>
+              <div className="feature-content">
+                <h3>An toàn</h3>
+                <p>Trạm được kiểm định</p>
+              </div>
             </div>
           </div>
+        </div>
+
+        {/* Bottom CTA */}
+        <div className="bottom-cta">
+          <div className="cta-content">
+            <h3>Bắt đầu hành trình xanh</h3>
+            <p>Tham gia ngay hôm nay</p>
+          </div>
+          <Link to="/register" className="cta-button">
+            Đăng ký miễn phí
+          </Link>
         </div>
       </div>
     );
