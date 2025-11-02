@@ -52,3 +52,16 @@
 ---
 
 **📝 Note**: Vấn đề này có thể do CSS Minimizer plugin của Webpack không thể xử lý một số cú pháp CSS phức tạp hoặc ký tự đặc biệt trong file CSS gốc.
+#
+## 5. 🔄 **Disable App-clean.css Import**
+- Comment out `import './App-clean.css';` trong App.js
+- Chỉ sử dụng essential charger-styles.css
+- **Chờ kết quả build từ Vercel**
+
+## 🎯 **Hypothesis:**
+Vấn đề có thể nằm ở file `App-clean.css` (4000+ dòng) thay vì `charger-styles.css`. 
+File App-clean.css có nhiều CSS phức tạp có thể gây lỗi cho CSS Minimizer plugin.
+
+## 📊 **Test Results:**
+- ❌ Essential CSS + App-clean.css = Vẫn lỗi
+- 🔄 Essential CSS only (no App-clean.css) = Đang test...
