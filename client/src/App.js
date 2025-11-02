@@ -14,17 +14,33 @@ import CreateStation from './pages/CreateStation';
 import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
 import Chat from './pages/Chat';
-import './test-basic.css';
+// Temporarily disable CSS imports to test build
 
 function AppContent() {
   const location = useLocation();
   const isOnboarding = location.pathname === '/';
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/quick-register';
 
+  const appStyles = {
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
+    minHeight: '100vh',
+    background: 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)',
+    color: '#ffffff'
+  };
+
+  const mainContentStyles = {
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column'
+  };
+
   return (
-    <div className="App app-container">
+    <div className="App app-container" style={appStyles}>
       {!isOnboarding && !isAuthPage && <Navbar />}
-      <div className={`main-content ${isOnboarding ? 'onboarding-mode' : ''} ${isAuthPage ? 'auth-mode' : ''}`}>
+      <div 
+        className={`main-content ${isOnboarding ? 'onboarding-mode' : ''} ${isAuthPage ? 'auth-mode' : ''}`}
+        style={mainContentStyles}
+      >
         <PageTransition>
           <Routes>
             <Route path="/" element={<Onboarding />} />
