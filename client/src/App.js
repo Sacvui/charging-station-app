@@ -14,8 +14,7 @@ import CreateStation from './pages/CreateStation';
 import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
 import Chat from './pages/Chat';
-// import './App-minimal.css';
-// import './charger-styles.css';
+import './empty.css';
 
 function AppContent() {
   const location = useLocation();
