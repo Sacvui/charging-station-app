@@ -1,4 +1,4 @@
-﻿/* ===== CHARGER TYPES & PRICING STYLES ===== */
+﻿/* ===== CHARGER TYPES & PRICING STYLES =====  */
 
 .charger-types-grid {
     display: grid;
@@ -419,7 +419,7 @@
     }
 }
 
-/* ===== STATION DETAIL PRICING STYLES ===== */
+/* ===== STATION DETAIL PRICING STYLES =====  */
 
 .pricing-card {
     background: rgba(255, 255, 255, 0.05);
@@ -535,7 +535,7 @@
     letter-spacing: 0.5px;
 }
 
-/* Power Badge for Pricing Items */
+/* Power Badge for Pricing Items  */
 .pricing-item .power-badge {
     position: absolute;
     top: 0.75rem;
@@ -551,7 +551,7 @@
     z-index: 2;
 }
 
-/* Enhanced Charger Type Names */
+/* Enhanced Charger Type Names  */
 .pricing-item .charger-type-details {
     display: flex;
     flex-direction: column;
@@ -582,7 +582,7 @@
     font-weight: 500;
 }
 
-/* Responsive Design for Pricing Cards */
+/* Responsive Design for Pricing Cards  */
 @media (max-width: 768px) {
     .pricing-card {
         padding: 1rem;
@@ -633,7 +633,7 @@
     }
 }
 
-/* ===== ENHANCED HOME PAGE STYLES ===== */
+/* ===== ENHANCED HOME PAGE STYLES =====  */
 
 .home-guest {
     min-height: 100vh;
@@ -642,7 +642,7 @@
     overflow-x: hidden;
 }
 
-/* Hero Section */
+/* Hero Section  */
 .hero-section {
     position: relative;
     min-height: 100vh;
@@ -869,7 +869,7 @@
     transform: translateY(-2px);
 }
 
-/* Features Section */
+/* Features Section  */
 .features-section {
     padding: 6rem 2rem;
     background: rgba(255, 255, 255, 0.02);
@@ -991,7 +991,7 @@
     display: inline-block;
 }
 
-/* CTA Section */
+/* CTA Section  */
 .cta-section {
     padding: 4rem 2rem;
     text-align: center;
@@ -1040,7 +1040,7 @@
     transform: translateX(5px);
 }
 
-/* Responsive Design */
+/* Responsive Design  */
 @media (max-width: 768px) {
     .hero-title {
         font-size: 2.5rem;
@@ -1098,7 +1098,7 @@
     }
 }
 
-/* ===== ONBOARDING SCREEN STYLES ===== */
+/* ===== ONBOARDING SCREEN STYLES =====  */
 
 .onboarding-container {
     min-height: 100vh;
@@ -1116,7 +1116,7 @@
     transform: translateY(0);
 }
 
-/* Background */
+/* Background  */
 .onboarding-background {
     position: absolute;
     top: 0;
@@ -1163,7 +1163,7 @@
     }
 }
 
-/* Header */
+/* Header  */
 .onboarding-header {
     display: flex;
     justify-content: space-between;
@@ -1216,7 +1216,7 @@
     color: #ffffff;
 }
 
-/* Main Content */
+/* Main Content  */
 .onboarding-content {
     flex: 1;
     display: flex;
@@ -1261,7 +1261,7 @@
     transform: translateX(100px);
 }
 
-/* Slide Icon */
+/* Slide Icon  */
 .slide-icon {
     margin-bottom: 2rem;
 }
@@ -1301,7 +1301,7 @@
     50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); }
 }
 
-/* Slide Text */
+/* Slide Text  */
 .slide-text {
     max-width: 600px;
 }
@@ -1365,7 +1365,7 @@
     font-weight: 500;
 }
 
-/* Navigation */
+/* Navigation  */
 .slide-navigation {
     display: flex;
     align-items: center;
@@ -1422,7 +1422,7 @@
     background: rgba(255, 255, 255, 0.6);
 }
 
-/* Bottom Actions */
+/* Bottom Actions  */
 .onboarding-actions {
     padding: 2rem;
     z-index: 10;
@@ -1525,7 +1525,7 @@
     font-weight: 500;
 }
 
-/* Floating Elements */
+/* Floating Elements  */
 .floating-elements {
     position: absolute;
     top: 0;
@@ -1586,7 +1586,7 @@
     }
 }
 
-/* Responsive Design */
+/* Responsive Design  */
 @media (max-width: 768px) {
     .onboarding-header {
         padding: 1.5rem;
@@ -1656,7 +1656,7 @@
     }
 }
 
-/* ===== ONBOARDING MODE STYLES ===== */
+/* ===== ONBOARDING MODE STYLES =====  */
 
 .main-content.onboarding-mode {
     padding: 0;
@@ -1667,9 +1667,9 @@
     min-height: 100vh;
 }
 
-/* ===== NEW ONBOARDING SCREEN STYLES ===== */
+/* ===== NEW ONBOARDING SCREEN STYLES =====  */
 
-/* CSS Variables for Onboarding */
+/* CSS Variables for Onboarding  */
 .main-content.onboarding-mode {
     --primary-gradient-start: #00bcd4;
     --primary-gradient-end: #00e676;
@@ -1678,7 +1678,7 @@
     --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
-/* Body and Background - High Specificity */
+/* Body and Background - High Specificity  */
 .App .main-content.onboarding-mode {
     padding: 0 !important;
     min-height: 100vh !important;
@@ -1691,7 +1691,7 @@
     flex: none !important;
 }
 
-/* Bokeh Effects - Multiple floating elements */
+/* Bokeh Effects - Multiple floating elements  */
 .main-content.onboarding-mode::before,
 .main-content.onboarding-mode::after {
     content: '';
@@ -1721,7 +1721,7 @@
     animation-delay: 4s;
 }
 
-/* Additional bokeh elements */
+/* Additional bokeh elements  */
 .main-content.onboarding-mode {
     position: relative;
 }
@@ -1774,7 +1774,7 @@
     }
 }
 
-/* App Container */
+/* App Container  */
 .onboarding-app-container {
     width: 375px !important;
     height: 812px !important;
@@ -1791,7 +1791,7 @@
     margin: 0 auto !important;
 }
 
-/* Status Bar */
+/* Status Bar  */
 .onboarding-status-bar {
     display: flex;
     justify-content: space-between;
@@ -1864,7 +1864,7 @@
     transform: translateY(-50%);
 }
 
-/* Main Card */
+/* Main Card  */
 .onboarding-card {
     flex-grow: 1;
     background: rgba(255, 255, 255, 0.3);
@@ -1880,7 +1880,7 @@
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
-/* Hero Section */
+/* Hero Section  */
 .onboarding-hero-section {
     margin-top: 60px !important;
     margin-bottom: 50px !important;
@@ -1920,7 +1920,7 @@
     animation: sceneFloat 4s ease-in-out infinite;
 }
 
-/* Vehicle Items */
+/* Vehicle Items  */
 .vehicle-item {
     position: absolute;
     display: flex;
@@ -1946,7 +1946,7 @@
     animation: bikeMove 4s ease-in-out infinite;
 }
 
-/* Car Bodies */
+/* Car Bodies  */
 .car-body {
     font-size: 28px;
     filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
@@ -1966,7 +1966,7 @@
     filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.2));
 }
 
-/* Charging Station */
+/* Charging Station  */
 .charging-station {
     position: absolute;
     top: 30px;
@@ -1990,7 +1990,7 @@
     animation: boltFlash 1.5s ease-in-out infinite;
 }
 
-/* Arrows and Effects */
+/* Arrows and Effects  */
 .charging-arrow {
     font-size: 20px;
     color: #8B5CF6;
@@ -2003,7 +2003,7 @@
     animation: boltFlash 1.8s ease-in-out infinite;
 }
 
-/* Floating Dots */
+/* Floating Dots  */
 .floating-dots {
     position: absolute;
     width: 100%;
@@ -2048,7 +2048,7 @@
     animation-delay: 2s;
 }
 
-/* Animations */
+/* Animations  */
 @keyframes sceneFloat {
     0%, 100% { transform: translateY(0px) rotate(0deg); }
     50% { transform: translateY(-5px) rotate(1deg); }
@@ -2095,7 +2095,7 @@
     }
 }
 
-/* Text Content */
+/* Text Content  */
 .onboarding-text-content {
     margin-bottom: 50px;
 }
@@ -2127,7 +2127,7 @@
     max-width: 280px;
 }
 
-/* Actions */
+/* Actions  */
 .onboarding-actions {
     display: flex;
     flex-direction: column;
@@ -2195,7 +2195,7 @@
     color: #007aff;
 }
 
-/* Footer */
+/* Footer  */
 .onboarding-footer {
     margin-top: 30px;
     font-size: 12px;
@@ -2203,7 +2203,7 @@
     opacity: 0.7;
 }
 
-/* Responsive Design */
+/* Responsive Design  */
 @media (max-width: 768px) {
     .onboarding-app-container {
         width: 90vw;
@@ -2299,9 +2299,9 @@
     }
 }
 
-/* ===== PAGE TRANSITION STYLES ===== */
+/* ===== PAGE TRANSITION STYLES =====  */
 
-/* Page Transition Container */
+/* Page Transition Container  */
 .page-transition-container {
     position: relative;
     width: 100%;
@@ -2320,7 +2320,7 @@
     opacity: 0;
 }
 
-/* Transition Overlay */
+/* Transition Overlay  */
 .page-transition-overlay {
     position: fixed;
     top: 0;
@@ -2367,7 +2367,7 @@
     100% { transform: rotate(360deg); }
 }
 
-/* Body Transition Classes */
+/* Body Transition Classes  */
 body.page-transitioning-out {
     overflow: hidden;
 }
@@ -2402,7 +2402,7 @@ body.page-transitioning-in .main-content {
     }
 }
 
-/* Button Loading States */
+/* Button Loading States  */
 .btn-loading {
     display: flex;
     align-items: center;
@@ -2419,7 +2419,7 @@ body.page-transitioning-in .main-content {
     animation: spin 0.8s linear infinite;
 }
 
-/* Enhanced Button Transitions */
+/* Enhanced Button Transitions  */
 .onboarding-btn {
     position: relative;
     overflow: hidden;
@@ -2440,7 +2440,7 @@ body.page-transitioning-in .main-content {
     transform: translateY(0);
 }
 
-/* Ripple Effect */
+/* Ripple Effect  */
 .onboarding-btn::after {
     content: '';
     position: absolute;
@@ -2459,7 +2459,7 @@ body.page-transitioning-in .main-content {
     height: 300px;
 }
 
-/* Page Enter/Exit Animations */
+/* Page Enter/Exit Animations  */
 .page-enter {
     opacity: 0;
     transform: translateX(100px);
@@ -2482,7 +2482,7 @@ body.page-transitioning-in .main-content {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Smooth App Container Transitions */
+/* Smooth App Container Transitions  */
 .onboarding-app-container {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -2492,7 +2492,7 @@ body.page-transitioning-in .main-content {
     opacity: 0.8;
 }
 
-/* Enhanced Status Bar Animation */
+/* Enhanced Status Bar Animation  */
 .onboarding-status-bar {
     animation: statusBarSlideIn 0.5s ease-out 0.2s both;
 }
@@ -2508,7 +2508,7 @@ body.page-transitioning-in .main-content {
     }
 }
 
-/* Enhanced Hero Section Animation */
+/* Enhanced Hero Section Animation  */
 .onboarding-hero-section {
     animation: heroFadeIn 0.6s ease-out 0.4s both;
 }
@@ -2524,7 +2524,7 @@ body.page-transitioning-in .main-content {
     }
 }
 
-/* Enhanced Text Content Animation */
+/* Enhanced Text Content Animation  */
 .onboarding-text-content {
     animation: textSlideUp 0.5s ease-out 0.6s both;
 }
@@ -2540,7 +2540,7 @@ body.page-transitioning-in .main-content {
     }
 }
 
-/* Enhanced Actions Animation */
+/* Enhanced Actions Animation  */
 .onboarding-actions {
     animation: actionsSlideUp 0.5s ease-out 0.8s both;
 }
@@ -2556,7 +2556,7 @@ body.page-transitioning-in .main-content {
     }
 }
 
-/* Enhanced Footer Animation */
+/* Enhanced Footer Animation  */
 .onboarding-footer {
     animation: footerFadeIn 0.4s ease-out 1s both;
 }
@@ -2570,7 +2570,7 @@ body.page-transitioning-in .main-content {
     }
 }
 
-/* Mobile Optimizations */
+/* Mobile Optimizations  */
 @media (max-width: 768px) {
     .page-transition-overlay {
         backdrop-filter: blur(5px);
@@ -2609,9 +2609,9 @@ body.page-transitioning-in .main-content {
     }
 }
 
-/* ===== AUTH PAGES STYLES (LOGIN & REGISTER) ===== */
+/* ===== AUTH PAGES STYLES (LOGIN & REGISTER) =====  */
 
-/* Auth App Container - Same as Onboarding */
+/* Auth App Container - Same as Onboarding  */
 .auth-app-container {
     width: 375px !important;
     height: 812px !important;
@@ -2628,7 +2628,7 @@ body.page-transitioning-in .main-content {
     margin: 0 auto !important;
 }
 
-/* Auth Status Bar - Same as Onboarding */
+/* Auth Status Bar - Same as Onboarding  */
 .auth-status-bar {
     display: flex;
     justify-content: space-between;
@@ -2701,7 +2701,7 @@ body.page-transitioning-in .main-content {
     transform: translateY(-50%);
 }
 
-/* Auth Card - Same as Onboarding */
+/* Auth Card - Same as Onboarding  */
 .auth-card {
     flex-grow: 1;
     background: rgba(255, 255, 255, 0.3);
@@ -2715,7 +2715,7 @@ body.page-transitioning-in .main-content {
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
-/* Auth Header */
+/* Auth Header  */
 .auth-header {
     display: flex;
     align-items: center;
@@ -2760,7 +2760,7 @@ body.page-transitioning-in .main-content {
     width: 40px;
 }
 
-/* Progress Indicator */
+/* Progress Indicator  */
 .auth-progress {
     margin-bottom: 30px;
     animation: authProgressSlideIn 0.5s ease-out 0.2s both;
@@ -2789,7 +2789,7 @@ body.page-transitioning-in .main-content {
     font-weight: 500;
 }
 
-/* Auth Hero Section */
+/* Auth Hero Section  */
 .auth-hero-section {
     display: flex;
     justify-content: center;
@@ -2839,7 +2839,7 @@ body.page-transitioning-in .main-content {
     100% { transform: scale(1); opacity: 1; }
 }
 
-/* Auth Form Content */
+/* Auth Form Content  */
 .auth-form-content {
     flex: 1;
     display: flex;
@@ -2855,7 +2855,7 @@ body.page-transitioning-in .main-content {
     margin-bottom: 30px;
 }
 
-/* Auth Form */
+/* Auth Form  */
 .auth-form {
     display: flex;
     flex-direction: column;
@@ -2903,7 +2903,7 @@ body.page-transitioning-in .main-content {
     color: #718096;
 }
 
-/* Auth Buttons */
+/* Auth Buttons  */
 .auth-btn {
     padding: 16px 24px;
     border-radius: 12px;
@@ -2937,7 +2937,7 @@ body.page-transitioning-in .main-content {
     transform: none;
 }
 
-/* Auth Error */
+/* Auth Error  */
 .auth-error {
     display: flex;
     align-items: center;
@@ -2961,7 +2961,7 @@ body.page-transitioning-in .main-content {
     75% { transform: translateX(5px); }
 }
 
-/* Success Message */
+/* Success Message  */
 .success-message {
     text-align: center;
     padding: 20px;
@@ -2980,7 +2980,7 @@ body.page-transitioning-in .main-content {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Auth Footer */
+/* Auth Footer  */
 .auth-footer {
     text-align: center;
     margin-top: auto;
@@ -3009,7 +3009,7 @@ body.page-transitioning-in .main-content {
     color: #00a0b4;
 }
 
-/* Animations */
+/* Animations  */
 @keyframes authHeaderSlideIn {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
@@ -3035,7 +3035,7 @@ body.page-transitioning-in .main-content {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Responsive Design */
+/* Responsive Design  */
 @media (max-width: 768px) {
     .auth-app-container {
         width: 90vw !important;
@@ -3102,9 +3102,9 @@ body.page-transitioning-in .main-content {
     }
 }
 
-/* ===== QUICK REGISTER SPECIFIC STYLES ===== */
+/* ===== QUICK REGISTER SPECIFIC STYLES =====  */
 
-/* Phone Input Container */
+/* Phone Input Container  */
 .phone-input-container {
     display: flex;
     align-items: center;
@@ -3145,7 +3145,7 @@ body.page-transitioning-in .main-content {
     box-shadow: none !important;
 }
 
-/* OTP Input */
+/* OTP Input  */
 .otp-input {
     text-align: center;
     font-size: 24px;
@@ -3174,7 +3174,7 @@ body.page-transitioning-in .main-content {
     font-size: 16px;
 }
 
-/* Resend Section */
+/* Resend Section  */
 .resend-section {
     text-align: center;
     margin-top: 16px;
@@ -3186,7 +3186,7 @@ body.page-transitioning-in .main-content {
     margin: 0;
 }
 
-/* Role Selector */
+/* Role Selector  */
 .role-selector {
     display: flex;
     flex-direction: column;
@@ -3258,7 +3258,7 @@ body.page-transitioning-in .main-content {
     color: #4A5568;
 }
 
-/* Welcome Bonus */
+/* Welcome Bonus  */
 .welcome-bonus {
     margin-top: 20px;
 }
@@ -3300,7 +3300,7 @@ body.page-transitioning-in .main-content {
     50% { transform: translateY(-3px) rotate(5deg); }
 }
 
-/* Loading Spinner for Buttons */
+/* Loading Spinner for Buttons  */
 .btn-loading {
     display: flex;
     align-items: center;
@@ -3317,7 +3317,7 @@ body.page-transitioning-in .main-content {
     animation: spin 0.8s linear infinite;
 }
 
-/* Enhanced Animations for QuickRegister */
+/* Enhanced Animations for QuickRegister  */
 .auth-form {
     animation: formSlideIn 0.5s ease-out;
 }
@@ -3333,7 +3333,7 @@ body.page-transitioning-in .main-content {
     }
 }
 
-/* Step Transition Effects */
+/* Step Transition Effects  */
 .auth-form-content {
     position: relative;
 }
@@ -3353,7 +3353,7 @@ body.page-transitioning-in .main-content {
     }
 }
 
-/* Mobile Optimizations for QuickRegister */
+/* Mobile Optimizations for QuickRegister  */
 @media (max-width: 480px) {
     .phone-input-container {
         flex-direction: column;
@@ -3396,9 +3396,9 @@ body.page-transitioning-in .main-content {
     }
 }
 
-/* ===== ADDITIONAL INFO STEP STYLES ===== */
+/* ===== ADDITIONAL INFO STEP STYLES =====  */
 
-/* Step Info */
+/* Step Info  */
 .step-info {
     text-align: center;
     margin-bottom: 20px;
@@ -3420,7 +3420,7 @@ body.page-transitioning-in .main-content {
     font-weight: 600;
 }
 
-/* Gender Selector */
+/* Gender Selector  */
 .gender-selector {
     display: flex;
     gap: 8px;
@@ -3452,7 +3452,7 @@ body.page-transitioning-in .main-content {
     box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.1);
 }
 
-/* Vehicle Selector */
+/* Vehicle Selector  */
 .vehicle-selector {
     display: flex;
     flex-direction: column;
@@ -3524,7 +3524,7 @@ body.page-transitioning-in .main-content {
     color: #4A5568;
 }
 
-/* Location Section */
+/* Location Section  */
 .location-section {
     display: flex;
     flex-direction: column;
@@ -3596,7 +3596,7 @@ body.page-transitioning-in .main-content {
     line-height: 1.4;
 }
 
-/* Completion Bonus */
+/* Completion Bonus  */
 .completion-bonus {
     margin-top: 20px;
 }
@@ -3645,7 +3645,7 @@ body.page-transitioning-in .main-content {
     }
 }
 
-/* Mobile Optimizations */
+/* Mobile Optimizations  */
 @media (max-width: 480px) {
     .gender-selector {
         flex-direction: column;
@@ -3702,9 +3702,9 @@ body.page-transitioning-in .main-content {
     flex: none !important;
 }
 
-/* ===== STATION OWNER REGISTRATION STYLES ===== */
+/* ===== STATION OWNER REGISTRATION STYLES =====  */
 
-/* Location Options */
+/* Location Options  */
 .location-options {
     display: flex;
     flex-direction: column;
@@ -3737,7 +3737,7 @@ body.page-transitioning-in .main-content {
     background: rgba(239, 68, 68, 0.2);
 }
 
-/* Charger Types Selector */
+/* Charger Types Selector  */
 .charger-types-selector {
     display: flex;
     flex-direction: column;
@@ -3830,7 +3830,7 @@ body.page-transitioning-in .main-content {
     color: #ffffff;
 }
 
-/* Promotions Section */
+/* Promotions Section  */
 .promotions-section {
     display: flex;
     flex-direction: column;
@@ -3929,7 +3929,7 @@ body.page-transitioning-in .main-content {
     color: #ffffff;
 }
 
-/* Station Owner Bonus */
+/* Station Owner Bonus  */
 .station-owner-bonus {
     margin-top: 20px;
 }
@@ -3982,7 +3982,7 @@ body.page-transitioning-in .main-content {
     }
 }
 
-/* Mobile Optimizations for Station Owner */
+/* Mobile Optimizations for Station Owner  */
 @media (max-width: 480px) {
     .charger-type-option {
         padding: 12px;
