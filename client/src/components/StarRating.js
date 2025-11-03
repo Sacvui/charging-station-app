@@ -1,3 +1,5 @@
+import React from 'react';
+
 const StarRating = ({ rating, totalRatings, size = 'normal', interactive = false, onRatingChange }) => {
   const stars = [];
   const fullStars = Math.floor(rating);
