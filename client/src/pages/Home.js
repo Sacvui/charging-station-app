@@ -108,6 +108,50 @@ const Home = () => {
     return new Intl.NumberFormat('vi-VN').format(price);
   };
 
+  // Get relevant charger types based on user's vehicle
+  const getRelevantChargerTypes = (station, userVehicleType) => {
+    if (!station || !station.pricing || !Array.isArray(station.pricing) || station.pricing.length === 0) {
+      return [];
+    }
+    
+    // Filter charger types based on vehicle compatibility
+    let relevantChargers = station.pricing.filter(p => 
+      p && p.chargerType && typeof p.chargerType === 'string' && p.pricePerHour
+    );
+    
+    if (userVehicleType === 'motorbike') {
+      // Xe máy điện thường dùng AC Slow và AC Fast
+      relevantChargers = relevantChargers.filter(p => 
+        p.chargerType.includes('AC') && !p.chargerType.includes('DC')
+      );
+    } else if (userVehicleType === 'car') {
+      // Ô tô điện có thể dùng tất cả loại sạc
+      relevantChargers = relevantChargers;
+    }
+    
+    // Sort by price (cheapest first) and limit to 2 most relevant
+    return relevantChargers
+      .sort((a, b) => (a.pricePerHour || 0) - (b.pricePerHour || 0))
+      .slice(0, 2);
+  };
+
+  const getChargerIcon = (chargerType) => {
+    if (!chargerType || typeof chargerType !== 'string') return '🔋';
+    if (chargerType.includes('DC')) return '🚀';
+    if (chargerType.includes('22kW')) return '⚡';
+    if (chargerType.includes('7kW')) return '🔌';
+    return '🔋';
+  };
+
+  const getChargerDisplayName = (chargerType) => {
+    if (!chargerType || typeof chargerType !== 'string') return 'Standard';
+    if (chargerType.includes('DC Fast (50kW)')) return 'DC 50kW';
+    if (chargerType.includes('AC Fast (22kW)')) return 'AC 22kW';
+    if (chargerType.includes('AC Fast (7kW)')) return 'AC 7kW';
+    if (chargerType.includes('AC Slow (3.7kW)')) return 'AC 3.7kW';
+    return chargerType.split('(')[0].trim();
+  };
+
   // Guest user view
   if (!user) {
     return (
@@ -302,12 +346,15 @@ const Home = () => {
                     </div>
                     
                     <div className="detail-item">
-                      <span className="vehicle-support">
-                        {station.supportedVehicles?.includes('car') && '🚗'}
-                        {station.supportedVehicles?.includes('motorbike') && '🏍️'}
-                        {!station.supportedVehicles && '🚗🏍️'}
-                      </span>
-                      <span className="charger-count">{station.chargerTypes.length} loại sạc</span>
+                      <div className="charger-types-display">
+                        {getRelevantChargerTypes(station, user.vehicleType).map((charger, idx) => (
+                          <div key={idx} className="charger-type-chip">
+                            <span className="charger-icon">{getChargerIcon(charger.type)}</span>
+                            <span className="charger-name">{getChargerDisplayName(charger.type)}</span>
+                            <span className="charger-price">{formatPrice(charger.pricePerHour)}đ/h</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
 

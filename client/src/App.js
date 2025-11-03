@@ -13,9 +13,10 @@ import Map from './pages/Map';
 import StationDetail from './pages/StationDetail';
 import CreateStation from './pages/CreateStation';
 import Profile from './pages/Profile';
+import Settings from './pages/Settings';
 import AdminDashboard from './pages/AdminDashboard';
 import Chat from './pages/Chat';
-import './styles.css';
+import './styles-production.css';
 
 function AppContent() {
   const location = useLocation();
@@ -38,6 +39,7 @@ function AppContent() {
             <Route path="/station/:id" element={<StationDetail />} />
             <Route path="/create-station" element={<CreateStation />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/chat/:userId" element={<Chat />} />
           </Routes>

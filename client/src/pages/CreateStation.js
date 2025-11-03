@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { saveToLocalStorage, getFromLocalStorage } from '../utils/mockData';
@@ -64,25 +64,128 @@ const CreateStation = () => {
     return selectedDistrict?.wards || [];
   };
 
-  // Ước tính tỉnh dựa trên tọa độ (offline fallback)
+  // Ước tính tỉnh dựa trên tọa độ (offline fallback) - cải thiện độ chính xác
   const estimateProvinceFromCoords = (lat, lng) => {
-    // Các vùng chính của Việt Nam
-    if (lat >= 21.0 && lat <= 23.5 && lng >= 105.0 && lng <= 106.5) return 'HN'; // Hà Nội
-    if (lat >= 10.5 && lat <= 11.0 && lng >= 106.0 && lng <= 107.0) return 'HCM'; // TP.HCM
-    if (lat >= 15.8 && lat <= 16.3 && lng >= 107.8 && lng <= 108.5) return 'DN'; // Đà Nẵng
-    if (lat >= 20.7 && lat <= 21.2 && lng >= 106.0 && lng <= 106.8) return 'HP'; // Hải Phòng
-    if (lat >= 10.0 && lat <= 10.5 && lng >= 105.5 && lng <= 106.5) return 'CT'; // Cần Thơ
+    console.log('🗺️ Phân tích tọa độ:', { lat, lng });
     
-    // Miền Bắc
-    if (lat >= 20.0) return 'HN';
-    // Miền Trung
-    if (lat >= 14.0 && lat < 20.0) return 'DN';
-    // Miền Nam
+    // Tọa độ chính xác cho các thành phố lớn
+    
+    // TP. Hồ Chí Minh (10.72-10.88, 106.62-106.82)
+    if (lat >= 10.72 && lat <= 10.88 && lng >= 106.62 && lng <= 106.82) {
+      console.log('✅ Xác định: TP. Hồ Chí Minh');
+      return 'HCM';
+    }
+    
+    // Hà Nội (20.95-21.15, 105.75-105.95)
+    if (lat >= 20.95 && lat <= 21.15 && lng >= 105.75 && lng <= 105.95) {
+      console.log('✅ Xác định: Hà Nội');
+      return 'HN';
+    }
+    
+    // Đà Nẵng (15.95-16.15, 108.15-108.35)
+    if (lat >= 15.95 && lat <= 16.15 && lng >= 108.15 && lng <= 108.35) {
+      console.log('✅ Xác định: Đà Nẵng');
+      return 'DN';
+    }
+    
+    // Hải Phòng (20.82-20.92, 106.62-106.82)
+    if (lat >= 20.82 && lat <= 20.92 && lng >= 106.62 && lng <= 106.82) {
+      console.log('✅ Xác định: Hải Phòng');
+      return 'HP';
+    }
+    
+    // Cần Thơ (10.02-10.12, 105.72-105.82)
+    if (lat >= 10.02 && lat <= 10.12 && lng >= 105.72 && lng <= 105.82) {
+      console.log('✅ Xác định: Cần Thơ');
+      return 'CT';
+    }
+    
+    // Vùng miền rộng hơn
+    console.log('🔍 Phân tích theo vùng miền...');
+    
+    // Miền Nam (dưới 14 độ vĩ bắc)
+    if (lat < 14.0) {
+      console.log('📍 Vùng miền Nam');
+      
+      // Khu vực TP.HCM mở rộng (10.5-11.0, 106.4-107.0)
+      if (lat >= 10.5 && lat <= 11.0 && lng >= 106.4 && lng <= 107.0) {
+        console.log('✅ Khu vực TP.HCM mở rộng');
+        return 'HCM';
+      }
+      
+      // Khu vực Đồng Nai (10.7-11.2, 106.8-107.5)
+      if (lat >= 10.7 && lat <= 11.2 && lng >= 106.8 && lng <= 107.5) {
+        console.log('✅ Khu vực Đồng Nai');
+        return 'DN2';
+      }
+      
+      // Khu vực Bình Dương (10.8-11.3, 106.5-107.0)
+      if (lat >= 10.8 && lat <= 11.3 && lng >= 106.5 && lng <= 107.0) {
+        console.log('✅ Khu vực Bình Dương');
+        return 'BD';
+      }
+      
+      // Khu vực Long An (10.4-10.9, 105.8-106.5)
+      if (lat >= 10.4 && lat <= 10.9 && lng >= 105.8 && lng <= 106.5) {
+        console.log('✅ Khu vực Long An');
+        return 'LA';
+      }
+      
+      // Khu vực Tây Ninh (11.0-11.8, 106.0-106.5)
+      if (lat >= 11.0 && lat <= 11.8 && lng >= 106.0 && lng <= 106.5) {
+        console.log('✅ Khu vực Tây Ninh');
+        return 'TN';
+      }
+      
+      // Đồng bằng sông Cửu Long (9.0-10.5, 105.0-106.2)
+      if (lat >= 9.0 && lat <= 10.5 && lng >= 105.0 && lng <= 106.2) {
+        console.log('✅ Khu vực Cần Thơ/ĐBSCL');
+        return 'CT';
+      }
+      
+      // Mặc định miền Nam
+      console.log('🔄 Mặc định: TP.HCM (miền Nam)');
+      return 'HCM';
+    }
+    
+    // Miền Trung (14-20 độ vĩ bắc)
+    if (lat >= 14.0 && lat < 20.0) {
+      console.log('📍 Vùng miền Trung');
+      // Khu vực Đà Nẵng và lân cận
+      if (lng >= 107.5 && lng <= 109.0) {
+        console.log('✅ Khu vực Đà Nẵng');
+        return 'DN';
+      }
+      // Miền Trung khác - mặc định Đà Nẵng
+      console.log('🔄 Mặc định: Đà Nẵng (miền Trung)');
+      return 'DN';
+    }
+    
+    // Miền Bắc (trên 20 độ vĩ bắc)
+    if (lat >= 20.0) {
+      console.log('📍 Vùng miền Bắc');
+      // Khu vực Hà Nội và lân cận
+      if (lng >= 105.5 && lng <= 106.2) {
+        console.log('✅ Khu vực Hà Nội');
+        return 'HN';
+      }
+      // Khu vực Hải Phòng
+      if (lng >= 106.2 && lng <= 107.0) {
+        console.log('✅ Khu vực Hải Phòng');
+        return 'HP';
+      }
+      // Miền Bắc khác - mặc định Hà Nội
+      console.log('🔄 Mặc định: Hà Nội (miền Bắc)');
+      return 'HN';
+    }
+    
+    // Mặc định trả về TP.HCM
+    console.log('🔄 Mặc định cuối cùng: TP.HCM');
     return 'HCM';
   };
 
-  // Reverse geocoding để đoán tỉnh/huyện từ tọa độ với retry logic
-  const reverseGeocode = useCallback(async (lat, lng, retryCount = 0) => {
+  // Simplified reverse geocoding - chỉ sử dụng offline fallback
+  const reverseGeocode = useCallback(async (lat, lng) => {
     // Tránh gọi trùng lặp
     if (isGeocoding) {
       console.log('🔄 Đang geocoding, bỏ qua request trùng lặp');
@@ -96,419 +199,23 @@ const CreateStation = () => {
       return;
     }
     
-    let controller = null;
-    let timeoutId = null;
-    
-    // Cleanup function
-    const cleanup = () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-        timeoutId = null;
-      }
-      if (controller && !controller.signal.aborted) {
-        controller.abort();
-      }
-      setIsGeocoding(false);
-    };
-    
     try {
       setIsGeocoding(true);
-      console.log('🔍 Đang reverse geocoding cho tọa độ:', lat, lng, 'với', provinces.length, 'tỉnh thành');
-      setGeocodingStatus(retryCount > 0 ? `Đang thử lại... (${retryCount + 1}/3)` : 'Đang tìm địa chỉ...');
+      console.log('🔍 Đang ước tính địa chỉ từ tọa độ:', lat, lng);
+      setGeocodingStatus('Đang ước tính địa chỉ...');
       
-      // Tạo AbortController mới cho mỗi request
-      controller = new AbortController();
-      
-      // Timeout sau 12 giây (tăng thời gian chờ)
-      timeoutId = setTimeout(() => {
-        if (controller && !controller.signal.aborted) {
-          console.log('⏰ Timeout - aborting request');
-          controller.abort();
-        }
-      }, 12000);
-      
-      // Thử nhiều CORS proxy khác nhau
-      const corsProxies = [
-        'https://api.allorigins.win/raw?url=',
-        'https://cors-anywhere.herokuapp.com/',
-        'https://api.codetabs.com/v1/proxy?quest='
-      ];
-      
-      const nominatimUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1&accept-language=vi`;
-      
-      let response = null;
-      let lastError = null;
-      
-      // Thử từng proxy cho đến khi thành công
-      for (let i = 0; i < corsProxies.length; i++) {
-        if (controller.signal.aborted) break;
-        
-        try {
-          const proxyUrl = corsProxies[i] + encodeURIComponent(nominatimUrl);
-          console.log(`🌐 Trying proxy ${i + 1}/${corsProxies.length}:`, proxyUrl);
-          
-          response = await fetch(proxyUrl, {
-            method: 'GET',
-            signal: controller.signal,
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            }
-          });
-          
-          if (response.ok) {
-            console.log('✅ Proxy thành công:', corsProxies[i]);
-            break;
-          } else {
-            throw new Error(`HTTP ${response.status}`);
-          }
-        } catch (error) {
-          lastError = error;
-          console.log(`❌ Proxy ${i + 1} failed:`, error.message);
-          if (i === corsProxies.length - 1) {
-            throw lastError;
-          }
-        }
-      }
-      
-      // Clear timeout nếu request thành công
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-        timeoutId = null;
-      }
-      
-      if (!response || !response.ok) {
-        throw new Error(`All proxies failed. Last error: ${lastError?.message || 'Unknown error'}`);
-      }
-      
-      const data = await response.json();
-      
-      console.log('📍 Dữ liệu từ Nominatim API:', data);
-      
-      if (data && data.address) {
-        const address = data.address;
-        const fullAddress = data.display_name;
-        setAddressSuggestion(fullAddress);
-        setGeocodingStatus('✅ Đã tự động điền tỉnh thành và quận huyện!');
-        
-        // Clear success message after 3 seconds
-        setTimeout(() => {
-          setGeocodingStatus('');
-        }, 3000);
-        
-        console.log('🏠 Address object:', address);
-        console.log('🏠 Full API response:', data);
-        
-        // Mapping các tên thành phố với code - đầy đủ tất cả tỉnh thành với nhiều biến thể
-        const cityMapping = {
-          // TP. Hồ Chí Minh - nhiều biến thể
-          'hồ chí minh': 'HCM', 'ho chi minh': 'HCM', 'hcm': 'HCM', 'sài gòn': 'HCM', 'saigon': 'HCM',
-          'thành phố hồ chí minh': 'HCM', 'tp hồ chí minh': 'HCM', 'tp. hồ chí minh': 'HCM',
-          'ho chi minh city': 'HCM', 'saigon city': 'HCM',
-          
-          // Hà Nội
-          'hà nội': 'HN', 'ha noi': 'HN', 'hanoi': 'HN', 'hn': 'HN',
-          'thành phố hà nội': 'HN', 'tp hà nội': 'HN', 'tp. hà nội': 'HN',
-          'hanoi city': 'HN',
-          
-          // Đà Nẵng
-          'đà nẵng': 'DN', 'da nang': 'DN', 'danang': 'DN', 'dn': 'DN',
-          'thành phố đà nẵng': 'DN', 'tp đà nẵng': 'DN', 'tp. đà nẵng': 'DN',
-          'da nang city': 'DN',
-          
-          // Cần Thơ
-          'cần thơ': 'CT', 'can tho': 'CT', 'cantho': 'CT', 'ct': 'CT',
-          'thành phố cần thơ': 'CT', 'tp cần thơ': 'CT', 'tp. cần thơ': 'CT',
-          'can tho city': 'CT',
-          
-          // Hải Phòng
-          'hải phòng': 'HP', 'hai phong': 'HP', 'haiphong': 'HP', 'hp': 'HP',
-          'thành phố hải phòng': 'HP', 'tp hải phòng': 'HP', 'tp. hải phòng': 'HP',
-          'hai phong city': 'HP',
-          
-          // Các tỉnh miền Nam với biến thể
-          'an giang': 'AG', 'bạc liêu': 'BL', 'bac lieu': 'BL', 'bến tre': 'BT', 'ben tre': 'BT',
-          'bình dương': 'BD', 'binh duong': 'BD', 'bình phước': 'BP', 'binh phuoc': 'BP',
-          'bình thuận': 'BH', 'binh thuan': 'BH', 'cà mau': 'CM', 'ca mau': 'CM',
-          'đồng nai': 'DN2', 'dong nai': 'DN2', 'đồng tháp': 'DT', 'dong thap': 'DT',
-          'kiên giang': 'KG', 'kien giang': 'KG', 'long an': 'LA',
-          'ninh thuận': 'NT', 'ninh thuan': 'NT', 'sóc trăng': 'ST', 'soc trang': 'ST',
-          'tây ninh': 'TN', 'tay ninh': 'TN', 'tiền giang': 'TG', 'tien giang': 'TG',
-          'trà vinh': 'TV', 'tra vinh': 'TV', 'vĩnh long': 'VL', 'vinh long': 'VL',
-          
-          // Các tỉnh miền Bắc với biến thể
-          'bắc kạn': 'BK', 'bac kan': 'BK', 'bắc giang': 'BG', 'bac giang': 'BG',
-          'bắc ninh': 'BN', 'bac ninh': 'BN', 'cao bằng': 'CB', 'cao bang': 'CB',
-          'hà giang': 'HG', 'ha giang': 'HG', 'hà tĩnh': 'HT', 'ha tinh': 'HT',
-          'hòa bình': 'HB', 'hoa binh': 'HB', 'hưng yên': 'HY', 'hung yen': 'HY',
-          'lai châu': 'LC', 'lai chau': 'LC', 'lạng sơn': 'LS', 'lang son': 'LS',
-          'nam định': 'ND', 'nam dinh': 'ND', 'ninh bình': 'NB', 'ninh binh': 'NB',
-          'quảng ninh': 'QNi', 'quang ninh': 'QNi', 'sơn la': 'SL', 'son la': 'SL',
-          'thái bình': 'TB', 'thai binh': 'TB', 'tuyên quang': 'TQ', 'tuyen quang': 'TQ',
-          'vĩnh phúc': 'VP', 'vinh phuc': 'VP', 'yên bái': 'YB', 'yen bai': 'YB',
-          
-          // Các tỉnh miền Trung với biến thể
-          'đắk lắk': 'DL', 'dak lak': 'DL', 'daklak': 'DL', 'gia lai': 'GL',
-          'khánh hòa': 'KH', 'khanh hoa': 'KH', 'kon tum': 'KT',
-          'nghệ an': 'NA', 'nghe an': 'NA', 'phú yên': 'PY', 'phu yen': 'PY',
-          'quảng bình': 'QB', 'quang binh': 'QB', 'quảng nam': 'QN', 'quang nam': 'QN',
-          'quảng ngãi': 'QG', 'quang ngai': 'QG', 'quảng trị': 'QT', 'quang tri': 'QT',
-          'thừa thiên huế': 'TTH', 'thua thien hue': 'TTH', 'huế': 'TTH', 'hue': 'TTH'
-        };
-        
-        // Lấy thông tin địa chỉ từ nhiều trường - bao gồm tất cả các trường có thể
-        const addressFields = [
-          address.state,           // Tỉnh/State
-          address.province,        // Tỉnh/Province  
-          address.city,           // Thành phố
-          address.county,         // Huyện/County
-          address.municipality,   // Thành phố/Municipality
-          address.administrative_area_level_1,  // Cấp hành chính 1
-          address.administrative_area_level_2,  // Cấp hành chính 2
-          address.city_district,  // Quận/Huyện
-          address.suburb,         // Phường/Xã
-          address.neighbourhood,  // Khu vực
-          address.quarter,        // Phường
-          // Thêm các trường từ display_name
-          ...data.display_name.split(',').map(s => s.trim())
-        ].filter(Boolean);
-        
-        console.log('🏙️ Các trường địa chỉ tìm được:', addressFields);
-        
-        let matchedProvinceCode = null;
-        
-        // Tìm tỉnh phù hợp từ mapping
-        for (const cityName of addressFields) {
-          if (!cityName || typeof cityName !== 'string') continue;
-          
-          const normalizedCity = cityName.toLowerCase()
-            .replace(/tp\.|thành phố|tỉnh|province|city/g, '')
-            .replace(/\s+/g, ' ')
-            .trim();
-          
-          console.log('🔍 Đang kiểm tra:', `"${cityName}" -> "${normalizedCity}"`);
-          
-          // Exact match
-          if (cityMapping[normalizedCity]) {
-            matchedProvinceCode = cityMapping[normalizedCity];
-            console.log('✅ Tìm thấy exact match:', normalizedCity, '->', matchedProvinceCode);
-            break;
-          }
-          
-          // Partial match - tìm trong cityMapping
-          for (const [key, value] of Object.entries(cityMapping)) {
-            if (normalizedCity.includes(key) || key.includes(normalizedCity)) {
-              matchedProvinceCode = value;
-              console.log('✅ Tìm thấy partial match:', `"${normalizedCity}" contains "${key}"`, '->', value);
-              break;
-            }
-          }
-          
-          if (matchedProvinceCode) break;
-        }
-        
-        // Nếu không tìm thấy trong mapping, tìm trong danh sách provinces
-        if (!matchedProvinceCode) {
-          console.log('🔍 Không tìm thấy trong mapping, thử tìm trong danh sách provinces...', provinces.length, 'provinces available');
-          
-          for (const cityName of addressFields) {
-            if (!cityName) continue;
-            
-            const cityNameLower = cityName.toLowerCase()
-              .replace(/tp\.|thành phố|tỉnh/g, '')
-              .replace(/\s+/g, ' ')
-              .trim();
-            
-            console.log('🔍 Đang tìm kiếm:', cityNameLower);
-            
-            const matchedProvince = provinces.find(p => {
-              const provinceName = p.name.toLowerCase()
-                .replace(/tp\.|thành phố|tỉnh/g, '')
-                .replace(/\s+/g, ' ')
-                .trim();
-              
-              console.log('  - So sánh với:', provinceName);
-              
-              // Exact match
-              if (provinceName === cityNameLower) return true;
-              
-              // Contains match
-              if (provinceName.includes(cityNameLower) || cityNameLower.includes(provinceName)) return true;
-              
-              // Word match
-              const provinceWords = provinceName.split(' ');
-              const cityWords = cityNameLower.split(' ');
-              
-              return provinceWords.some(pw => cityWords.some(cw => pw.includes(cw) || cw.includes(pw)));
-            });
-            
-            if (matchedProvince) {
-              matchedProvinceCode = matchedProvince.code;
-              console.log('✅ Tìm thấy trong provinces:', matchedProvince.name, '->', matchedProvinceCode);
-              break;
-            }
-          }
-        }
-        
-        // Tìm district/quận huyện
-        let matchedDistrictCode = null;
-        const finalProvinceCode = matchedProvinceCode || 'HCM';
-        const selectedProvince = provinces.find(p => p.code === finalProvinceCode);
-        
-        console.log('🏛️ Selected province:', selectedProvince?.name, 'with', selectedProvince?.districts?.length, 'districts');
-        
-        if (selectedProvince && selectedProvince.districts) {
-          const districtFields = [
-            address.city_district,
-            address.suburb,
-            address.neighbourhood,
-            address.quarter,
-            address.county,
-            address.administrative_area_level_2,
-            address.administrative_area_level_3
-          ].filter(Boolean);
-          
-          console.log('🏘️ Tìm kiếm district trong:', districtFields);
-          console.log('🏘️ Available districts:', selectedProvince.districts.map(d => d.name));
-          
-          for (const districtName of districtFields) {
-            if (!districtName) continue;
-            
-            const districtNameLower = districtName.toLowerCase()
-              .replace(/quận|huyện|thị xã|tp\.|district|ward/g, '')
-              .replace(/\s+/g, ' ')
-              .trim();
-            
-            console.log('🔍 Đang tìm district:', districtNameLower);
-            
-            const matchedDistrict = selectedProvince.districts.find(d => {
-              const dName = d.name.toLowerCase()
-                .replace(/quận|huyện|thị xã|tp\./g, '')
-                .replace(/\s+/g, ' ')
-                .trim();
-              
-              console.log('  - So sánh với district:', dName);
-              
-              // Exact match
-              if (dName === districtNameLower) return true;
-              
-              // Contains match
-              if (dName.includes(districtNameLower) || districtNameLower.includes(dName)) return true;
-              
-              // Number match for districts like "Quận 1", "Quận 7"
-              const districtNumber = districtNameLower.match(/\d+/);
-              const dNumber = dName.match(/\d+/);
-              if (districtNumber && dNumber && districtNumber[0] === dNumber[0]) return true;
-              
-              // Partial word match
-              const districtWords = districtNameLower.split(' ');
-              const dWords = dName.split(' ');
-              const hasWordMatch = districtWords.some(dw => dWords.some(w => w.includes(dw) || dw.includes(w)));
-              
-              return hasWordMatch;
-            });
-            
-            if (matchedDistrict) {
-              matchedDistrictCode = matchedDistrict.code;
-              console.log('✅ Tìm thấy district:', matchedDistrict.name, '->', matchedDistrictCode);
-              break;
-            }
-          }
-          
-          // Fallback: nếu không tìm thấy district, chọn district đầu tiên
-          if (!matchedDistrictCode && selectedProvince.districts.length > 0) {
-            matchedDistrictCode = selectedProvince.districts[0].code;
-            console.log('🔄 Fallback: Chọn district đầu tiên:', selectedProvince.districts[0].name);
-          }
-        }
-        
-        // Tạo địa chỉ gợi ý
-        const suggestedAddress = [
-          address.house_number,
-          address.road,
-          address.suburb || address.neighbourhood || address.quarter
-        ].filter(Boolean).join(' ');
-        
-        console.log('📍 Kết quả cuối cùng:', {
-          province: finalProvinceCode,
-          district: matchedDistrictCode,
-          suggestedAddress,
-          fullAddress: data.display_name,
-          addressObject: address
-        });
-        
-        // Cập nhật form data với cả province và district
-        console.log('🔄 Đang cập nhật form data...');
-        
-        // Immediate update first
-        setFormData(prev => {
-          const newData = {
-            ...prev,
-            province: finalProvinceCode,
-            district: matchedDistrictCode || '',
-            address: prev.address || suggestedAddress
-          };
-          console.log('✅ Form data updated immediately:', newData);
-          return newData;
-        });
-        
-        // Force update với timeout để đảm bảo UI update
-        setTimeout(() => {
-          setFormData(prev => {
-            const newData = {
-              ...prev,
-              province: finalProvinceCode,
-              district: matchedDistrictCode || '',
-              address: prev.address || suggestedAddress
-            };
-            console.log('✅ Form data updated with timeout:', newData);
-            return newData;
-          });
-        }, 200);
-        
-        setIsGeocoding(false);
-      }
-    } catch (error) {
-      // Cleanup resources
-      cleanup();
-      console.error('❌ Reverse geocoding error:', error);
-      
-      // Retry logic - thử lại tối đa 1 lần, và không retry nếu là AbortError
-      if (retryCount < 1 && 
-          !error.name?.includes('Abort') && 
-          !error.message?.includes('aborted') &&
-          (error.message?.includes('Failed to fetch') || error.message?.includes('HTTP'))) {
-        console.log(`🔄 Thử lại lần ${retryCount + 1}/2...`);
-        setGeocodingStatus(`Kết nối chậm, đang thử lại... (${retryCount + 2}/3)`);
-        setTimeout(() => {
-          reverseGeocode(lat, lng, retryCount + 1);
-        }, 3000); // Tăng thời gian chờ lên 3 giây
-        return;
-      }
-      
-      // Xử lý các loại lỗi khác nhau
-      let errorMessage = 'Không thể tự động đoán địa chỉ. Vui lòng nhập thủ công.';
-      
-      if (error.name === 'AbortError') {
-        errorMessage = 'Kết nối mạng chậm. Đã thử 3 lần. Vui lòng nhập địa chỉ thủ công.';
-        console.log('⏰ Geocoding timeout sau nhiều lần thử');
-      } else if (error.message.includes('Failed to fetch')) {
-        errorMessage = 'Không có kết nối mạng. Vui lòng kiểm tra internet và nhập địa chỉ thủ công.';
-        console.log('🌐 Không có kết nối mạng sau nhiều lần thử');
-      }
-      
-      // Fallback: ước tính tỉnh dựa trên tọa độ (offline) và auto-select district
+      // Sử dụng offline fallback để ước tính tỉnh
       const estimatedProvince = estimateProvinceFromCoords(lat, lng);
       const estimatedProvinceData = provinces.find(p => p.code === estimatedProvince);
       const firstDistrict = estimatedProvinceData?.districts?.[0]?.code || '';
       
-      console.log('🔄 Offline fallback:', {
+      console.log('🔄 Offline estimation:', {
         province: estimatedProvince,
         district: firstDistrict,
         provinceName: estimatedProvinceData?.name
       });
       
-      // Force update form data with both province and district
+      // Cập nhật form data với province và district
       setTimeout(() => {
         setFormData(prev => ({
           ...prev,
@@ -517,10 +224,20 @@ const CreateStation = () => {
         }));
       }, 100);
       
-      setAddressSuggestion(`${errorMessage} (Ước tính: ${estimatedProvinceData?.name || 'TP.HCM'})`);
+      setAddressSuggestion(`Ước tính vị trí: ${estimatedProvinceData?.name || 'TP.HCM'}`);
       setGeocodingStatus('✅ Đã tự động chọn tỉnh thành dựa trên tọa độ!');
       
       // Clear success message after 3 seconds
+      setTimeout(() => {
+        setGeocodingStatus('');
+      }, 3000);
+      
+      setIsGeocoding(false);
+    } catch (error) {
+      console.error('❌ Geocoding error:', error);
+      setIsGeocoding(false);
+      setGeocodingStatus('Không thể ước tính địa chỉ. Vui lòng chọn tỉnh thành thủ công.');
+      
       setTimeout(() => {
         setGeocodingStatus('');
       }, 3000);
@@ -603,9 +320,24 @@ const CreateStation = () => {
             console.log('📍 Tọa độ GPS nhận được:', {
               lat,
               lng,
-              accuracy: `${accuracy}m`,
-              timestamp: new Date(position.timestamp).toLocaleString()
+              accuracy: `${Math.round(accuracy)}m`,
+              altitude: position.coords.altitude ? `${Math.round(position.coords.altitude)}m` : 'N/A',
+              heading: position.coords.heading ? `${Math.round(position.coords.heading)}°` : 'N/A',
+              speed: position.coords.speed ? `${Math.round(position.coords.speed * 3.6)} km/h` : 'N/A',
+              timestamp: new Date(position.timestamp).toLocaleString('vi-VN')
             });
+            
+            // Hiển thị độ chính xác cho user
+            if (accuracy > 100) {
+              console.warn('⚠️ Độ chính xác GPS thấp:', `${Math.round(accuracy)}m`);
+              setGeocodingStatus(`⚠️ Độ chính xác GPS: ${Math.round(accuracy)}m (khuyến nghị < 50m)`);
+            } else if (accuracy > 50) {
+              console.log('📍 Độ chính xác GPS trung bình:', `${Math.round(accuracy)}m`);
+              setGeocodingStatus(`📍 Độ chính xác GPS: ${Math.round(accuracy)}m`);
+            } else {
+              console.log('✅ Độ chính xác GPS tốt:', `${Math.round(accuracy)}m`);
+              setGeocodingStatus(`✅ Độ chính xác GPS tốt: ${Math.round(accuracy)}m`);
+            }
             
             setFormData(prev => ({
               ...prev,
@@ -653,9 +385,9 @@ const CreateStation = () => {
           setGettingLocation(false);
         },
         {
-          enableHighAccuracy: true,
-          timeout: 20000, // Tăng timeout lên 20s
-          maximumAge: 30000 // Giảm xuống 30s để có dữ liệu mới hơn
+          enableHighAccuracy: true, // Sử dụng GPS chính xác cao
+          timeout: 30000, // Tăng timeout lên 30s để có thời gian lấy GPS chính xác
+          maximumAge: 0 // Không sử dụng cache, luôn lấy vị trí mới
         }
       );
     } else {
@@ -810,12 +542,7 @@ const CreateStation = () => {
   };
 
   return (
-    <div style={{ 
-      padding: '1rem', 
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #1f2937, #111827)',
-      color: 'white'
-    }}>
+    <div className="create-station-container">
       {/* Back Button */}
       <div style={{ marginBottom: '1rem' }}>
         <button 
@@ -826,18 +553,12 @@ const CreateStation = () => {
         </button>
       </div>
       
-      <div className="form-container" style={{ maxWidth: '800px' }}>
+      <div className="form-container">
         <h2>⚡ Thêm trạm sạc mới</h2>
         {error && <div className="error-message">{error}</div>}
         
         {/* GPS Location Section */}
-        <div className="location-section" style={{ 
-          background: locationDetected ? 'rgba(34, 197, 94, 0.15)' : 'rgba(59, 130, 246, 0.15)', 
-          border: `1px solid ${locationDetected ? 'rgba(34, 197, 94, 0.4)' : 'rgba(59, 130, 246, 0.4)'}`,
-          borderRadius: '12px', 
-          padding: '1rem', 
-          marginBottom: '1.5rem' 
-        }}>
+        <div className={`location-section ${locationDetected ? 'detected' : 'detecting'}`}>
           <h3 style={{ margin: '0 0 1rem 0', color: locationDetected ? '#10b981' : '#60a5fa' }}>
             📍 Bước 1: Xác định vị trí trạm sạc
           </h3>
@@ -868,18 +589,6 @@ const CreateStation = () => {
                   onClick={getCurrentLocation}
                   disabled={gettingLocation}
                   className="location-btn"
-                  style={{
-                    background: gettingLocation ? 'rgba(59, 130, 246, 0.5)' : 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
-                    color: 'white',
-                    border: 'none',
-                    padding: '0.75rem 1.5rem',
-                    borderRadius: '8px',
-                    fontSize: '1rem',
-                    fontWeight: '600',
-                    cursor: gettingLocation ? 'not-allowed' : 'pointer',
-                    opacity: gettingLocation ? 0.7 : 1,
-                    transition: 'all 0.2s ease'
-                  }}
                 >
                   {gettingLocation ? '🔄 Đang lấy vị trí...' : '🎯 Lấy vị trí hiện tại'}
                 </button>
@@ -900,40 +609,14 @@ const CreateStation = () => {
                     setError('');
                   }}
                   className="manual-location-btn"
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    color: 'rgba(255, 255, 255, 0.8)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    padding: '0.75rem 1.5rem',
-                    borderRadius: '8px',
-                    fontSize: '1rem',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease'
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.background = 'rgba(255, 255, 255, 0.2)';
-                    e.target.style.color = '#ffffff';
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.background = 'rgba(255, 255, 255, 0.1)';
-                    e.target.style.color = 'rgba(255, 255, 255, 0.8)';
-                  }}
                 >
                   📝 Nhập thủ công
                 </button>
               </div>
               
-              <div style={{ 
-                marginTop: '1rem', 
-                padding: '0.75rem', 
-                background: 'rgba(59, 130, 246, 0.1)',
-                borderRadius: '8px',
-                fontSize: '0.85rem',
-                color: 'rgba(255, 255, 255, 0.7)'
-              }}>
+              <div className="location-tips">
                 💡 <strong>Mẹo:</strong> Để lấy vị trí chính xác, hãy đảm bảo:
-                <ul style={{ margin: '0.5rem 0 0 1rem', paddingLeft: '1rem' }}>
+                <ul>
                   <li>Cho phép truy cập vị trí trong trình duyệt</li>
                   <li>Bật GPS/Location Services trên thiết bị</li>
                   <li>Kết nối WiFi hoặc dữ liệu di động ổn định</li>
@@ -943,8 +626,8 @@ const CreateStation = () => {
           ) : (
             <div className="location-success">
               <div className="location-info">
-                <span style={{ color: '#059669', fontSize: '1.2rem' }}>✅</span>
-                <span style={{ fontWeight: '600', color: '#059669' }}>Đã lấy tọa độ GPS thành công!</span>
+                <span>✅</span>
+                <span>Đã lấy tọa độ GPS thành công!</span>
               </div>
               
               <div className="location-coords">
@@ -952,13 +635,13 @@ const CreateStation = () => {
               </div>
               
               {geocodingStatus && (
-                <div className="location-address" style={{ color: '#f59e0b' }}>
+                <div className="location-address">
                   🔄 {geocodingStatus}
                 </div>
               )}
               
               {/* Debug info */}
-              <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', marginTop: '0.5rem' }}>
+              <div className="debug-info">
                 📊 Data: {provinces.length} tỉnh thành, {chargerTypes.length} loại sạc
                 {formData.province && ` | Selected: ${provinces.find(p => p.code === formData.province)?.name || 'Unknown'}`}
               </div>

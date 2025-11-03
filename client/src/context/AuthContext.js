@@ -104,7 +104,7 @@ export const AuthProvider = ({ children }) => {
       const newUser = {
         id: generateId(),
         phone: phone, // SĐT là user ID chính
-        password: phone, // Mặc định password = SĐT
+        password: additionalInfo.password || phone, // Password từ form hoặc mặc định = SĐT
         name: name || '', // Có thể để trống, bổ sung sau
         role: role?.toUpperCase() || 'USER',
         points: 50, // Tặng 50 điểm khi đăng ký
@@ -114,6 +114,7 @@ export const AuthProvider = ({ children }) => {
         gender: additionalInfo.gender || '', // Nam/Nữ/Khác
         vehicleType: additionalInfo.vehicleType || '', // Ô tô/Xe máy điện
         vehicleModel: additionalInfo.vehicleModel || '', // Model xe
+        vehicleModelId: additionalInfo.vehicleModelId || '', // ID model xe VinFast
         location: additionalInfo.location || null, // Tọa độ hiện tại
         address: additionalInfo.address || '', // Địa chỉ từ tọa độ
         

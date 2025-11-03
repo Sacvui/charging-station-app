@@ -6,10 +6,12 @@ import vehicleModels from '../data/vehicleModels.json';
 
 const QuickRegister = () => {
   const [currentTime, setCurrentTime] = useState('');
-  const [step, setStep] = useState(1); // 1: Phone, 2: OTP, 3: Basic Info, 4: Additional Info, 5: Station Info (for STATION_OWNER)
+  const [step, setStep] = useState(1); // 1: Phone, 2: OTP, 3: Password, 4: Basic Info, 5: Additional Info, 6: Station Info (for STATION_OWNER)
   const [formData, setFormData] = useState({
     phone: '',
     otp: '',
+    password: '',
+    confirmPassword: '',
     name: '',
     role: 'USER',
     gender: '',
@@ -144,7 +146,7 @@ const QuickRegister = () => {
     }
 
     setError('');
-    setStep(3);
+    setStep(3); // Chuyển đến step setup password
   };
 
   const completeBasicRegistration = async () => {
@@ -159,7 +161,7 @@ const QuickRegister = () => {
     // Nếu là chủ trạm, chuyển đến step tạo trạm
     if (formData.role === 'STATION_OWNER') {
       setLoading(false);
-      setStep(5);
+      setStep(6);
       return;
     }
 
@@ -170,6 +172,7 @@ const QuickRegister = () => {
       formData.name,
       formData.role,
       {
+        password: formData.password,
         gender: formData.gender,
         vehicleType: formData.vehicleType,
         vehicleModel: formData.vehicleModel,
@@ -216,6 +219,7 @@ const QuickRegister = () => {
       formData.name,
       formData.role,
       {
+        password: formData.password,
         gender: formData.gender,
         vehicleType: formData.vehicleType,
         vehicleModel: formData.vehicleModel,
@@ -244,7 +248,7 @@ const QuickRegister = () => {
     }
   };
 
-  // Lấy vị trí hiện tại
+  // Lấy vị trí hiện tại với improved error handling
   const getCurrentLocation = () => {
     setLoading(true);
     if (navigator.geolocation) {
@@ -253,36 +257,55 @@ const QuickRegister = () => {
           const { latitude, longitude } = position.coords;
           const location = { lat: latitude, lng: longitude };
           
-          // Reverse geocoding để lấy địa chỉ
+          // Reverse geocoding với timeout và fallback
+          let address = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+          
           try {
-            const response = await fetch(
-              `https://api.allorigins.win/raw?url=${encodeURIComponent(
-                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1&accept-language=vi`
-              )}`
-            );
-            const data = await response.json();
-            const address = data.display_name || `${latitude}, ${longitude}`;
+            // Thêm timeout cho fetch request
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
             
-            setFormData(prev => ({
-              ...prev,
-              location,
-              address
-            }));
+            const response = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1&accept-language=vi`,
+              { 
+                signal: controller.signal,
+                headers: {
+                  'User-Agent': 'SacVui-App/1.0'
+                }
+              }
+            );
+            
+            clearTimeout(timeoutId);
+            
+            if (response.ok) {
+              const data = await response.json();
+              if (data && data.display_name) {
+                address = data.display_name;
+              }
+            }
           } catch (error) {
-            console.error('Geocoding error:', error);
-            setFormData(prev => ({
-              ...prev,
-              location,
-              address: `${latitude}, ${longitude}`
-            }));
+            console.log('Geocoding failed, using coordinates:', error.message);
+            // Fallback to simple address format
+            address = `Vị trí: ${latitude.toFixed(4)}°N, ${longitude.toFixed(4)}°E`;
           }
+          
+          setFormData(prev => ({
+            ...prev,
+            location,
+            address
+          }));
           
           setLoading(false);
         },
         (error) => {
           console.error('Location error:', error);
-          setError('Không thể lấy vị trí hiện tại');
+          setError('Không thể lấy vị trí hiện tại. Vui lòng kiểm tra quyền truy cập vị trí.');
           setLoading(false);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 300000 // 5 minutes
         }
       );
     } else {
@@ -308,9 +331,10 @@ const QuickRegister = () => {
     switch (step) {
       case 1: return '📱';
       case 2: return '🔐';
-      case 3: return '👤';
-      case 4: return '🚗';
-      case 5: return showSuccess ? '🎉' : '🏪';
+      case 3: return '🔑';
+      case 4: return '👤';
+      case 5: return '🚗';
+      case 6: return showSuccess ? '🎉' : '🏪';
       default: return '📱';
     }
   };
@@ -324,9 +348,10 @@ const QuickRegister = () => {
     switch (step) {
       case 1: return 'Số điện thoại';
       case 2: return 'Xác thực OTP';
-      case 3: return 'Thông tin cơ bản';
-      case 4: return 'Thông tin bổ sung';
-      case 5: return showSuccess ? 'Hoàn tất!' : 'Thông tin trạm sạc';
+      case 3: return 'Tạo mật khẩu';
+      case 4: return 'Thông tin cơ bản';
+      case 5: return 'Thông tin bổ sung';
+      case 6: return showSuccess ? 'Hoàn tất!' : 'Thông tin trạm sạc';
       default: return 'Đăng ký';
     }
   };
@@ -360,11 +385,11 @@ const QuickRegister = () => {
           <div className="progress-bar">
             <div 
               className="progress-fill"
-              style={{ width: `${(step / (formData.role === 'STATION_OWNER' ? 5 : 4)) * 100}%` }}
+              style={{ width: `${(step / (formData.role === 'STATION_OWNER' ? 6 : 5)) * 100}%` }}
             ></div>
           </div>
           <div className="progress-text">
-            Bước {step}/{formData.role === 'STATION_OWNER' ? 5 : 4}
+            Bước {step}/{formData.role === 'STATION_OWNER' ? 6 : 5}
           </div>
         </div>
 
@@ -484,8 +509,95 @@ const QuickRegister = () => {
             </div>
           )}
 
-          {/* Step 3: User Info */}
-          {step === 3 && !showSuccess && (
+          {/* Step 3: Password Setup */}
+          {step === 3 && (
+            <div className="auth-form">
+              <div className="step-info">
+                <p>Tạo mật khẩu để bảo mật tài khoản của bạn</p>
+              </div>
+
+              {error && (
+                <div className="auth-error">
+                  <span className="error-icon">⚠️</span>
+                  <span>{error}</span>
+                </div>
+              )}
+
+              <div className="auth-form-group">
+                <label className="auth-label">
+                  <span className="label-icon">🔑</span>
+                  <span>Mật khẩu</span>
+                </label>
+                <input
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  placeholder="Nhập mật khẩu (tối thiểu 6 ký tự)"
+                  className="auth-input"
+                  minLength={6}
+                />
+                <div className="password-requirements">
+                  <div className={`requirement ${formData.password.length >= 6 ? 'met' : ''}`}>
+                    {formData.password.length >= 6 ? '✅' : '⭕'} Tối thiểu 6 ký tự
+                  </div>
+                  <div className={`requirement ${/[A-Za-z]/.test(formData.password) && /[0-9]/.test(formData.password) ? 'met' : ''}`}>
+                    {/[A-Za-z]/.test(formData.password) && /[0-9]/.test(formData.password) ? '✅' : '⭕'} Có chữ và số
+                  </div>
+                </div>
+              </div>
+
+              <div className="auth-form-group">
+                <label className="auth-label">
+                  <span className="label-icon">🔐</span>
+                  <span>Xác nhận mật khẩu</span>
+                </label>
+                <input
+                  type="password"
+                  value={formData.confirmPassword}
+                  onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                  placeholder="Nhập lại mật khẩu"
+                  className="auth-input"
+                />
+                {formData.confirmPassword && (
+                  <div className={`password-match ${formData.password === formData.confirmPassword ? 'match' : 'no-match'}`}>
+                    {formData.password === formData.confirmPassword ? '✅ Mật khẩu khớp' : '❌ Mật khẩu không khớp'}
+                  </div>
+                )}
+              </div>
+
+              <button 
+                onClick={() => {
+                  if (formData.password.length < 6) {
+                    setError('Mật khẩu phải có ít nhất 6 ký tự');
+                    return;
+                  }
+                  if (formData.password !== formData.confirmPassword) {
+                    setError('Mật khẩu xác nhận không khớp');
+                    return;
+                  }
+                  setError('');
+                  setStep(4);
+                }}
+                disabled={!formData.password || !formData.confirmPassword || formData.password !== formData.confirmPassword || formData.password.length < 6}
+                className="auth-btn auth-btn-primary"
+              >
+                Tiếp tục
+              </button>
+
+              <div className="security-info">
+                <div className="security-tips">
+                  <span className="security-icon">🛡️</span>
+                  <div className="security-text">
+                    <strong>Bảo mật tài khoản</strong>
+                    <span>Mật khẩu sẽ được mã hóa và bảo mật tuyệt đối</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Step 4: User Info */}
+          {step === 4 && !showSuccess && (
             <div className="auth-form">
               {/* Welcome message đặc biệt khi đến từ Login */}
               {location.state?.fromLogin && (
@@ -524,35 +636,61 @@ const QuickRegister = () => {
                   <span className="label-icon">🎯</span>
                   <span>Loại tài khoản</span>
                 </label>
-                <div className="role-selector">
-                  <button
-                    type="button"
-                    className={`role-option ${formData.role === 'USER' ? 'active' : ''}`}
+                <div className="role-selection-grid">
+                  <div
+                    className={`role-card ${formData.role === 'USER' ? 'selected' : ''}`}
                     onClick={() => setFormData({ ...formData, role: 'USER' })}
                   >
-                    <div className="role-icon">🙋‍♂️</div>
-                    <div className="role-info">
-                      <strong>Người dùng</strong>
-                      <span>Tìm kiếm trạm sạc</span>
+                    <div className="role-card-header">
+                      <div className="role-icon-large">🚗</div>
+                      <div className="role-badge user">Phổ biến</div>
                     </div>
-                  </button>
+                    <div className="role-card-content">
+                      <h3>Người dùng</h3>
+                      <p>Tìm kiếm và sử dụng trạm sạc</p>
+                      <ul className="role-features">
+                        <li>🔍 Tìm trạm sạc gần nhất</li>
+                        <li>📱 Đặt chỗ và thanh toán</li>
+                        <li>⭐ Đánh giá trạm sạc</li>
+                        <li>💰 Tích điểm thưởng</li>
+                      </ul>
+                    </div>
+                    <div className="role-card-footer">
+                      <div className="selection-indicator">
+                        {formData.role === 'USER' ? '✅ Đã chọn' : 'Chọn'}
+                      </div>
+                    </div>
+                  </div>
                   
-                  <button
-                    type="button"
-                    className={`role-option ${formData.role === 'STATION_OWNER' ? 'active' : ''}`}
+                  <div
+                    className={`role-card ${formData.role === 'STATION_OWNER' ? 'selected' : ''}`}
                     onClick={() => setFormData({ ...formData, role: 'STATION_OWNER' })}
                   >
-                    <div className="role-icon">🏪</div>
-                    <div className="role-info">
-                      <strong>Chủ trạm sạc</strong>
-                      <span>Quản lý kinh doanh</span>
+                    <div className="role-card-header">
+                      <div className="role-icon-large">🏪</div>
+                      <div className="role-badge owner">Kinh doanh</div>
                     </div>
-                  </button>
+                    <div className="role-card-content">
+                      <h3>Chủ trạm sạc</h3>
+                      <p>Quản lý và kinh doanh trạm sạc</p>
+                      <ul className="role-features">
+                        <li>🏪 Tạo và quản lý trạm</li>
+                        <li>💼 Theo dõi doanh thu</li>
+                        <li>📊 Thống kê sử dụng</li>
+                        <li>🎁 Tạo khuyến mãi</li>
+                      </ul>
+                    </div>
+                    <div className="role-card-footer">
+                      <div className="selection-indicator">
+                        {formData.role === 'STATION_OWNER' ? '✅ Đã chọn' : 'Chọn'}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               <button 
-                onClick={() => setStep(4)}
+                onClick={() => setStep(5)}
                 disabled={!formData.name.trim()}
                 className="auth-btn auth-btn-primary"
               >
@@ -579,8 +717,8 @@ const QuickRegister = () => {
             </div>
           )}
 
-          {/* Step 4: Additional Info */}
-          {step === 4 && !showSuccess && (
+          {/* Step 5: Additional Info */}
+          {step === 5 && !showSuccess && (
             <div className="auth-form">
               <div className="step-info">
                 <p>Hoàn thiện thông tin để nhận <strong>100 token thưởng</strong> 🎁</p>
@@ -615,38 +753,72 @@ const QuickRegister = () => {
               <div className="auth-form-group">
                 <label className="auth-label">
                   <span className="label-icon">🚗</span>
-                  <span>Loại xe</span>
+                  <span>Loại xe điện</span>
                 </label>
-                <div className="vehicle-selector">
-                  <button
-                    type="button"
-                    className={`vehicle-option ${formData.vehicleType === 'car' ? 'active' : ''}`}
+                <div className="vehicle-type-selection">
+                  <div
+                    className={`vehicle-type-card ${formData.vehicleType === 'car' ? 'selected' : ''}`}
                     onClick={() => {
                       setFormData({ ...formData, vehicleType: 'car', vehicleModel: '', vehicleModelId: '' });
                       setShowVehicleModels(false);
                     }}
                   >
-                    <div className="vehicle-icon">🚗</div>
-                    <div className="vehicle-info">
-                      <strong>Ô tô điện</strong>
-                      <span>VinFast VF8, VF9, VF6...</span>
+                    <div className="vehicle-type-header">
+                      <div className="vehicle-type-icon">🚗</div>
+                      <div className="vehicle-type-badge">Phổ biến</div>
                     </div>
-                  </button>
+                    <div className="vehicle-type-content">
+                      <h4>Ô tô điện</h4>
+                      <p>Xe 4 bánh, phù hợp đi xa</p>
+                      <div className="vehicle-examples">
+                        <span>VinFast VF8</span>
+                        <span>Tesla Model 3</span>
+                        <span>BMW iX3</span>
+                      </div>
+                    </div>
+                    <div className="vehicle-type-specs">
+                      <div className="spec-item">
+                        <span className="spec-icon">⚡</span>
+                        <span>AC/DC Fast</span>
+                      </div>
+                      <div className="spec-item">
+                        <span className="spec-icon">🔋</span>
+                        <span>50-100kWh</span>
+                      </div>
+                    </div>
+                  </div>
                   
-                  <button
-                    type="button"
-                    className={`vehicle-option ${formData.vehicleType === 'motorbike' ? 'active' : ''}`}
+                  <div
+                    className={`vehicle-type-card ${formData.vehicleType === 'motorbike' ? 'selected' : ''}`}
                     onClick={() => {
                       setFormData({ ...formData, vehicleType: 'motorbike', vehicleModel: '', vehicleModelId: '' });
                       setShowVehicleModels(false);
                     }}
                   >
-                    <div className="vehicle-icon">🏍️</div>
-                    <div className="vehicle-info">
-                      <strong>Xe máy điện</strong>
-                      <span>VinFast Klara, Feliz, Impes...</span>
+                    <div className="vehicle-type-header">
+                      <div className="vehicle-type-icon">🏍️</div>
+                      <div className="vehicle-type-badge">Tiết kiệm</div>
                     </div>
-                  </button>
+                    <div className="vehicle-type-content">
+                      <h4>Xe máy điện</h4>
+                      <p>Xe 2 bánh, linh hoạt trong phố</p>
+                      <div className="vehicle-examples">
+                        <span>VinFast Klara</span>
+                        <span>Pega Cap A</span>
+                        <span>Yadea Xmen</span>
+                      </div>
+                    </div>
+                    <div className="vehicle-type-specs">
+                      <div className="spec-item">
+                        <span className="spec-icon">🔌</span>
+                        <span>AC Slow</span>
+                      </div>
+                      <div className="spec-item">
+                        <span className="spec-icon">🔋</span>
+                        <span>1-5kWh</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -811,8 +983,8 @@ const QuickRegister = () => {
             </div>
           )}
 
-          {/* Step 5: Station Info (for STATION_OWNER) */}
-          {step === 5 && !showSuccess && (
+          {/* Step 6: Station Info (for STATION_OWNER) */}
+          {step === 6 && !showSuccess && (
             <div className="auth-form">
               <div className="step-info">
                 <p>Tạo trạm sạc đầu tiên của bạn và nhận <strong>200 token thưởng</strong> 🎁</p>
