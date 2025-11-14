@@ -1,0 +1,185 @@
+{
+  "productGroups": [
+    {
+      "id": "group1",
+      "name": "Thuốc kê đơn",
+      "products": [
+        {
+          "id": "p001",
+          "name": "Paracetamol 500mg",
+          "unit": "Viên",
+          "price": 5000
+        },
+        {
+          "id": "p002",
+          "name": "Amoxicillin 500mg",
+          "unit": "Viên",
+          "price": 8000
+        },
+        {
+          "id": "p003",
+          "name": "Ciprofloxacin 500mg",
+          "unit": "Viên",
+          "price": 12000
+        },
+        {
+          "id": "p004",
+          "name": "Azithromycin 500mg",
+          "unit": "Viên",
+          "price": 15000
+        },
+        {
+          "id": "p005",
+          "name": "Metformin 500mg",
+          "unit": "Viên",
+          "price": 3000
+        }
+      ]
+    },
+    {
+      "id": "group2",
+      "name": "Thuốc không kê đơn",
+      "products": [
+        {
+          "id": "p006",
+          "name": "Panadol Extra",
+          "unit": "Viên",
+          "price": 2500
+        },
+        {
+          "id": "p007",
+          "name": "Tiffy",
+          "unit": "Viên",
+          "price": 2000
+        },
+        {
+          "id": "p008",
+          "name": "Efferalgan 500mg",
+          "unit": "Viên",
+          "price": 3000
+        },
+        {
+          "id": "p009",
+          "name": "Berberin",
+          "unit": "Viên",
+          "price": 1000
+        },
+        {
+          "id": "p010",
+          "name": "Smecta",
+          "unit": "Gói",
+          "price": 5000
+        }
+      ]
+    },
+    {
+      "id": "group3",
+      "name": "Thực phẩm chức năng",
+      "products": [
+        {
+          "id": "p011",
+          "name": "Vitamin C 1000mg",
+          "unit": "Viên",
+          "price": 15000
+        },
+        {
+          "id": "p012",
+          "name": "Vitamin D3 2000IU",
+          "unit": "Viên",
+          "price": 20000
+        },
+        {
+          "id": "p013",
+          "name": "Omega 3",
+          "unit": "Viên",
+          "price": 25000
+        },
+        {
+          "id": "p014",
+          "name": "Calcium + D3",
+          "unit": "Viên",
+          "price": 18000
+        },
+        {
+          "id": "p015",
+          "name": "Ginkgo Biloba",
+          "unit": "Viên",
+          "price": 30000
+        }
+      ]
+    },
+    {
+      "id": "group4",
+      "name": "Dụng cụ y tế",
+      "products": [
+        {
+          "id": "p016",
+          "name": "Khẩu trang y tế",
+          "unit": "Hộp",
+          "price": 50000
+        },
+        {
+          "id": "p017",
+          "name": "Nhiệt kế điện tử",
+          "unit": "Cái",
+          "price": 150000
+        },
+        {
+          "id": "p018",
+          "name": "Máy đo huyết áp",
+          "unit": "Cái",
+          "price": 500000
+        },
+        {
+          "id": "p019",
+          "name": "Que thử thai",
+          "unit": "Que",
+          "price": 25000
+        },
+        {
+          "id": "p020",
+          "name": "Băng gạc y tế",
+          "unit": "Hộp",
+          "price": 30000
+        }
+      ]
+    },
+    {
+      "id": "group5",
+      "name": "Mỹ phẩm",
+      "products": [
+        {
+          "id": "p021",
+          "name": "Kem chống nắng SPF50",
+          "unit": "Tuýp",
+          "price": 200000
+        },
+        {
+          "id": "p022",
+          "name": "Serum Vitamin C",
+          "unit": "Lọ",
+          "price": 350000
+        },
+        {
+          "id": "p023",
+          "name": "Kem dưỡng ẩm",
+          "unit": "Tuýp",
+          "price": 150000
+        },
+        {
+          "id": "p024",
+          "name": "Sữa rửa mặt",
+          "unit": "Chai",
+          "price": 120000
+        },
+        {
+          "id": "p025",
+          "name": "Toner",
+          "unit": "Chai",
+          "price": 180000
+        }
+      ]
+    }
+  ]
+}
+

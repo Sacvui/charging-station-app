@@ -201,6 +201,17 @@ const Login = () => {
                   'Đăng nhập'
                 )}
               </button>
+
+              {/* Forgot Password Link */}
+              <div className="auth-forgot-password">
+                <button 
+                  type="button"
+                  onClick={() => navigateWithTransition('/forgot-password')}
+                  className="auth-forgot-link"
+                >
+                  Quên mật khẩu?
+                </button>
+              </div>
             </form>
           )}
 

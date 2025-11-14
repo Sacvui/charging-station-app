@@ -270,7 +270,7 @@ const QuickRegister = () => {
               { 
                 signal: controller.signal,
                 headers: {
-                  'User-Agent': 'SacVui-App/1.0'
+                  'User-Agent': 'SapharcoSales-App/1.0'
                 }
               }
             );

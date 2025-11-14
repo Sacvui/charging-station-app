@@ -163,7 +163,7 @@ const Home = () => {
         <div className="mobile-header">
           <div className="app-logo">
             <span className="logo-icon">⚡</span>
-            <span className="logo-text">SacVui</span>
+            <span className="logo-text">Sapharco Sales</span>
           </div>
         </div>
 

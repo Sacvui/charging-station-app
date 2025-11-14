@@ -6,8 +6,8 @@ const Footer = () => {
       <div className="footer-content">
         <div className="footer-brand">
           <span className="footer-logo">⚡</span>
-          <span className="footer-text">Sạc Vui được tạo ra bởi</span>
-          <span className="footer-author">Lê Phúc Hải</span>
+          <span className="footer-text">Sapharco Sales</span>
+          <span className="footer-author">Sales Management System</span>
         </div>
         <div className="footer-links">
           <span className="footer-year">© 2025</span>

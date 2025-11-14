@@ -42,51 +42,26 @@ const Onboarding = () => {
         {/* Hero Section */}
         <div className="onboarding-hero-section">
           <div className="onboarding-icon-circle">
-            <div className="electric-journey-icon">
-              {/* Electric Vehicles and Charging Station Scene */}
-              <div className="vehicle-scene">
-                {/* Top Car */}
-                <div className="vehicle-item top-car">
-                  <div className="car-body car-purple">🚗</div>
-                  <div className="charging-arrow">→</div>
-                </div>
-                
-                {/* Charging Station */}
-                <div className="charging-station">
-                  <div className="station-pole">🔌</div>
-                  <div className="station-bolt">⚡</div>
-                </div>
-                
-                {/* Bottom Car */}
-                <div className="vehicle-item bottom-car">
-                  <div className="car-body car-blue">🚗</div>
-                  <div className="charging-bolt-small">⚡</div>
-                </div>
-                
-                {/* Electric Bike */}
-                <div className="vehicle-item electric-bike">
-                  <div className="bike-body">🏍️</div>
-                </div>
-                
-                {/* Floating Dots */}
-                <div className="floating-dots">
-                  <span className="dot dot-1">•</span>
-                  <span className="dot dot-2">•</span>
-                  <span className="dot dot-3">•</span>
-                  <span className="dot dot-4">•</span>
-                  <span className="dot dot-5">•</span>
-                </div>
-              </div>
-            </div>
+            <img 
+              src="/image/logo.png" 
+              alt="Logo" 
+              className="onboarding-logo"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+                borderRadius: '50%'
+              }}
+            />
           </div>
         </div>
 
         {/* Text Content */}
         <div className="onboarding-text-content">
-          <h1 className="onboarding-app-title">Sạc Vui</h1>
-          <p className="onboarding-slogan">Kết nối trạm sạc - Lái xe an tâm</p>
+          <h1 className="onboarding-app-title">Sapharco Sales</h1>
+          <p className="onboarding-slogan">Quản lý đơn hàng - Hiệu quả tối ưu</p>
           <p className="onboarding-description">
-            Ứng dụng tìm và so sánh giá trạm sạc xe điện thông minh
+            Ứng dụng nhập đơn hàng cho Trình dược viên tại các nhà thuốc
           </p>
         </div>
 
@@ -117,7 +92,7 @@ const Onboarding = () => {
 
         {/* Footer */}
         <div className="onboarding-footer">
-          <p>© 2024 Sạc Vui • v1.0</p>
+          <p>© 2024 Sapharco Sales • v1.0</p>
         </div>
       </div>
     </div>

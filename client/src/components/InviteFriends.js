@@ -8,10 +8,10 @@ const InviteFriends = () => {
   const [isSharing, setIsSharing] = useState(false);
 
   const appConfig = {
-    name: 'SacVui',
-    tagline: 'EV Charging Network',
-    url: 'https://sacvui.app',
-    description: 'Find, navigate, and charge your electric vehicle with ease'
+    name: 'Sapharco Sales',
+    tagline: 'Sales Management System',
+    url: 'https://sapharcosales.app',
+    description: 'Quản lý đơn hàng cho Trình dược viên tại các nhà thuốc'
   };
   
   const shareContent = {
@@ -199,7 +199,7 @@ const InviteFriends = () => {
                 <div className="modal-icon">🎁</div>
                 <div className="modal-title-text">
                   <h3>Invite Friends</h3>
-                  <p>Share SacVui and earn rewards</p>
+                  <p>Share Sapharco Sales and earn rewards</p>
                 </div>
               </div>
               <button 

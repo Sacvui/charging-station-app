@@ -12,6 +12,9 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Khởi tạo admin user nếu chưa có
+    initializeAdminUser();
+    
     // Lấy user từ localStorage
     const savedUser = getFromLocalStorage('currentUser');
     if (savedUser) {
@@ -19,6 +22,60 @@ export const AuthProvider = ({ children }) => {
     }
     setLoading(false);
   }, []);
+
+  // Khởi tạo admin user mặc định
+  const initializeAdminUser = () => {
+    const users = getFromLocalStorage('users', []);
+    
+    // Kiểm tra xem đã có admin chưa
+    const adminExists = users.find(u => u.phone === '0938300489' || u.role === 'ADMIN');
+    
+    if (!adminExists) {
+      const adminUser = {
+        id: 'admin-001',
+        phone: '0938300489',
+        password: 'admin',
+        name: 'Quản trị viên hệ thống',
+        role: 'ADMIN',
+        points: 10000,
+        tokens: 10000,
+        
+        // Thông tin admin đầy đủ
+        gender: 'Nam',
+        vehicleType: 'car',
+        vehicleModel: 'VinFast VF8',
+        vehicleModelId: 'vf8',
+        location: { lat: 10.8231, lng: 106.6297 }, // TP.HCM
+        address: 'Thành phố Hồ Chí Minh, Việt Nam',
+        
+        // Profile hoàn thiện
+        profileCompleted: true,
+        profileCompletionPercentage: 100,
+        
+        avatar: null,
+        createdAt: new Date().toISOString(),
+        lastLogin: new Date().toISOString(),
+        
+        // Quyền admin
+        permissions: {
+          manageUsers: true,
+          manageStations: true,
+          viewAnalytics: true,
+          systemSettings: true,
+          moderateContent: true
+        }
+      };
+      
+      users.push(adminUser);
+      saveToLocalStorage('users', users);
+      
+      console.log('✅ Admin user initialized:', {
+        phone: '0938300489',
+        password: 'admin',
+        role: 'ADMIN'
+      });
+    }
+  };
 
   const checkPhoneExists = async (phone) => {
     // Simulate API delay
@@ -75,7 +132,10 @@ export const AuthProvider = ({ children }) => {
       saveToLocalStorage('currentUser', user);
       setUser(user);
       
-      return { success: true, redirect: '/home' };
+      // Redirect dựa trên role
+      const redirectPath = user.role === 'ADMIN' ? '/admin' : '/home';
+      
+      return { success: true, redirect: redirectPath };
     } catch (error) {
       return { 
         success: false, 

@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { saveToLocalStorage, getFromLocalStorage } from '../utils/mockData';
 import provincesData from '../data/provinces.json';
 import chargerTypesData from '../data/chargerTypes.json';
-import '../charger-styles.css';
+
 
 const CreateStation = () => {
   const [formData, setFormData] = useState({
